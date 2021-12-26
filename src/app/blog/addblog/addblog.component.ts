@@ -32,21 +32,6 @@ export class AddblogComponent implements OnInit {
   selectFile(event) {
     this.selectedFiles = event.target.files;
   }
-
-  // onSubmit(): void {
-  //   const { title, content } = this.form;
-
-  //   this.blogService.addPost(title, content).subscribe(
-  //     data => {
-  //       console.log(data);
-  //     },
-  //     err => {
-  //       this.errorMessage = err.error.message;
-  //     }
-  //   );
-  //   this.reloadPage();
-  // }
-
   onSubmit() {
     this.progress.percentage = 0;
     const { title, content } = this.form;

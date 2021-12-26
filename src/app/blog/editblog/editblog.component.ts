@@ -31,7 +31,7 @@ export class EditblogComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.bs.updatePost(title, content, params.id);
       alert('You have succesfully changed a post!');
-      this.router.navigate(['/recent-blogs']).then(() => window.location.reload());
+      this.router.navigate(['/recent-blogs']);
 
     });
   }
