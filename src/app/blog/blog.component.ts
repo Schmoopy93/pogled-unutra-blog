@@ -17,26 +17,14 @@ export class BlogComponent implements OnInit {
   posts: Post[];
   currentPost = null;
   user: User;
+  confirmationCode: string;
 
   constructor(private blogService: ServiceblogService, private authService: AuthService, private route: ActivatedRoute,
     private router: Router,) {
+    //this.confirmationCode = this.route.snapshot.params['confirmationCode'];
   }
-  
+
   ngOnInit() {
-    const confirmationCode = this.route.snapshot.queryParams['confirmationCode'];
-
-        // remove token from url to prevent http referer leakage
-        this.router.navigate([], { relativeTo: this.route, replaceUrl: true });
-
-        this.authService.verifyUser(confirmationCode)
-            .pipe()
-            .subscribe({
-                next: () => {
-                    //this.alertService.success('Verification successful, you can now login', { keepAfterRouteChange: true });
-                    this.router.navigate(['../login'], { relativeTo: this.route });
-                }
-            });
-
     this.blogService.findAll().subscribe(data => {
       this.posts = data;
     });
@@ -46,9 +34,21 @@ export class BlogComponent implements OnInit {
       duration: 1000,
       delay: 1,
     })
-
-    // this.user.isVerified = true;
+    this.confirmationCode = this.route.snapshot.params['confirmationCode'];
+    if(!this.confirmationCode){
+      return;
+    }
+    this.router.navigate(['/login'], { relativeTo: this.route, replaceUrl: true });
+    this.authService.verifyUser(this.confirmationCode)
+      .pipe()
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/'], { relativeTo: this.route });
+        }
+      });
+    console.log(this.confirmationCode);
   }
+
 
 
 }

@@ -32,12 +32,19 @@ export class AuthService {
     }, httpOptions);
   }
 
-  getUserById(id: any) {
+  /*getUserById(id: any) {
     return this.http.get(`${USER_API}/${id}`).subscribe(res => console.log(res, 'res pls'));
-  }
-  
-  verifyUser(confirmationCode: string) {
-    return this.http.get(`${AUTH_API}confirm/` + confirmationCode );
-}
+  }*/
 
+  getUserById(id: any) {
+    return this.http.get(`${USER_API}/${id}`);
+  }
+
+  verifyUser(confirmationCode: string) {
+    return this.http.get(`${AUTH_API}confirm/` + confirmationCode);
+  }
+
+  getUserByToken(confirmationCode: any){
+    return this.http.get(`${AUTH_API}confirm/` + confirmationCode);
+  }
 }
