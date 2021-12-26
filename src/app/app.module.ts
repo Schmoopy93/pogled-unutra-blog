@@ -18,6 +18,7 @@ import { AddblogComponent } from './blog/addblog/addblog.component';
 import { ViewblogComponent } from './blog/viewblog/viewblog.component';
 import { BlogdetailComponent } from './blog/blogdetail/blogdetail.component';
 import { EditblogComponent } from './blog/editblog/editblog.component';
+import { DatePipe } from '@angular/common';
 
 
 
@@ -48,7 +49,7 @@ import { EditblogComponent } from './blog/editblog/editblog.component';
       confirmButtonType: 'danger'
     })
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

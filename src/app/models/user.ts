@@ -4,5 +4,5 @@ export class User
     password: string;
     role: string;
     createdAt: Date;
-
+    confirmationCode: string;
 }

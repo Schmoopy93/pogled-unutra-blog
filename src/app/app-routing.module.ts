@@ -19,7 +19,7 @@ const routes: Routes = [
     children: [
       { path: '', component: BlogComponent },
       { path: 'register', component: RegisterComponent },
-      { path: 'auth/verify-email', component: BlogComponent },
+      { path: 'confirm/:confirmationCode', component: BlogComponent },
       { path: 'login', component: LoginComponent },
       { path: 'my-profile', component: MyprofileComponent },
       {
