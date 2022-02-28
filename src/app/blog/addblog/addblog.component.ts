@@ -27,6 +27,7 @@ export class AddblogComponent implements OnInit {
   constructor(private blogService: ServiceblogService, private router: Router) { }
 
   ngOnInit(): void {
+    
   }
 
   selectFile(event) {
@@ -35,9 +36,11 @@ export class AddblogComponent implements OnInit {
   onSubmit() {
     this.progress.percentage = 0;
     const { title, content } = this.form;
+    const userId = JSON.parse(sessionStorage.getItem('auth-user')).id;
+    
 
     this.currentFileUpload = this.selectedFiles.item(0);
-    this.blogService.addPost(this.currentFileUpload, title, content).subscribe(event => {
+    this.blogService.addPost(this.currentFileUpload, title, content, userId).subscribe(event => {
       if (event.type === HttpEventType.UploadProgress) {
         this.progress.percentage = Math.round(100 * event.loaded / event.total);
       } else if (event instanceof HttpResponse) {

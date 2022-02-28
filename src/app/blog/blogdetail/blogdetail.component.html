@@ -9,9 +9,6 @@
                     <h1 class="fw-bolder mb-1">{{ currentPost?.title }}</h1>
                     <!-- Post meta content-->
                     <div class="text-muted fst-italic mb-2">Posted on {{ currentPost?.createdAt | date:"MMM d, y h:mm:ss a" }}</div>
-                    <!-- Post categories-->
-                    <!-- <a class="badge bg-secondary text-decoration-none link-light" href="#!">Web Design</a>
-                    <a class="badge bg-secondary text-decoration-none link-light" href="#!">Freebies</a> -->
                 </header>
                 <!-- Preview image figure-->
                 <figure class="mb-4"><img class="img-fluid rounded" src="http://localhost:4000/uploads/{{currentPost?.name}}" alt="..." /></figure>
@@ -21,22 +18,26 @@
                 </section>
                 <div class="text-muted fst-italic mb-2">Last time updated on {{ currentPost?.updatedAt | date:"MMM d, y h:mm:ss a" }}</div>
             </article>
-            <!-- Comments section-->
-             <!-- <section class="mb-5">
+
+            <section class="mb-5">
                 <div class="card bg-light">
                     <div class="card-body">
-                        <form class="mb-4"><textarea class="form-control" rows="3" placeholder="Join the discussion and leave a comment!"></textarea></form>
-                        <div class="d-flex">
-                            <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                            <div class="ms-3">
-                                <div class="fw-bold">{{currentUser.firstname}} {{currentUser.lastname}}</div>
-                                When I look at the universe and all the ways the universe wants to kill us, I find it hard to reconcile that with statements of beneficence.
+                          <form form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate id="signup-form" class="signup-form">
+                            <div class="form-outline mb-4">
+                              <textarea class="form-control" id="form3Example1q" type="text" name="content" [(ngModel)]="form.content" 
+                              #content="ngModel" placeholder="Discuss with us... "></textarea>
+                              <span class="focus-input100"></span>
                             </div>
-                        </div>
+                            <button type="submit" class="btn btn-success btn-lg mb-1">Submit</button>
+            
+                          </form>
+                          <div *ngFor="let comment of comments">
+                            {{comment?.content}}
+                          </div>
                     </div>
-                </div>
+                    </div>
             </section>
-            -->
+                    
         </div>
     </div>
   </div>
