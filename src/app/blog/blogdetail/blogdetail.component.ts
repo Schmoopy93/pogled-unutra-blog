@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterContentChecked, AfterContentInit, AfterViewInit, Component, DoCheck, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Post } from 'src/app/models/post';
@@ -12,7 +12,7 @@ import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './blogdetail.component.html',
   styleUrls: ['./blogdetail.component.css']
 })
-export class BlogdetailComponent implements OnInit {
+export class BlogdetailComponent implements OnInit, DoCheck, AfterContentChecked {
 
   form: any = {
     content: null,
@@ -24,6 +24,8 @@ export class BlogdetailComponent implements OnInit {
   errorMessage = '';
   comments: any;
   user = null;
+  post = null;
+  userId: number;
   closeResult = '';
 
   constructor(private blogService: ServiceblogService, private authService: AuthService, public sanitizer: DomSanitizer,
@@ -31,9 +33,29 @@ export class BlogdetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getCommentByPost(this.route.snapshot.paramMap.get('id'));
-    this.getPost(this.route.snapshot.paramMap.get('id'));
-    //this.currentUser = this.token.getUser();
+    this.getCommentByPost(this.route.snapshot.params.id);
+    this.getPost(this.route.snapshot.params.id);
+
+    if (!this.user) {
+      this.user = this.getUserById(this.currentPost?.userId);
+    }
+  }
+  ngAfterContentChecked(): void {
+    if (!this.user) {
+      this.user = this.getUserById(this.currentPost?.userId);
+    }
+
+    //console.log(this.currentPost?.userId, "user")
+    // if (!this.post) {
+    //   this.post = this.getUserById(this.currentComment?.userId)
+    // }
+
+  }
+
+  ngDoCheck() {
+    this.userId = this.currentPost?.userId;
+    this.userId = this.currentComment?.userId
+    //console.log(this.userId, "userID")
   }
 
   getCommentByPost(id) {
@@ -41,7 +63,7 @@ export class BlogdetailComponent implements OnInit {
       .subscribe(
         data => {
           this.comments = data;
-          console.log(data, "Dataaaaaaaaaaaaaaaa");
+          //console.log(data, "Dataaaaaaaaaaaaaaaa");
         },
         error => {
           console.log(error);
@@ -50,6 +72,7 @@ export class BlogdetailComponent implements OnInit {
   }
 
   getPost(id) {
+    if (!id) return;
     this.blogService.getPostById(id)
       .subscribe(
         data => {
@@ -62,10 +85,24 @@ export class BlogdetailComponent implements OnInit {
 
   }
 
+  getUserById(id) {
+    this.authService.getUserById(id)
+      .subscribe(
+        data => {
+          this.user = data;
+          //console.log(data, "user");
+        },
+        error => {
+          console.log(error);
+        });
+  }
+
+
+
   onSubmit(): void {
     const { content } = this.form;
 
-    this.blogService.addComment(content).subscribe(
+    this.blogService.addComment(content, this.currentPost.id).subscribe(
       data => {
         console.log(data);
       },
@@ -74,6 +111,7 @@ export class BlogdetailComponent implements OnInit {
       }
     );
     window.location.reload();
+
   }
 
   open(content) {

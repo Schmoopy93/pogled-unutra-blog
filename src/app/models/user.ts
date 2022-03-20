@@ -6,4 +6,8 @@ export class User
     role: string;
     createdAt: Date;
     confirmationCode: string;
+    pic: ArrayBuffer;
+    mimetype: string;
+    photoName: string;
+
 }

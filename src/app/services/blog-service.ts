@@ -3,6 +3,8 @@ import { HttpClient, HttpEvent, HttpHeaders, HttpParams, HttpRequest } from '@an
 import { Observable, of, Subject } from 'rxjs';
 import { Post } from '../models/post';
 import { Comment } from '../models/comment'
+import { TokenStorageService } from './token-storage.service';
+import { ActivatedRoute } from '@angular/router';
 
 const AUTH_API = 'http://localhost:4000/api/auth/';
 const httpOptions = {
@@ -18,7 +20,7 @@ export class ServiceblogService {
   postsURL: string;
   commentURL: string;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private token: TokenStorageService, private route: ActivatedRoute) {
     this.postsURL = 'http://localhost:4000/api/auth/posts';
     this.commentURL = 'http://localhost:4000/api/auth/showComments'
   }
@@ -31,13 +33,16 @@ export class ServiceblogService {
     return this.http.get<Comment[]>(this.commentURL);
   }
 
-  public getCommentsByPost(postId) : Observable<any> {
+  public getCommentsByPost(postId): Observable<any> {
     let params = new HttpParams().set('postId', postId);
     return this.http.get(`${this.commentURL}/`, { params: params });
   }
 
-  public getPostById(id) {
-    return this.http.get(`${this.postsURL}/${id}`);
+  public getPostById(id: number) {
+    if (id) {
+      return this.http.get(`${this.postsURL}/${id}`);
+    }
+    return null;
   }
 
   addPost(file: File, title: string, content: string, userId: string): Observable<HttpEvent<{}>> {
@@ -79,12 +84,9 @@ export class ServiceblogService {
     return this.http.delete(`${this.postsURL}/${id}`, { responseType: 'text' });
   }
 
-  addComment(content: string): Observable<any> {
-    const pathName = window.location.pathname.split('/')
-    const postId =+ pathName[pathName.length - 1];
-    const userId =+ pathName[pathName.length - 1];
-
-
+  addComment(content: string, postId: number): Observable<any> {
+    // const postId = this.route.snapshot.params;
+    const userId = + this.token.getUser().id;
 
     return this.http.post(AUTH_API + 'comments', {
       postId,
