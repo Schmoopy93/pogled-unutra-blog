@@ -1,61 +1,53 @@
-<div class="banner-innerpage">
-    <div class="limiter">
-      <div class="container-login100">
-        <div class="wrap-login100 p-l-55 p-r-55 p-t-65 p-b-54">
-          <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate
-          id="signup-form" class="signup-form">
-            <span class="login100-form-title p-b-49">
-              Create a Post
-            </span>
-  
-            <div class="wrap-input100 validate-input m-b-23" data-validate="Title is required">
-              <span class="label-input100">Title</span>
-              <input type="text" class="input100" name="title" [(ngModel)]="form.title" required minlength="3"
-               #title="ngModel" placeholder="Type your title">
-              <span class="focus-input100"></span>
+<body>
+    <hr>
+    <h1 class="h1">Create a post</h1>
+    <br>
+    <div class="container">
+        <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate id="signup-form" class="signup-form">
+            <div class="row">
+                <div class="col-25">
+                    <label for="fname">Title</label>
+                </div>
+                <div class="col-75" data-validate="Title is required">
+                    <input type="text" class="input100" name="title" [(ngModel)]="form.title" required minlength="3" #title="ngModel" placeholder="Type your title">
+                </div>
             </div>
             <br>
             <div class="alert-danger" *ngIf="title.errors && f.submitted">
-              <div *ngIf="title.errors.required">Title is required</div>
-              <div *ngIf="title.errors.minlength">
-                Title must be at least 3 characters
-              </div>
+                <div *ngIf="title.errors.required">Title is required</div>
+                <div *ngIf="title.errors.minlength">
+                    Title must be at least 3 characters
+                </div>
             </div>
-  
-            <div class="wrap-input100 validate-input" data-validate="Description is required">
-              <span class="label-input100">Description</span>
-              <textarea type="text" class="input100" name="content" [(ngModel)]="form.content" required content
-              #content="ngModel" placeholder="Type your Description"></textarea>
+            <div class="row">
+                <div class="col-25">
+                    <label for="subject">Text</label>
+                </div>
+                <div class="col-75" data-validate="Text is required">
+                    <textarea type="text" class="input100" name="content" [(ngModel)]="form.content" required content #content="ngModel" placeholder="Type your text" style="height: 200px;"></textarea>
+                </div>
             </div>
-            <br>
             <div class="alert-danger" *ngIf="content.errors && f.submitted">
-              <div *ngIf="content.errors.required">Description is required</div>
-              <div *ngIf="content.errors.content">
-                Description must be a valid
-              </div>
+                <div *ngIf="content.errors.required">Text is required</div>
+                <div *ngIf="content.errors.content">
+                    Text must be a valid
+                </div>
             </div>
             <br>
-            <div *ngIf="currentFileUpload" class="progress">
-              <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar"
-                attr.aria-valuenow="{{progress.percentage}}" aria-valuemin="0" aria-valuemax="100"
-                [ngStyle]="{width:progress.percentage+'%'}">
-                {{progress.percentage}}%</div>
+            <div class="row">
+                <div class="col-25">
+                    <label for="subject">Picture</label>
+                </div>
+                <div class="col-75">
+                    <input type="file" class="form-control" id="customFile" (change)="selectFile($event)" style="height: auto;" />
+                </div>
             </div>
-    
-            <label class="btn btn-default">
-              <input type="file" (change)="selectFile($event)">
-            </label>
             <br>
-            <div class="container-login100-form-btn">
-              <div class="wrap-login100-form-btn">
-                <div class="login100-form-bgbtn"></div>
-                <button class="login100-form-btn">
-                  Submit
-                </button>
-              </div>
+            <div class="row">
+                <input type="submit" value="Submit">
             </div>
-          </form>
-        </div>
-      </div>
+        </form>
     </div>
-    </div>
+
+</body>
+<br>

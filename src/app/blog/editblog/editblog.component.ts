@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ServiceblogService } from 'src/app/services/blog-service';
 
@@ -11,38 +11,70 @@ import { ServiceblogService } from 'src/app/services/blog-service';
 export class EditblogComponent implements OnInit {
 
   post: any = {};
-  form: any = {
-    username: null,
-    email: null,
-    password: null,
-    firstname: null,
-    lastname: null
-  };
+  angForm: FormGroup;
 
   constructor(private route: ActivatedRoute,
-    private router: Router,
-    private bs: ServiceblogService,
-    private fb: FormBuilder) {
+              private router: Router,
+              private bs: ServiceblogService,
+              private fb: FormBuilder) {
+      this.createForm();
+ }
 
-  }
+  createForm() {
+    this.angForm = this.fb.group({
+        title: ['', Validators.required ],
+        content: ['', Validators.required ],
+      });
+    }
 
-  onSubmit() {
-    const { title, content } = this.form;
+  updatePost(title, content) {
     this.route.params.subscribe(params => {
       this.bs.updatePost(title, content, params.id);
-      alert('You have succesfully changed a post!');
+      alert('You have succesfully changed a Post');
       this.router.navigate(['/recent-blogs']);
 
+        
+      
+ });
+  }
+  ngOnInit() {
+    this.route.params.subscribe(params => {
+        this.bs.editPost(params.id).subscribe(res => {
+          this.post = res;
+      });
     });
   }
 
-  ngOnInit(): void {
+  // post: any = {};
+  // form: any = {
+  //   title: null,
+  //   content: null
 
-    this.route.params.subscribe(params => {
-      this.bs.editPost(params.id).subscribe(res => {
-        this.post = res;
-      });
-    });
-  } 
+  // };
+
+  // constructor(private route: ActivatedRoute,
+  //   private router: Router,
+  //   private bs: ServiceblogService) {
+
+  // }
+
+  // onSubmit() {
+  //   const { title, content } = this.form;
+  //   this.route.params.subscribe(params => {
+  //     this.bs.updatePost(title, content, params.id);
+  //     alert('You have succesfully changed a post!');
+  //     this.router.navigate(['/recent-blogs']);
+
+  //   });
+  // }
+
+  // ngOnInit(): void {
+  //   this.route.params.subscribe(params => {
+  //     this.bs.editPost(params.id).subscribe(res => {
+  //       this.post = res;
+  //       console.log(res, "ressssssssssssssssssssss")
+  //     });
+  //   });
+  // }
 
 }

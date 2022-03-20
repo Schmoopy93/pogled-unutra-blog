@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 const AUTH_API = 'http://localhost:4000/api/auth/';
-const USER_API = `${AUTH_API}users`;
+const USER_API = `http://localhost:4000/api/auth/users`;
 
 
 const httpOptions = {
@@ -32,11 +32,15 @@ export class AuthService {
     }, httpOptions);
   }
 
-  /*getUserById(id: any) {
-    return this.http.get(`${USER_API}/${id}`).subscribe(res => console.log(res, 'res pls'));
-  }*/
+  // getUserById(id: any) {
+  //   return this.http.get(`${USER_API}/${id}`).subscribe(res => console.log(res, 'res pls'));
+  // }
 
-  getUserById(id: any) {
+  // getUserById(id: any) {
+  //   return this.http.get(`${USER_API}/${id}`);
+  // }
+
+  getUserById(id): Observable<any> {
     return this.http.get(`${USER_API}/${id}`);
   }
 

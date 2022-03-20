@@ -10,4 +10,5 @@ export class Post{
     author: User[];
     pic: ArrayBuffer;
     mimetype: string;
+    userId: number;
 }

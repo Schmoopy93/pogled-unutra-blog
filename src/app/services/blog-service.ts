@@ -82,11 +82,14 @@ export class ServiceblogService {
   addComment(content: string): Observable<any> {
     const pathName = window.location.pathname.split('/')
     const postId =+ pathName[pathName.length - 1];
+    const userId =+ pathName[pathName.length - 1];
+
 
 
     return this.http.post(AUTH_API + 'comments', {
       postId,
       content,
+      userId
     }, httpOptions);
   }
 
