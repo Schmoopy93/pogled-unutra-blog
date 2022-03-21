@@ -19,7 +19,7 @@
                 </section>
                 <div class="text-muted fst-italic mb-2">Last time updated on {{ currentPost?.updatedAt | date:"MMM d, y h:mm:ss a" }}</div>
             </article>
-            <div>
+            <div *ngIf="isLoggedIn">
                 <hr>
                 <button type="button" mdbBtn color="default" data-toggle="modal" data-target="#basicExample" (click)="open(content)" mdbWavesEffect>Discuss with us...</button>
                 <ng-template #content let-modal>

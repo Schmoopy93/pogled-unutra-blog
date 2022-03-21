@@ -24,17 +24,6 @@ export class AuthService {
       password
     }, httpOptions);
   }
-
-  // register(username: string, email: string, password: string, firstname: string, lastname: string): Observable<any> {
-  //   return this.http.post(AUTH_API + 'signup', {
-  //     username,
-  //     email,
-  //     password,
-  //     firstname,
-  //     lastname
-  //   }, httpOptions);
-  // }
-
   register(file: File, username: string, email: string, password: string, firstname: string, lastname: string): Observable<HttpEvent<{}>> {
     const formdata: FormData = new FormData();
 
@@ -53,15 +42,24 @@ export class AuthService {
     return this.http.request(req);
   }
 
+  getUsers(){
+    return this.http.get(USER_API);
+  }
+  editUser(id) {
+    return this
+      .http
+      .get(`${USER_API}/${id}`);
+  }
+  updateUser(username, id) {
 
-  // getUserById(id: any) {
-  //   return this.http.get(`${USER_API}/${id}`).subscribe(res => console.log(res, 'res pls'));
-  // }
-
-  // public getUserById(id) {
-  //   return this.http.get(`${this.usersURL}/${id}`);
-  // }
-
+    const obj = {
+      username: username,
+    };
+    this
+      .http
+      .put(`${USER_API}/${id}`, obj)
+      .subscribe(res => console.log('Done'));
+  }
   getUserById(id): Observable<any> {
     return this.http.get(`${USER_API}/${id}`);
   }

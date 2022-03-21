@@ -12,7 +12,7 @@ import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './blogdetail.component.html',
   styleUrls: ['./blogdetail.component.css']
 })
-export class BlogdetailComponent implements OnInit, DoCheck, AfterContentChecked {
+export class BlogdetailComponent implements OnInit, AfterContentChecked {
 
   form: any = {
     content: null,
@@ -27,15 +27,18 @@ export class BlogdetailComponent implements OnInit, DoCheck, AfterContentChecked
   post = null;
   userId: number;
   closeResult = '';
+  isLoggedIn = false;
 
   constructor(private blogService: ServiceblogService, private authService: AuthService, public sanitizer: DomSanitizer,
     private router: Router, private route: ActivatedRoute, private token: TokenStorageService, private modalService: NgbModal) {
   }
 
   ngOnInit(): void {
+    if (this.token.getToken()) {
+      this.isLoggedIn = true;
+    }  
     this.getCommentByPost(this.route.snapshot.params.id);
     this.getPost(this.route.snapshot.params.id);
-
     if (!this.user) {
       this.user = this.getUserById(this.currentPost?.userId);
     }
@@ -44,7 +47,8 @@ export class BlogdetailComponent implements OnInit, DoCheck, AfterContentChecked
     if (!this.user) {
       this.user = this.getUserById(this.currentPost?.userId);
     }
-
+    
+  
     //console.log(this.currentPost?.userId, "user")
     // if (!this.post) {
     //   this.post = this.getUserById(this.currentComment?.userId)
@@ -52,11 +56,11 @@ export class BlogdetailComponent implements OnInit, DoCheck, AfterContentChecked
 
   }
 
-  ngDoCheck() {
-    this.userId = this.currentPost?.userId;
-    this.userId = this.currentComment?.userId
-    //console.log(this.userId, "userID")
-  }
+  // ngDoCheck() {
+  //   this.userId = this.currentPost?.userId;
+  //   this.userId = this.currentComment?.userId
+  //   //console.log(this.userId, "userID")
+  // }
 
   getCommentByPost(id) {
     this.blogService.getCommentsByPost(id)

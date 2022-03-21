@@ -1,0 +1,25 @@
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Username</th>
+                <th scope="col">Firstname</th>
+                <th scope="col">Lastname</th>
+                <th scope="col">Email</th>
+                <th scope="col">Joined At</th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let user of users">
+            <tr>
+                <th scope="row">{{user?.id}}</th>
+                <td>{{user?.username}}</td>
+                <td>{{user?.firstname}}</td>
+                <td>{{user?.lastname}}</td>
+                <td>{{user?.email}}</td>
+                <td>{{user?.createdAt | date:"MMM d, y h:mm:ss a"}}</td>
+                <button routerLink="/edit-user/{{ user.id }}">Edit</button>
+            </tr>
+        </tbody>
+    </table>
+</div>

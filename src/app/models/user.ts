@@ -3,6 +3,8 @@ export class User
     username: string;
     email: string;
     password: string;
+    firstname: string;
+    lastname: string;
     role: string;
     createdAt: Date;
     confirmationCode: string;

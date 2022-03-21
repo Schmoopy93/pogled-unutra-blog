@@ -58,14 +58,8 @@
                                     Password must be at least 6 characters
                                 </div>
                             </div>
-                            <br>
-                            <div class="row">
-                                <div class="col-25">
-                                    <label for="subject">Picture</label>
-                                </div>
-                                <div class="col-75">
-                                    <input type="file" class="form-control" id="customFile" (change)="selectFile($event)" style="height: auto;" />
-                                </div>
+                            <div class="form-outline mb-4 validate-input" data-validate="Lastname is required">
+                                <input type="file" class="form-control" id="customFile" (change)="selectFile($event)" style="height: auto;" />
                             </div>
                             <br>
                             <div class="alert alert-warning" *ngIf="f.submitted && isSignUpFailed">

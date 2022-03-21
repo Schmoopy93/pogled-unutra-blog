@@ -11,6 +11,9 @@ import { LoginComponent } from './login/login.component';
 import { MyprofileComponent } from './myprofile/myprofile.component';
 import { RegisterComponent } from './register/register.component';
 import { AuthGuard } from './services/auth.guard';
+import { UpdateUserComponent } from './update-user/update-user.component';
+import { UsersListComponent } from './users-list/users-list.component';
+
 
 const routes: Routes = [
   {
@@ -27,10 +30,20 @@ const routes: Routes = [
           roles: '[ROLE_ADMIN]'
         }
       },
+      {
+        path: 'all-users', component: UsersListComponent, canActivate: [AuthGuard], data: {
+          roles: '[ROLE_ADMIN]'
+        }
+      },
       { path: 'recent-blogs', component: ViewblogComponent },
       { path: 'blogDetail/:id', component: BlogdetailComponent },
       {
         path: 'edit-post/:id', component: EditblogComponent, canActivate: [AuthGuard], data: {
+          roles: '[ROLE_ADMIN]'
+        }
+      },
+      {
+        path: 'edit-user/:id', component: UpdateUserComponent, canActivate: [AuthGuard], data: {
           roles: '[ROLE_ADMIN]'
         }
       },

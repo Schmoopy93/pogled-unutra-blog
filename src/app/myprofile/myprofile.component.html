@@ -11,6 +11,12 @@
           Create a post
         </button>
         </div>
+        <br>
+        <div class="buttons" *ngIf="currentUser?.roles== 'ROLE_ADMIN'">
+            <button class="button" routerLink="/all-users">
+          List of Users
+        </button>
+        </div>
         <div class="buttons" *ngIf="currentUser?.roles== 'ROLE_USER'">
             <button class="button" (click)="viewBlog()">
             <!-- <button class="button" routerLink="/recent-blogs"> -->
