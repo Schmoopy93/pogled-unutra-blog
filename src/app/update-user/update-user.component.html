@@ -5,16 +5,11 @@
                 <div class="card rounded-3">
                     <img src="../../../assets/images/session/therapy-5.jpg" class="w-100" style="border-top-left-radius: .3rem; border-top-right-radius: .3rem;" alt="Sample photo">
                     <div class="card-body p-4 p-md-5">
-                        <h3 class="mb-4 pb-2 pb-md-0 mb-md-5 px-md-2">Login</h3>
-
+                        <h3 class="mb-4 pb-2 pb-md-0 mb-md-5 px-md-2">Edit user with an {{user.id}}</h3>
                         <form class="px-md-2" name="form" #f="ngForm" novalidate>
-
                             <div class="form-outline mb-4">
                                 <input class="form-control" id="form3Example1q" type="text" name="username" placeholder="Enter your username" [(ngModel)]="user.username" required #username="ngModel">
                             </div>
-                            <!--<div class="alert alert-danger" role="alert" *ngIf="username.errors && f.submitted">
-                            Username is required!-->
-
                             <button (click)="updateUser(username.value)" class="btn btn-success">
                                 <i class="fas fa-edit"></i> Edit </button>
 

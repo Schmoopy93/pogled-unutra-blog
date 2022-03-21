@@ -12,31 +12,26 @@ export class UsersListComponent implements OnInit {
 
   users: User[];
   user: any = {};
-  constructor(private authService: AuthService, private route: ActivatedRoute,
-    private router: Router) { }
+  public popoverTitle: string = 'WARNING';
+  public popoverMessage: string = 'Are you sure you want to delete this post???'
+  public cancelClicked: boolean = false;
+  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     this.getUsers();
-    this.route.params.subscribe(params => {
-      this.authService.editUser(params.id).subscribe(res => {
-        this.user = res;
-    });
-  });
   }
-
   getUsers(){
     this.authService.getUsers().subscribe((data: User[]) => {
       this.users = data;
-      console.log(data, "dataaaaaaaaaaa");
     });
-
   }
-  // updateUser(username) {
-  //   this.route.params.subscribe(params => {
-  //     this.authService.updateUser(username, params.id);
-  //     alert('You have succesfully changed a username of a User');
-  //     this.router.navigate(['/recent-blogs']);
-      
-  //   });
-  // }
+
+  deleteUser(id) {
+    this.authService.deleteUser(id).subscribe(res => {
+      console.log('Deleted');
+      this.router.navigate(['/all-users']).then(() => window.location.reload());
+      this.ngOnInit();
+    });
+  }
+
 }

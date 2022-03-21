@@ -19,6 +19,8 @@
                 <td>{{user?.email}}</td>
                 <td>{{user?.createdAt | date:"MMM d, y h:mm:ss a"}}</td>
                 <button routerLink="/edit-user/{{ user.id }}">Edit</button>
+                <button mwlConfirmationPopover [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteUser(user.id)" (cancel)="cancelClicked = true"> Delete
+              </button>
             </tr>
         </tbody>
     </table>

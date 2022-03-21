@@ -60,6 +60,9 @@ export class AuthService {
       .put(`${USER_API}/${id}`, obj)
       .subscribe(res => console.log('Done'));
   }
+  deleteUser(id: number): Observable<any> {
+    return this.http.delete(`${USER_API}/${id}`, { responseType: 'text' });
+  }
   getUserById(id): Observable<any> {
     return this.http.get(`${USER_API}/${id}`);
   }
