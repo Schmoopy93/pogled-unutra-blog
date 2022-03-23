@@ -13,7 +13,7 @@ export class UsersListComponent implements OnInit {
   users: User[];
   user: any = {};
   public popoverTitle: string = 'WARNING';
-  public popoverMessage: string = 'Are you sure you want to delete this post???'
+  public popoverMessage: string = 'Are you sure you want to delete this user???'
   public cancelClicked: boolean = false;
   constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router) { }
 

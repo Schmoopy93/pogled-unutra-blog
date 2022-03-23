@@ -19,7 +19,8 @@ export class RegisterComponent implements OnInit {
   };
   isSuccessful = false;
   isSignUpFailed = false;
-  errorMessage = '';
+  //errorMessage = '';
+  message = '';
   selectedFiles: FileList;
   currentFileUpload: File;
   progress: { percentage: number } = { percentage: 0 };
@@ -32,25 +33,51 @@ export class RegisterComponent implements OnInit {
     this.selectedFiles = event.target.files;
   }
 
+  // onSubmit(): void {
+  //   this.progress.percentage = 0;
+  //   const { username, email, password, firstname, lastname } = this.form;
+  //   this.currentFileUpload = this.selectedFiles.item(0);
+  //   this.authService.register(this.currentFileUpload, username, email, password, firstname, lastname).subscribe(event => {
+  //     if (event.type === HttpEventType.UploadProgress) {
+  //       this.progress.percentage = Math.round(100 * event.loaded / event.total);
+  //     } else if (event instanceof HttpResponse) {
+  //       console.log('File is completely uploaded!');
+  //     }
+  //   });
+  //   this.selectedFiles = undefined;
+
+  // }
+
   onSubmit(): void {
     this.progress.percentage = 0;
     const { username, email, password, firstname, lastname } = this.form;
-    this.currentFileUpload = this.selectedFiles.item(0);
-    this.authService.register(this.currentFileUpload, username, email, password, firstname, lastname).subscribe(event => {
-      if (event.type === HttpEventType.UploadProgress) {
-        this.progress.percentage = Math.round(100 * event.loaded / event.total);
-      } else if (event instanceof HttpResponse) {
-        console.log('File is completely uploaded!');
-        // this.router.navigateByUrl('/', { skipLocationChange: false })
+    if (this.selectedFiles) {
+      const file: File | null = this.selectedFiles.item(0);
+      if (file) {
+        this.currentFileUpload = file;
+        this.authService.register(this.currentFileUpload, username, email, password, firstname, lastname).subscribe(
+          (event: any) => {
+            if (event.type === HttpEventType.UploadProgress) {
+              this.progress.percentage = Math.round(100 * event.loaded / event.total);
+            } else if (event instanceof HttpResponse) {
+              this.message = event.body.message;
+              this.isSuccessful = true;
+              this.isSignUpFailed = false;
+            }
+          },
+          (err: any) => {
+            this.message = err.error.message;
+            this.isSignUpFailed = true;
+            console.log(this.message, "errrrr");
+            this.progress.percentage = 0;
+            // if (err.error && err.error.message) {
+            // } else {
+            //   this.message = 'Username or Email already exsist !';
+            // }
+            this.currentFileUpload = undefined;
+          });
       }
-    },
-      err => {
-        this.errorMessage = err.error.message;
-        this.isSignUpFailed = true;
-        console.log(this.errorMessage, "err")
-      });
-    this.selectedFiles = undefined;
-
+      this.selectedFiles = undefined;
+    }
   }
-
 }

@@ -36,9 +36,9 @@ export class AuthService {
 
     const req = new HttpRequest('POST', 'http://localhost:4000/api/auth/signup/upload', formdata, {
       reportProgress: true,
-      responseType: 'text',
+      responseType: 'json',
+      
     });
-
     return this.http.request(req);
   }
 
