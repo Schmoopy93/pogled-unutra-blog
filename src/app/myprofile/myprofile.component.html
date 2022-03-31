@@ -1,4 +1,4 @@
-<div class="banner-innerpage">
+<!-- <div class="banner-innerpage">
     <div class="card-container">
         <img class="round" src="http://localhost:4000/uploads/userphoto/{{currentUser?.photoName}}" alt="user" />
         <h3 style="color: #000000;">{{ currentUser?.firstname }} {{ currentUser?.lastname }}</h3>
@@ -19,7 +19,6 @@
         </div>
         <div class="buttons" *ngIf="currentUser?.roles== 'ROLE_USER'">
             <button class="button" (click)="viewBlog()">
-            <!-- <button class="button" routerLink="/recent-blogs"> -->
           View My Blog
         </button>
         </div>
@@ -36,4 +35,28 @@
             </ul>
         </div>
     </div>
+</div> -->
+
+<div class="card">
+    <img src="http://localhost:4000/uploads/userphoto/{{currentUser?.photoName}}" alt="John" style="width:100%;">
+    <h1>{{ currentUser?.firstname }} {{ currentUser?.lastname }}</h1>
+    <p class="title"> Username: {{ currentUser?.username }}</p>
+    <p>Email: {{ currentUser?.email }}</p>
+    <p *ngFor="let role of currentUser?.roles" style="color: #000000;">{{ role }}</p>
+    <div class="buttons" *ngIf="currentUser?.roles== 'ROLE_ADMIN'">
+        <button class="button" routerLink="/add-blog">
+          Create a post
+        </button>
+    </div>
+    <div class="buttons">
+        <button class="button" (click)="viewBlog()">
+        View My Blog
+      </button>
+    </div>
+    <div class="buttons" *ngIf="currentUser?.roles== 'ROLE_ADMIN'">
+        <button class="button" routerLink="/all-users">
+          List of Users
+        </button>
+    </div>
+
 </div>

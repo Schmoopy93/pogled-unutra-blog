@@ -29,11 +29,11 @@ export class BlogComponent implements OnInit {
       this.posts = data;
     });
 
-    const el = document.querySelector('.counter')
-    counterUp(el, {
-      duration: 1000,
-      delay: 1,
-    })
+    // const el = document.querySelector('.counter')
+    // counterUp(el, {
+    //   duration: 1000,
+    //   delay: 1,
+    // })
     this.confirmationCode = this.route.snapshot.params['confirmationCode'];
     if(!this.confirmationCode){
       return;

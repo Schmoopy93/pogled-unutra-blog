@@ -1,4 +1,4 @@
-<div class="table-responsive">
+<!-- <div class="table-responsive">
     <table class="table">
         <thead>
             <tr>
@@ -24,4 +24,40 @@
             </tr>
         </tbody>
     </table>
-</div>
+</div> -->
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Username</th>
+                            <th scope="col">Firstname</th>
+                            <th scope="col">Lastname</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Joined At</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngFor="let user of users">
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>{{user?.username}}</td>
+                            <td>{{user?.firstname}}</td>
+                            <td>{{user?.lastname}}</td>
+                            <td>{{user?.email}}</td>
+                            <td>{{user?.createdAt | date:"MMM d, y h:mm:ss a"}}</td>
+                            <td>
+                                <button type="button" class="btn btn-success" routerLink="/edit-user/{{ user.id }}"><i class="fas fa-edit"></i></button>
+                                <button type="button" class="btn btn-danger" mwlConfirmationPopover placement="right" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteUser(user.id)" (cancel)="cancelClicked = true"><i class="far fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>

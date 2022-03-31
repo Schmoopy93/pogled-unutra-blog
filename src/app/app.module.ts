@@ -7,6 +7,7 @@ import { ConfirmationPopoverModule} from 'angular-confirmation-popover'
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LayoutComponent } from './layout/layout.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { FooterComponent } from './footer/footer.component';
@@ -47,6 +48,7 @@ import { UpdateUserComponent } from './update-user/update-user.component';
     HttpClientModule,
     NgbModule,
     FormsModule,
+    BrowserAnimationsModule,
     ReactiveFormsModule,
     MDBBootstrapModule.forRoot(),
     ConfirmationPopoverModule.forRoot({
