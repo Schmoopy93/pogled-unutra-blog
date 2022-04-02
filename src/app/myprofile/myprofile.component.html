@@ -1,62 +1,91 @@
-<!-- <div class="banner-innerpage">
-    <div class="card-container">
-        <img class="round" src="http://localhost:4000/uploads/userphoto/{{currentUser?.photoName}}" alt="user" />
-        <h3 style="color: #000000;">{{ currentUser?.firstname }} {{ currentUser?.lastname }}</h3>
-        <h3 style="color: #000000;">{{ currentUser?.username }}</h3>
-        <h5 style="color: #000000;">{{ currentUser?.email }}</h5>
-        <h5 style="color: #000000;">Joined At: {{ currentUser?.createdAt | date: "MMM d, y h:mm:ss a" }}</h5>
-        <p *ngFor="let role of currentUser?.roles" style="color: #000000;">{{ role }}</p>
-        <div class="buttons" *ngIf="currentUser?.roles== 'ROLE_ADMIN'">
-            <button class="button" routerLink="/add-blog">
-          Create a post
-        </button>
-        </div>
-        <br>
-        <div class="buttons" *ngIf="currentUser?.roles== 'ROLE_ADMIN'">
-            <button class="button" routerLink="/all-users">
-          List of Users
-        </button>
-        </div>
-        <div class="buttons" *ngIf="currentUser?.roles== 'ROLE_USER'">
-            <button class="button" (click)="viewBlog()">
-          View My Blog
-        </button>
-        </div>
-        <div class="skills">
-            <h6>Tags</h6>
-            <ul>
-                <li>Individual Therapy</li>
-                <li>Group Therapy</li>
-                <li>Relationship Problems</li>
-                <li>Depresy</li>
-                <li>Paranoia</li>
-                <li>Sadness</li>
-                <li>Anxiety</li>
-            </ul>
+<div class="container">
+    <div class="main-body">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex flex-column align-items-center text-center">
+                            <img src="http://localhost:4000/uploads/userphoto/{{currentUser?.photoName}}" alt="Admin" class="rounded-circle" width="110">
+                            <div class="mt-3">
+                                <h4>{{ currentUser?.firstname }} {{ currentUser?.lastname }}</h4>
+                                <p class="text-secondary mb-1">Joined At: {{ currentUser?.createdAt | date: "MMM d, y" }}</p>
+                                <p class="text-muted font-size-sm">{{currentUser?.address}}, {{currentUser?.town}}</p>
+                                <div class="buttons" *ngIf="currentUser?.roles== 'ROLE_ADMIN'">
+                                    <button class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" routerLink="/add-blog"> Create a post</button>
+                                </div>
+                                <br>
+                                <div class="buttons" *ngIf="currentUser?.roles== 'ROLE_ADMIN'">
+                                    <button class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" routerLink="/all-users">List of Users</button>
+                                </div>
+                                <br>
+                                <div class="buttons">
+                                    <button class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" (click)="viewBlog()">View My Blog</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body" *ngFor="let user of users">
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Full Name</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <input type="text" class="form-control" value="{{ user?.firstname }} {{ user?.lastname }}" disabled>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Email</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <input type="text" class="form-control" value="{{ user?.email }}" disabled>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Username</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <input type="text" class="form-control" value="{{ user?.username }}" disabled>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Phone</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <input type="text" class="form-control" value="{{ user?.phone }}" disabled>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Address</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <input type="text" class="form-control" value="{{ user?.address }}" disabled>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Town</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                <input type="text" class="form-control" value="{{ user?.town }}" disabled>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3"></div>
+                            <div class="col-sm-9 text-secondary">
+                                <input type="button" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" value="Edit User" routerLink="/edit-user/{{ currentUser?.id }}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div> -->
-
-<div class="card">
-    <img src="http://localhost:4000/uploads/userphoto/{{currentUser?.photoName}}" alt="John" style="width:100%;">
-    <h1>{{ currentUser?.firstname }} {{ currentUser?.lastname }}</h1>
-    <p class="title"> Username: {{ currentUser?.username }}</p>
-    <p>Email: {{ currentUser?.email }}</p>
-    <p *ngFor="let role of currentUser?.roles" style="color: #000000;">{{ role }}</p>
-    <div class="buttons" *ngIf="currentUser?.roles== 'ROLE_ADMIN'">
-        <button class="button" routerLink="/add-blog">
-          Create a post
-        </button>
-    </div>
-    <div class="buttons">
-        <button class="button" (click)="viewBlog()">
-        View My Blog
-      </button>
-    </div>
-    <div class="buttons" *ngIf="currentUser?.roles== 'ROLE_ADMIN'">
-        <button class="button" routerLink="/all-users">
-          List of Users
-        </button>
-    </div>
-
 </div>

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AboutMeComponent } from './about-me/about-me.component';
 import { AddblogComponent } from './blog/addblog/addblog.component';
 import { BlogComponent } from './blog/blog.component';
 import { BlogdetailComponent } from './blog/blogdetail/blogdetail.component';
@@ -43,10 +44,11 @@ const routes: Routes = [
         }
       },
       {
-        path: 'edit-user/:id', component: UpdateUserComponent, canActivate: [AuthGuard], data: {
-          roles: '[ROLE_ADMIN]'
-        }
+        path: 'edit-user/:id', component: UpdateUserComponent
       },
+      {
+        path: 'about', component: AboutMeComponent
+      }
     ]
   }];
 

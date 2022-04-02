@@ -50,14 +50,29 @@ export class AuthService {
       .http
       .get(`${USER_API}/${id}`);
   }
-  updateUser(username, id) {
+  updateUser(username,phone, address, town, id) {
 
     const obj = {
       username: username,
+      phone: phone,
+      address: address,
+      town: town
     };
     this
       .http
       .put(`${USER_API}/${id}`, obj)
+      .subscribe(res => console.log('Done'));
+  }
+
+  fillYourData(address, phone, id) {
+
+    const obj = {
+      address: address,
+      phone: phone
+    };
+    this
+      .http
+      .put(`${USER_API}`, obj)
       .subscribe(res => console.log('Done'));
   }
   deleteUser(id: number): Observable<any> {

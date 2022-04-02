@@ -23,11 +23,10 @@ export class UpdateUserComponent implements OnInit {
   });
   }
 
-    updateUser(username) {
+    updateUser(username, phone, adress, town) {
     this.route.params.subscribe(params => {
-      this.authService.updateUser(username, params.id);
-      alert('You have succesfully changed a username of a User');
-      this.router.navigate(['/all-users']);
+      this.authService.updateUser(username, phone, adress, town, params.id);
+      this.router.navigate(['/my-profile']);
       
     });
   }

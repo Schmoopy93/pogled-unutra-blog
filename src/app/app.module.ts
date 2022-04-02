@@ -22,6 +22,7 @@ import { EditblogComponent } from './blog/editblog/editblog.component';
 import { DatePipe } from '@angular/common';
 import { UsersListComponent } from './users-list/users-list.component';
 import { UpdateUserComponent } from './update-user/update-user.component';
+import { AboutMeComponent } from './about-me/about-me.component';
 
 
 
@@ -40,7 +41,8 @@ import { UpdateUserComponent } from './update-user/update-user.component';
     BlogdetailComponent,
     EditblogComponent,
     UsersListComponent,
-    UpdateUserComponent
+    UpdateUserComponent,
+    AboutMeComponent
   ],
   imports: [
     BrowserModule,

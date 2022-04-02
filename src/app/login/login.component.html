@@ -1,4 +1,4 @@
-<section class="h-100 h-custom" style="background-color: #8fc4b7;">
+<!-- <section class="h-100 h-custom" style="background-color: #8fc4b7;">
     <div class="container py-5 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-lg-8 col-xl-6">
@@ -40,4 +40,49 @@
         </div>
       </div>
     </div>
-  </section>
+  </section> -->
+
+<section class="vh-100 bg-image" style="background-image: url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp');">
+    <div class="mask d-flex align-items-center h-100 gradient-custom-3">
+        <div class="container h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+                    <div class="card" style="border-radius: 15px;">
+                        <div class="card-body p-5">
+                            <h2 class="text-uppercase text-center mb-5">Login</h2>
+                            <form *ngIf="!isLoggedIn" name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
+                                <div class="form-outline mb-4">
+                                    <input type="text" id="form3Example1cg" class="form-control form-control-lg" name="username" placeholder="Enter your username" [(ngModel)]="form.username" required #username="ngModel" />
+                                </div>
+                                <div class="alert alert-danger" role="alert" *ngIf="username.errors && f.submitted">
+                                    Username is required!
+                                </div>
+                                <div class="form-outline mb-4">
+                                    <input type="password" id="form3Example4cg" class="form-control form-control-lg" name="pass" placeholder="Enter your password" [(ngModel)]="form.password" required minlength="6" #password="ngModel" />
+                                </div>
+                                <div class="alert alert-danger" role="alert" *ngIf="password.errors && f.submitted">
+                                    <div *ngIf="password.errors.required">Password is required</div>
+                                    <div *ngIf="password.errors.minlength">
+                                        Password must be at least 6 characters
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="alert alert-danger" role="alert" *ngIf="f.submitted && isLoginFailed">
+                                        Login failed: {{ errorMessage }}
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="text-center text-muted mt-5 mb-0">Forgot password? <a routerLink="/" class="fw-bold text-body"><u>Reset your password</u></a></p>
+                                </div>
+                                <br>
+                                <div class="d-flex justify-content-center">
+                                    <button type="submit" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Login</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

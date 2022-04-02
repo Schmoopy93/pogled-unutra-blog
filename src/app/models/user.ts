@@ -11,5 +11,8 @@ export class User
     pic: ArrayBuffer;
     mimetype: string;
     photoName: string;
+    address: string;
+    phone: string;
+    town: string;
 
 }
