@@ -4,6 +4,15 @@
         <input type="submit" class="btn btn-outline-success btn-sm " value="Search" (click)="retrievePosts()">
     </form>
 </div>
+<div class="dropdown">
+    <button class="btn btn-outline-success btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Sort By Date
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" (click)="setPostsAsc()">Asc <i class="fas fa-arrow-up"></i></a>
+        <a class="dropdown-item" (click)="setPostsDesc()">Desc <i class="fas fa-arrow-down"></i></a>
+    </div>
+</div>
 <section id="gallery" style="padding-top:50px;">
     <div class="container">
         <div class="row">
@@ -21,7 +30,7 @@
                             <span mwlConfirmationPopover [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deletePost(post.id)" (cancel)="cancelClicked = true"><i class="fa fa-trash" aria-hidden="true"></i></span>
                         </a>
                         <hr>
-                        <p class="card-text"> Published on: {{post.createdAt | date:"EEEE, MMMM d, y"}}</p>
+                        <p class="card-text"> Published on: {{post.createdAt | date: "MMMM d, y, h:mm:ss a"}}</p>
                     </div>
                 </div>
             </div>
@@ -29,5 +38,14 @@
     </div>
     <div class="col-md-12">
         <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
+    </div>
+    <div class="col-md-12">
+        <h2 style="font-size: 1.5em; font-weight: bolder;">Posts per Page:
+            <select (change)="handlePageSizeChange($event)">
+      <option *ngFor="let size of pageSizes" [ngValue]="size">
+        {{ size }}
+      </option>
+    </select>
+        </h2>
     </div>
 </section>

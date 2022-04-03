@@ -10,6 +10,18 @@
     margin-top: 20px;
 }
 
+.dropdown {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.col-md-12 {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
 .search input[type="text"] {
     border: 0px;
     width: 67%;

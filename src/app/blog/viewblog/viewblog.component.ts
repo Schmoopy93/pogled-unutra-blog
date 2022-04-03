@@ -27,6 +27,9 @@ export class ViewblogComponent implements OnInit {
   page = 1;
   count = 0;
   pageSize = 6;
+  pageSizes = [6, 9, 12];
+  sortedItems: any;
+  
 
   constructor(private route: ActivatedRoute, private blogService: ServiceblogService, private token: TokenStorageService, private router: Router, private sanitizer: DomSanitizer) { }
 
@@ -40,6 +43,7 @@ export class ViewblogComponent implements OnInit {
     this.currentUser = this.token.getUser();
 
   }
+
   deletePost(id) {
     this.blogService.deletePost(id).subscribe(res => {
       console.log('Deleted');
@@ -51,6 +55,16 @@ export class ViewblogComponent implements OnInit {
   setActivePost(post: Post, index: number): void {
     this.currentPost = post;
     this.currentIndex = index;
+  }
+
+  setPostsAsc() : void {
+    this.sortedItems = this.posts.sort((a: any, b: any) =>
+    new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+  }
+
+  setPostsDesc(): void {
+    this.sortedItems = this.posts.sort((a: any, b: any) =>
+    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   }
 
   retrievePosts(): void {
@@ -108,14 +122,4 @@ export class ViewblogComponent implements OnInit {
           console.log(error);
         });
   }
-  
-
-
-  // sortRalliesByDateDesc() {
-  //   this.posts$ = this.posts$.pipe(map((posts => posts.sort((x, y) => +new Date(x.createdAt) - +new Date(y.createdAt)))));
-  // }
-  // sortRalliesByDateAsc() {
-  //   this.posts$ = this.posts$.pipe(map((posts => posts.sort((a, b) => new Date(a.createdAt).getDate() - new Date(b.createdAt).getDate()))))
-  // }
-
 }
