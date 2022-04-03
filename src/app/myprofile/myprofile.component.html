@@ -28,13 +28,13 @@
             </div>
             <div class="col-lg-8">
                 <div class="card">
-                    <div class="card-body" *ngFor="let user of users">
+                    <div class="card-body">
                         <div class="row mb-3">
                             <div class="col-sm-3">
                                 <h6 class="mb-0">Full Name</h6>
                             </div>
                             <div class="col-sm-9 text-secondary">
-                                <input type="text" class="form-control" value="{{ user?.firstname }} {{ user?.lastname }}" disabled>
+                                <input type="text" class="form-control" value="{{ currentUser?.firstname }} {{ currentUser?.lastname }}" disabled>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -42,7 +42,7 @@
                                 <h6 class="mb-0">Email</h6>
                             </div>
                             <div class="col-sm-9 text-secondary">
-                                <input type="text" class="form-control" value="{{ user?.email }}" disabled>
+                                <input type="text" class="form-control" value="{{ currentUser?.email }}" disabled>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -50,7 +50,7 @@
                                 <h6 class="mb-0">Username</h6>
                             </div>
                             <div class="col-sm-9 text-secondary">
-                                <input type="text" class="form-control" value="{{ user?.username }}" disabled>
+                                <input type="text" class="form-control" value="{{ currentUser?.username }}" disabled>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -58,7 +58,7 @@
                                 <h6 class="mb-0">Phone</h6>
                             </div>
                             <div class="col-sm-9 text-secondary">
-                                <input type="text" class="form-control" value="{{ user?.phone }}" disabled>
+                                <input type="text" class="form-control" value="{{ currentUser?.phone }}" disabled>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -66,7 +66,7 @@
                                 <h6 class="mb-0">Address</h6>
                             </div>
                             <div class="col-sm-9 text-secondary">
-                                <input type="text" class="form-control" value="{{ user?.address }}" disabled>
+                                <input type="text" class="form-control" value="{{ currentUser?.address }}" disabled>
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -74,7 +74,7 @@
                                 <h6 class="mb-0">Town</h6>
                             </div>
                             <div class="col-sm-9 text-secondary">
-                                <input type="text" class="form-control" value="{{ user?.town }}" disabled>
+                                <input type="text" class="form-control" value="{{ currentUser?.town }}" disabled>
                             </div>
                         </div>
                         <div class="row">

@@ -25,9 +25,9 @@ export class BlogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.blogService.findAll().subscribe(data => {
-      this.posts = data;
-    });
+    // this.blogService.findAll().subscribe(data => {
+    //   this.posts = data;
+    // });
 
     // const el = document.querySelector('.counter')
     // counterUp(el, {

@@ -1,59 +1,30 @@
-<div class="container spacer">
-  <div class="row justify-content-center">
- 
-    <div class="col-md-8 no-trans text-center">
-      <h2 class="title">Recent Blogs</h2>
-      <h6 class="subtitle">
-        You can relay on our amazing features list and also our customer
-        services will be great experience for you without doubt and in no-time
-      </h6>
-      <!-- <div class="filter-button" *ngIf="posts$ | async">
-        <button class="button1" (click)="sortRalliesByDateAsc()">
-          Sort by date (ASC)<i class="fas fa-sort-up"></i>
-        </button>
-        <button class="button1" (click)="sortRalliesByDateDesc()">
-          Sort by date (DESC)<i class="fas fa-sort-down"></i>
-        </button>
-      </div> -->
-    </div>
-  </div>
-  <div class="row m-t-40 justify-content-center">
-    <div class="col-md-8 no-trans border-bottom mb-4" *ngFor="let post of posts$ | async">
-      <div class="card" data-aos="flip-left" data-aos-duration="1200">
-        <div class="row">
-          <div class="col-md-2 no-trans">
-            <span class="text-dark font-medium">Created At: {{post.createdAt | date:"MMM d, y h:mm:ss a"}}</span>
-          </div>
-          <div class="col-md-7 no-trans">
-            <h5 class="font-medium cursor-pointer">
-              {{ post.title }}
-            </h5>
-            <p class="m-t-20" style="  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-              {{post.content}}
-            </p>
-          </div>
-          <div class="col-md-3 no-trans">
-            <a class="linking font-medium text-themecolor m-t-10 cursor-pointer">
-              <span routerLink="/blogDetail/{{ post.id }}">Show Detail</span>
-              <i class="ti-arrow-right"></i>
-            </a>
-            <br>
-            <a class="linking font-medium text-themecolor m-t-10 cursor-pointer"
-              *ngIf="currentUser.roles== 'ROLE_ADMIN'">
-              <span routerLink="/edit-post/{{ post.id }}">Edit</span>
-              <i class="ti-arrow-right"></i>
-            </a>
-            <br>
-            <a class="linking font-medium text-themecolor m-t-10 cursor-pointer"
-              *ngIf="currentUser.roles== 'ROLE_ADMIN'">
-              <span mwlConfirmationPopover [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage"
-                (confirm)="deletePost(post.id)" (cancel)="cancelClicked = true"> Delete
-              </span>
-              <i class="ti-arrow-right"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="search">
+    <form class="search-form">
+        <input type="text" placeholder="Search posts by title" [(ngModel)]="title" name="title">
+        <input type="submit" class="btn btn-outline-success btn-sm " value="Search" (click)="retrievePosts()">
+    </form>
 </div>
+<section id="gallery" style="padding-top:50px; border-radius: 1px black;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 mb-4" *ngFor="let post of posts  | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActivePost(post, i)">
+                <div class="card">
+                    <img src="http://localhost:4000/uploads/{{post?.name}}" alt=" " class="card-img-top ">
+                    <div class="card-body ">
+                        <h5 class="card-title ">{{post.title}}</h5>
+                        <p class="card-text" style=" white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{post.content}}</p>
+                        <a href="/blogDetail/{{ post.id }}" class="btn btn-outline-success btn-sm "> Read More </a>
+                        <a href=" " class="btn btn-outline-danger btn-sm " style="margin-left: 10px;"><i class="far fa-heart "></i></a>
+                        <a *ngIf="currentUser.roles== 'ROLE_ADMIN'" href="/edit-post/{{ post.id }}" class="btn btn-outline-success btn-sm" style="float: right; margin-left: 10px;"> Edit </a>
+                        <a class="btn btn-outline-danger btn-sm " *ngIf="currentUser.roles== 'ROLE_ADMIN'" style="float: right;">
+                            <span mwlConfirmationPopover [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deletePost(post.id)" (cancel)="cancelClicked = true"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
+    </div>
+</section>

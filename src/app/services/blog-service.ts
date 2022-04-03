@@ -25,8 +25,16 @@ export class ServiceblogService {
     this.commentURL = 'http://localhost:4000/api/auth/showComments'
   }
 
-  public findAll(): Observable<Post[]> {
-    return this.http.get<Post[]>(this.postsURL);
+  getAllPosts(params: any): Observable<any> {
+    return this.http.get<any>(this.postsURL, { params });
+  }
+
+  getAll(): Observable<any> {
+    return this.http.get<any>(this.postsURL);
+  }
+
+  findByTitle(title: any): Observable<Post[]> {
+    return this.http.get<Post[]>(`${(this.postsURL)}?title=${title}`);
   }
 
   public findAllComments(): Observable<Comment[]> {

@@ -23,7 +23,8 @@ import { DatePipe } from '@angular/common';
 import { UsersListComponent } from './users-list/users-list.component';
 import { UpdateUserComponent } from './update-user/update-user.component';
 import { AboutMeComponent } from './about-me/about-me.component';
-
+import { ImageCropperModule } from 'ngx-image-cropper';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 
 @NgModule({
@@ -52,6 +53,8 @@ import { AboutMeComponent } from './about-me/about-me.component';
     FormsModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
+    ImageCropperModule,
+    NgxPaginationModule,
     MDBBootstrapModule.forRoot(),
     ConfirmationPopoverModule.forRoot({
       confirmButtonType: 'danger'

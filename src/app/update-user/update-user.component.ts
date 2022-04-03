@@ -26,8 +26,9 @@ export class UpdateUserComponent implements OnInit {
     updateUser(username, phone, adress, town) {
     this.route.params.subscribe(params => {
       this.authService.updateUser(username, phone, adress, town, params.id);
-      this.router.navigate(['/my-profile']);
-      
+      this.router.navigate(['/my-profile']).then(() => {
+        window.location.reload();
+      });
     });
   }
 
