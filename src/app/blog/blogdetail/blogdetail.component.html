@@ -1,19 +1,119 @@
-<div class="container mt-5">
+<div class="container">
+    <div class="row">
+        <!-- Latest Posts -->
+        <main class="post blog-post col-lg-8">
+            <div class="container">
+                <div class="post-single">
+                    <div class="post-thumbnail"><img src="http://localhost:4000/uploads/{{currentPost?.name}}" alt="..." class="img-fluid"></div>
+                    <div class="post-details">
+                        <div class="post-meta d-flex justify-content-between">
+                            <div class="category"><a href="/recent-blogs">My Blog</a></div>
+                        </div>
+                        <h1>{{ currentPost?.title }}</h1>
+                        <div class="post-footer d-flex align-items-center flex-column flex-sm-row">
+                            <a href="#" class="author d-flex align-items-center flex-wrap">
+                                <div class="avatar"><img src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="..." class="img-fluid"></div>
+                                <div class="title"><span>{{user?.firstname}} {{user?.lastname}}</span></div>
+                                <div class="title"><i class="icon-clock"></i> {{ currentPost?.createdAt | date:"MMM d, y h:mm:ss a" }}</div>
+                            </a>
+                        </div>
+                        <div class="post-body">
+                            <p class="lead">{{currentPost?.content}}</p>
+
+                        </div>
+                        <div class="post-tags"><a class="tag">#Psychology</a><a class="tag">#Blog</a><a class="tag">#My Posts</a></div>
+                        <div class="posts-nav d-flex justify-content-between align-items-stretch flex-column flex-md-row">
+                        </div>
+                        <header>
+                            <h3 class="h6">Post Comments<span class="no-of-comments"></span></h3>
+                        </header>
+                        <div class="post-comments" *ngFor="let comment of comments | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveComment(post, i)">
+                            <div class="comment">
+                                <div class="comment-header d-flex justify-content-between">
+                                    <div class="user d-flex align-items-center">
+                                        <div class="image"><img src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" class="img-fluid rounded-circle"></div>
+                                        <div class="title"><strong>{{user?.username}}</strong><span class="date">{{comment?.createdAt | date:"MMM d, y h:mm:ss a" }}</span></div>
+                                    </div>
+                                </div>
+                                <div class="comment-body">
+                                    <p>{{comment?.content}}</p>
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+                        <div class="add-comment" *ngIf="isLoggedIn">
+                            <header>
+                                <h3 class="h6">Leave a reply</h3>
+                            </header>
+                            <form action="#" class="commenting-form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm">
+                                <div class="row">
+                                    <!-- <div class="form-group col-md-6">
+                                        <input type="text" name="username" id="username" placeholder="Name" class="form-control">
+                                    </div> -->
+                                    <div class="form-group col-md-12">
+                                        <textarea name="usercomment" id="usercomment" placeholder="Type your comment" class="form-control" name="content" [(ngModel)]="form.content" #content="ngModel"></textarea>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <button type="submit" class="btn btn-secondary">Submit Comment</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <aside class="col-lg-4">
+            <!-- Widget [Search Bar Widget]-->
+            <!-- <div class="widget search">
+                <header>
+                    <h3 class="h6">Search the blog</h3>
+                </header>
+                <form action="#" class="search-form">
+                    <div class="form-group">
+                        <input type="search" placeholder="What are you looking for?">
+                        <button type="submit" class="submit"><i class="icon-search"></i></button>
+                    </div>
+                </form>
+            </div> -->
+            <!-- Widget [Tags Cloud Widget]-->
+            <div class="widget tags">
+                <header>
+                    <h3 class="h6">Tags</h3>
+                </header>
+                <ul class="list-inline">
+                    <li class="list-inline-item"><a href="#" class="tag">#Psychology</a></li>
+                    <li class="list-inline-item"><a href="#" class="tag">#Blog</a></li>
+                    <li class="list-inline-item"><a href="#" class="tag">#My Posts</a></li>
+                    <li class="list-inline-item"><a href="#" class="tag">#Individual Therapy</a></li>
+                    <li class="list-inline-item"><a href="#" class="tag">#Group Therapy</a></li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+    <div class="paginate">
+        <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
+    </div>
+    <div class="paginate">
+        <h2 style="font-size: 1.5em; font-weight: bolder;">Comments per page:
+            <select (change)="handlePageSizeChange($event)">
+      <option *ngFor="let size of pageSizes" [ngValue]="size">
+        {{ size }}
+      </option>
+    </select>
+        </h2>
+    </div>
+</div>
+<!-- <div class="container mt-5">
     <div class="row">
         <div class="col-lg-8">
-            <!-- Post content-->
             <article>
-                <!-- Post header-->
                 <header class="mb-4">
-                    <!-- Post title-->
                     <h1 class="fw-bolder mb-1">{{ currentPost?.title }}</h1>
-                    <!-- Post meta content-->
                     <div class="text-muted fst-italic mb-2">Posted on {{ currentPost?.createdAt | date:"MMM d, y h:mm:ss a" }}</div>
                     <div class="text-muted fst-italic mb-2">Authored By: {{user?.firstname}} {{user?.lastname}}</div>
                 </header>
-                <!-- Preview image figure-->
                 <figure class="mb-4"><img class="img-fluid rounded" src="http://localhost:4000/uploads/{{currentPost?.name}}" alt="..." /></figure>
-                <!-- Post content-->
                 <section class="mb-5">
                     <p class="fs-5 mb-4">{{ currentPost?.content }}</p>
                 </section>
@@ -50,25 +150,20 @@
                                     <div class="media-body ml-3"><a>{{comment?.userId}}</a>
                                         <div class="text-muted small">Published: {{comment?.createdAt | date:"MMM d, y h:mm:ss a" }}</div>
                                     </div>
-                                    <!--<div class="text-muted small ml-3">
-                                    <div>Member since <strong>01/1/2019</strong></div>
-                                    <div><strong>134</strong> posts</div>
-                                </div>
-                              -->
+                                    <div class="text-muted small ml-3">
+                                        <div>Member since <strong>01/1/2019</strong></div>
+                                        <div><strong>134</strong> posts</div>
+                                    </div>
+
                                 </div>
                             </div>
                             <div class="card-body">
                                 <p>{{comment?.content}}</p>
                             </div>
-                            <!--<div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
-                            <div class="px-4 pt-3"> <a href="javascript:void(0)" class="text-muted d-inline-flex align-items-center align-middle" data-abc="true"> <i class="fa fa-heart text-danger"></i>&nbsp; <span class="align-middle">445</span> </a> <span class="text-muted d-inline-flex align-items-center align-middle ml-4"> <i class="fa fa-eye text-muted fsize-3"></i>&nbsp; <span class="align-middle">14532</span> </span> </div>
-                            <div class="px-4 pt-3"> <button type="button" class="btn btn-primary"><i class="ion ion-md-create"></i>&nbsp; Reply</button> </div>
-                        </div>
-                      -->
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</div> -->

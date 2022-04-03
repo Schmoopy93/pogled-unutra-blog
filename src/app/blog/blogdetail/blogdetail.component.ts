@@ -19,7 +19,8 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
   }
   posts: Post[];
   currentPost = null;
-  currentUser: any;
+  commentUser = null;
+  currentUser = null;
   currentComment = null
   errorMessage = '';
   comments: any;
@@ -28,6 +29,13 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
   userId: number;
   closeResult = '';
   isLoggedIn = false;
+  content = '';
+  page = 1;
+  count = 0;
+  pageSize = 10;
+  pageSizes = [10, 20, 30];
+  commentsPagination: Comment[] = [];
+  currentIndex = -1;
 
   constructor(private blogService: ServiceblogService, private authService: AuthService, public sanitizer: DomSanitizer,
     private router: Router, private route: ActivatedRoute, private token: TokenStorageService, private modalService: NgbModal) {
@@ -42,7 +50,64 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
     if (!this.user) {
       this.user = this.getUserById(this.currentPost?.userId);
     }
+    this.getCurrentUser();
   }
+
+  getCurrentUser(){
+    this.currentUser = this.token.getUser().id
+    console.log(this.currentUser, "currrr");
+
+  }
+
+  setActiveComment(comment: Comment, index: number): void {
+    this.currentComment = comment;
+    this.currentIndex = index;
+  }
+
+  handlePageChange(event: number): void {
+    this.page = event;
+    this.retrieveComments();
+  }
+
+  handlePageSizeChange(event: any): void {
+    this.pageSize = event.target.value;
+    this.page = 1;
+    this.retrieveComments();
+  }
+
+  retrieveComments(): void {
+    const params = this.getRequestParams(this.content, this.page, this.pageSize);
+
+    this.blogService.getAllComments(params)
+    .subscribe(
+      response => {
+        const { commentsPagination, totalItems } = response;
+        this.commentsPagination = commentsPagination;
+        this.count = totalItems;
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
+  getRequestParams(searchTitle: string, page: number, pageSize: number): any {
+    let params: any = {};
+
+    if (searchTitle) {
+      params[`title`] = searchTitle;
+    }
+
+    if (page) {
+      params[`page`] = page - 1;
+    }
+
+    if (pageSize) {
+      params[`size`] = pageSize;
+    }
+
+    return params;
+  }
+
   ngAfterContentChecked(): void {
     if (!this.user) {
       this.user = this.getUserById(this.currentPost?.userId);
@@ -57,17 +122,18 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
   }
 
   // ngDoCheck() {
-  //   this.userId = this.currentPost?.userId;
-  //   this.userId = this.currentComment?.userId
+  //   // this.userId = this.currentPost?.userId;
+  //   // this.userId = this.currentComment?.userId
   //   //console.log(this.userId, "userID")
   // }
+
+  
 
   getCommentByPost(id) {
     this.blogService.getCommentsByPost(id)
       .subscribe(
         data => {
           this.comments = data;
-          //console.log(data, "Dataaaaaaaaaaaaaaaa");
         },
         error => {
           console.log(error);
@@ -81,7 +147,6 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
       .subscribe(
         data => {
           this.currentPost = data;
-          //console.log(data);
         },
         error => {
           console.log(error);
@@ -94,7 +159,6 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
       .subscribe(
         data => {
           this.user = data;
-          //console.log(data, "user");
         },
         error => {
           console.log(error);
@@ -105,8 +169,7 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
 
   onSubmit(): void {
     const { content } = this.form;
-
-    this.blogService.addComment(content, this.currentPost.id).subscribe(
+    this.blogService.addComment(content, this.currentPost.id, this.currentUser).subscribe(
       data => {
         console.log(data);
       },
@@ -118,22 +181,23 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
 
   }
 
-  open(content) {
-    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });
-  }
+  // open(content) {
+  //   this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+  //     this.closeResult = `Closed with: ${result}`;
+  //   }, (reason) => {
+  //     this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+  //   });
+  // }
 
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return `with: ${reason}`;
-    }
-  }
+  // private getDismissReason(reason: any): string {
+  //   if (reason === ModalDismissReasons.ESC) {
+  //     return 'by pressing ESC';
+  //   } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+  //     return 'by clicking on a backdrop';
+  //   } else {
+  //     return `with: ${reason}`;
+  //   }
+  // }
+  
 
 }

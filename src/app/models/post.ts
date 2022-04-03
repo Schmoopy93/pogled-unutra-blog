@@ -7,7 +7,6 @@ export class Post{
     createdAt: Date;
     updatedAt: Date;
     name: string;
-    author: User[];
     pic: ArrayBuffer;
     mimetype: string;
     userId: number;

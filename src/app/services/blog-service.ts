@@ -23,10 +23,22 @@ export class ServiceblogService {
   constructor(private http: HttpClient, private token: TokenStorageService, private route: ActivatedRoute) {
     this.postsURL = 'http://localhost:4000/api/auth/posts';
     this.commentURL = 'http://localhost:4000/api/auth/showComments'
+   
   }
 
+  // getPost(id: any): Observable<Post> {
+  //   const url = `${this.postsURL}/${id}`;
+  //   return this.http.get<Post>(url).pipe(
+  //     tap(_ => console.log(`fetched post by id=${id}`)),
+  //     catchError(this.handleError<Post>(`getPost id=${id}`))
+  //   );
+  // }
   getAllPosts(params: any): Observable<any> {
     return this.http.get<any>(this.postsURL, { params });
+  }
+
+  getAllComments(params: any): Observable<any> {
+    return this.http.get<any>(this.commentURL, { params });
   }
 
   getAll(): Observable<any> {
@@ -43,6 +55,11 @@ export class ServiceblogService {
 
   public getCommentsByPost(postId): Observable<any> {
     let params = new HttpParams().set('postId', postId);
+    return this.http.get(`${this.commentURL}/`, { params: params });
+  }
+
+  public getUserByComment(userId): Observable<any> {
+    let params = new HttpParams().set('userId', userId);
     return this.http.get(`${this.commentURL}/`, { params: params });
   }
 
@@ -92,9 +109,9 @@ export class ServiceblogService {
     return this.http.delete(`${this.postsURL}/${id}`, { responseType: 'text' });
   }
 
-  addComment(content: string, postId: number): Observable<any> {
+  addComment(content: string, postId: number, userId:number): Observable<any> {
     // const postId = this.route.snapshot.params;
-    const userId = + this.token.getUser().id;
+    //const userId =+ this.token.getUser().id;;
 
     return this.http.post(AUTH_API + 'comments', {
       postId,
@@ -102,6 +119,5 @@ export class ServiceblogService {
       userId
     }, httpOptions);
   }
-
 
 }
