@@ -55,7 +55,6 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
 
   getCurrentUser(){
     this.currentUser = this.token.getUser().id
-    console.log(this.currentUser, "currrr");
 
   }
 
@@ -112,22 +111,7 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
     if (!this.user) {
       this.user = this.getUserById(this.currentPost?.userId);
     }
-    
-  
-    //console.log(this.currentPost?.userId, "user")
-    // if (!this.post) {
-    //   this.post = this.getUserById(this.currentComment?.userId)
-    // }
-
   }
-
-  // ngDoCheck() {
-  //   // this.userId = this.currentPost?.userId;
-  //   // this.userId = this.currentComment?.userId
-  //   //console.log(this.userId, "userID")
-  // }
-
-  
 
   getCommentByPost(id) {
     this.blogService.getCommentsByPost(id)

@@ -31,8 +31,8 @@
                             <div class="comment">
                                 <div class="comment-header d-flex justify-content-between">
                                     <div class="user d-flex align-items-center">
-                                        <div class="image"><img src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" class="img-fluid rounded-circle"></div>
-                                        <div class="title"><strong>{{user?.username}}</strong><span class="date">{{comment?.createdAt | date:"MMM d, y h:mm:ss a" }}</span></div>
+                                        <div class="image"><img src="http://localhost:4000/uploads/userphoto/{{comment?.user.photoName}}" class="img-fluid rounded-circle"></div>
+                                        <div class="title"><strong>{{comment?.user.firstname}} {{comment?.user.lastname}}</strong><span class="date">{{comment?.createdAt | date:"MMM d, y h:mm:ss a" }}</span></div>
                                     </div>
                                 </div>
                                 <div class="comment-body">
