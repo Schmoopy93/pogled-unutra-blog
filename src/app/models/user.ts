@@ -8,7 +8,7 @@ export class User
     role: string;
     createdAt: Date;
     confirmationCode: string;
-    pic: ArrayBuffer;
+    data: ArrayBuffer;
     mimetype: string;
     photoName: string;
     address: string;

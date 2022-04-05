@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { User } from '../models/user';
 import { AuthService } from '../services/auth.service';
 import { TokenStorageService } from '../services/token-storage.service';
-
+import { DomSanitizer } from '@angular/platform-browser';
 @Component({
   selector: 'app-myprofile',
   templateUrl: './myprofile.component.html',
@@ -13,19 +13,27 @@ import { TokenStorageService } from '../services/token-storage.service';
 export class MyprofileComponent implements OnInit {
   
   currentUser: any;
-  users: User[];
-  constructor(private router: Router, private route: ActivatedRoute, private token: TokenStorageService, private authService: AuthService) { }
+  user: any;
+  
+  constructor(private router: Router, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService) { }
 
   ngOnInit(): void {
     this.currentUser = this.token.getUser();
-    this.getUsers();
+    this.getUserById(this.currentUser.id);
   }
   viewBlog() {
     this.router.navigate(['recent-blogs'])
   }
-  getUsers(){
-    this.authService.getUsers().subscribe((data: User[]) => {
-      this.users = data;
-    });
+
+  getUserById(id) {
+    this.authService.getUserById(id)
+      .subscribe(
+        data => {
+          this.user = data;
+          console.log(data, "dataaaaaa")
+        },
+        error => {
+          console.log(error);
+        });
   }
 }

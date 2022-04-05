@@ -45,17 +45,10 @@ export class AddblogComponent implements OnInit {
         this.progress.percentage = Math.round(100 * event.loaded / event.total);
       } else if (event instanceof HttpResponse) {
         console.log('File is completely uploaded!');
-        this.router.navigateByUrl('/', { skipLocationChange: false }).then(() => {
-          window.location.reload();
-        });
+        this.router.navigateByUrl('/recent-blogs', { skipLocationChange: false })
       }
     });
     this.selectedFiles = undefined;
-  }
-
-  reloadPage(): void {
-    this.router.navigate(['/recent-blogs']).then(() => window.location.reload());
-
   }
 
 }

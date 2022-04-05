@@ -36,6 +36,7 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
   pageSizes = [10, 20, 30];
   commentsPagination: Comment[] = [];
   currentIndex = -1;
+  replyUser = null;
 
   constructor(private blogService: ServiceblogService, private authService: AuthService, public sanitizer: DomSanitizer,
     private router: Router, private route: ActivatedRoute, private token: TokenStorageService, private modalService: NgbModal) {
@@ -51,6 +52,7 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
       this.user = this.getUserById(this.currentPost?.userId);
     }
     this.getCurrentUser();
+    this.replyUser = this.token.getUser();
   }
 
   getCurrentUser(){
@@ -118,6 +120,7 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
       .subscribe(
         data => {
           this.comments = data;
+
         },
         error => {
           console.log(error);

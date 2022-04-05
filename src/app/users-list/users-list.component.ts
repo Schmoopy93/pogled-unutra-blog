@@ -10,12 +10,12 @@ import { AuthService } from '../services/auth.service';
 })
 export class UsersListComponent implements OnInit {
 
-  users: User[] = [];
-  currentUser = null;
-  user: any = {};
   public popoverTitle: string = 'WARNING';
   public popoverMessage: string = 'Are you sure you want to delete this user???'
   public cancelClicked: boolean = false;
+  users: User[] = [];
+  currentUser = null;
+  user: any = {};
   currentIndex = -1;
   firstname = '';
   page = 1;
