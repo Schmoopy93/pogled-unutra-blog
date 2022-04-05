@@ -20,3 +20,48 @@ h4 {
     justify-content: center;
     margin-top: 20px;
 }
+
+.search {
+    border: 1px solid #22d47b;
+    overflow: auto;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    width: 50%;
+    margin: auto;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+.search input[type="text"] {
+    border: 0px;
+    width: 67%;
+    padding: 10px 10px;
+}
+
+.search input[type="text"]:focus {
+    outline: 0;
+}
+
+.search input[type="submit"] {
+    float: right;
+    padding: 10px;
+    -moz-border-radius-top-right: 5px;
+    -webkit-border-radius-top-right: 5px;
+    -moz-border-radius-bottom-right: 5px;
+    -webkit-border-radius-bottom-right: 5px;
+    cursor: pointer;
+}
+
+@media only screen and (min-width: 150px) and (max-width: 780px) {
+    .search {
+        width: 95%;
+        margin: 0 auto;
+    }
+}
+
+.dropdown{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}

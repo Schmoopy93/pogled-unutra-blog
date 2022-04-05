@@ -17,7 +17,7 @@ export class UsersListComponent implements OnInit {
   public popoverMessage: string = 'Are you sure you want to delete this user???'
   public cancelClicked: boolean = false;
   currentIndex = -1;
-  title = '';
+  firstname = '';
   page = 1;
   count = 0;
   pageSize = 10;
@@ -36,7 +36,7 @@ export class UsersListComponent implements OnInit {
   }
 
   retrieveUsers(): void {
-    const params = this.getRequestParams(this.title, this.page, this.pageSize);
+    const params = this.getRequestParams(this.firstname, this.page, this.pageSize);
 
     this.authService.getAllUsers(params)
     .subscribe(
@@ -44,7 +44,6 @@ export class UsersListComponent implements OnInit {
         const { users, totalItems } = response;
         this.users = users;
         this.count = totalItems;
-        console.log(this.users, "useeeeeeeers");
       },
       error => {
         console.log(error);
@@ -66,7 +65,7 @@ export class UsersListComponent implements OnInit {
     let params: any = {};
 
     if (searchTitle) {
-      params[`title`] = searchTitle;
+      params[`firstname`] = searchTitle;
     }
 
     if (page) {
@@ -86,6 +85,14 @@ export class UsersListComponent implements OnInit {
       this.router.navigate(['/all-users']).then(() => window.location.reload());
       this.ngOnInit();
     });
+  }
+
+   compareAlphabeticallyAsc() : void {
+    this.users.sort((a, b) => a.firstname.localeCompare(b.firstname))
+  }
+
+  compareAlphabeticallyDesc(): void {
+    this.users.sort((a, b) => b.firstname.localeCompare(a.firstname))
   }
 
 }
