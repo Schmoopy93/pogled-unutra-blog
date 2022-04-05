@@ -14,3 +14,9 @@ h4 {
 .table-image th {
     vertical-align: middle;
 }
+
+.col-md-12 {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}

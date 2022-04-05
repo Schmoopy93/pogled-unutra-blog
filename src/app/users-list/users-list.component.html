@@ -1,31 +1,3 @@
-<!-- <div class="table-responsive">
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Username</th>
-                <th scope="col">Firstname</th>
-                <th scope="col">Lastname</th>
-                <th scope="col">Email</th>
-                <th scope="col">Joined At</th>
-            </tr>
-        </thead>
-        <tbody *ngFor="let user of users">
-            <tr>
-                <th scope="row">{{user?.id}}</th>
-                <td>{{user?.username}}</td>
-                <td>{{user?.firstname}}</td>
-                <td>{{user?.lastname}}</td>
-                <td>{{user?.email}}</td>
-                <td>{{user?.createdAt | date:"MMM d, y h:mm:ss a"}}</td>
-                <button routerLink="/edit-user/{{ user.id }}">Edit</button>
-                <button mwlConfirmationPopover [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteUser(user.id)" (cancel)="cancelClicked = true"> Delete
-              </button>
-            </tr>
-        </tbody>
-    </table>
-</div> -->
-
 <body>
     <div class="container">
         <div class="row">
@@ -41,7 +13,7 @@
                             <th scope="col">Actions</th>
                         </tr>
                     </thead>
-                    <tbody *ngFor="let user of users">
+                    <tbody *ngFor="let user of users | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveUser(user, i)">
                         <tr>
                             <td>{{user?.username}}</td>
                             <td>{{user?.firstname}}</td>
@@ -55,6 +27,18 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="col-md-12">
+                    <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
+                </div>
+                <div class="col-md-12">
+                    <h2 style="font-size: 1.5em; font-weight: bolder;">Posts per Page:
+                        <select (change)="handlePageSizeChange($event)">
+                  <option *ngFor="let size of pageSizes" [ngValue]="size">
+                    {{ size }}
+                  </option>
+                </select>
+                    </h2>
+                </div>
             </div>
         </div>
     </div>

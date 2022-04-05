@@ -89,4 +89,8 @@ export class AuthService {
   getUserByToken(confirmationCode: any){
     return this.http.get(`${AUTH_API}confirm/` + confirmationCode);
   }
+
+  getAllUsers(params: any): Observable<any> {
+    return this.http.get<any>(`${USER_API}`, { params });
+  }
 }
