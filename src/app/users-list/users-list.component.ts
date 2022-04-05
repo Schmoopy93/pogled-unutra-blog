@@ -23,11 +23,13 @@ export class UsersListComponent implements OnInit {
   pageSize = 10;
   pageSizes = [10, 20, 30];
   sortedItems: any;
+  countAll: any;
 
   constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     this.retrieveUsers();
+
   }
 
   setActiveUser(user: User, index: number): void {

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../models/user';
 import { AuthService } from '../services/auth.service';
+import { TokenStorageService } from '../services/token-storage.service';
 
 @Component({
   selector: 'app-update-user',
@@ -13,7 +14,7 @@ export class UpdateUserComponent implements OnInit {
   users: User[];
   user: any = {};
   constructor(private authService: AuthService, private route: ActivatedRoute,
-    private router: Router) { }
+    private router: Router, private token: TokenStorageService) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -26,9 +27,12 @@ export class UpdateUserComponent implements OnInit {
     updateUser(username, phone, adress, town) {
     this.route.params.subscribe(params => {
       this.authService.updateUser(username, phone, adress, town, params.id);
-      this.router.navigate(['/my-profile']).then(() => {
+      this.router.navigate(['/'])
+      .then(() => {
+        this.token.signOut();
+      }).then(() => {
         window.location.reload();
-      });
+      })
     });
   }
 

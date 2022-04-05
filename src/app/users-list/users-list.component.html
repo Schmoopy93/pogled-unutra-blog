@@ -15,6 +15,7 @@
         </div>
     </div>
     <div class="container">
+        <h4>Total registred users: {{count}}</h4>
         <div class="row">
             <div class="table-responsive">
                 <table class="table table-bordered">
@@ -37,7 +38,7 @@
                             <td>{{user?.createdAt | date:"MMM d, y h:mm:ss a"}}</td>
                             <td>
                                 <button type="button" style="margin-right: 10px;" class="btn btn-success" routerLink="/edit-user/{{ user.id }}"><i class="fas fa-edit"></i></button>
-                                <button type="button" class="btn btn-danger" mwlConfirmationPopover placement="right" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteUser(user.id)" (cancel)="cancelClicked = true"><i class="far fa-trash-alt"></i></button>
+                                <button type="button" class="btn btn-danger" mwlConfirmationPopover placement="top" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteUser(user.id)" (cancel)="cancelClicked = true"><i class="far fa-trash-alt"></i></button>
                             </td>
                         </tr>
                     </tbody>

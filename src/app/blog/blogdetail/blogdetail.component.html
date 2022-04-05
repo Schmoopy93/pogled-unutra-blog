@@ -12,7 +12,7 @@
                         <h1>{{ currentPost?.title }}</h1>
                         <div class="post-footer d-flex align-items-center flex-column flex-sm-row">
                             <a href="#" class="author d-flex align-items-center flex-wrap">
-                                <div class="avatar"><img src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="..." class="img-fluid"></div>
+                                <div class="avatar"><img src="http://localhost:4000/userphoto/{{user?.photoName}}" alt="..." class="img-fluid"></div>
                                 <div class="title"><span>{{user?.firstname}} {{user?.lastname}}</span></div>
                                 <div class="title"><i class="icon-clock"></i> {{ currentPost?.createdAt | date:"MMM d, y h:mm:ss a" }}</div>
                             </a>
@@ -31,7 +31,7 @@
                             <div class="comment">
                                 <div class="comment-header d-flex justify-content-between">
                                     <div class="user d-flex align-items-center">
-                                        <div class="image"><img src="http://localhost:4000/uploads/userphoto/{{comment?.user.photoName}}" class="img-fluid rounded-circle"></div>
+                                        <div class="image"><img src="http://localhost:4000/userphoto/{{comment?.user.photoName}}" class="img-fluid rounded-circle"></div>
                                         <div class="title"><strong>{{comment?.user.firstname}} {{comment?.user.lastname}}</strong><span class="date">{{comment?.createdAt | date:"MMM d, y h:mm:ss a" }}</span></div>
                                     </div>
                                 </div>
@@ -76,7 +76,7 @@
                     </div>
                 </form>
             </div> -->
-            <!-- Widget [Tags Cloud Widget]-->
+            <!-- Widget [Tags Cloud Widget] -->
             <div class="widget tags">
                 <header>
                     <h3 class="h6">Tags</h3>
