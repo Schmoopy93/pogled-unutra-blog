@@ -122,3 +122,7 @@ button:focus {
 #profile-grid .img-rounded {
     border-radius: 4px 4px 0 0;
 }
+
+.h1 {
+    font-family: 'Times New Roman', Times, serif;
+}
