@@ -41,8 +41,8 @@ export class ServiceblogService {
     return this.http.get<any>(this.commentURL, { params });
   }
 
-  getAll(): Observable<any> {
-    return this.http.get<any>(this.postsURL);
+  getAllAppointments(): Observable<any> {
+    return this.http.get<any>(`${AUTH_API}findAllAppointments`);
   }
 
   findByTitle(title: any): Observable<Post[]> {
@@ -57,6 +57,11 @@ export class ServiceblogService {
     let params = new HttpParams().set('postId', postId);
     return this.http.get(`${this.commentURL}/`, { params: params });
   }
+
+  // public getAppointmentByUser(userId): Observable<any> {
+  //   let params = new HttpParams().set('userId', userId);
+  //   return this.http.get(`${AUTH_API}/findAllAppointments`, { params: params });
+  // }
 
   public getUserByComment(userId): Observable<any> {
     let params = new HttpParams().set('userId', userId);

@@ -26,6 +26,7 @@ import {
 import { TokenStorageService } from '../services/token-storage.service';
 import { ServiceblogService } from '../services/blog-service';
 import { Appointment } from '../models/appointment';
+import { ActivatedRoute } from '@angular/router';
 
 const colors: any = {
   red: {
@@ -66,14 +67,15 @@ export class AppointmentComponent implements OnInit {
 currentUser = null;
 errorMessage = '';
 isLoggedIn = false;
-// appointment: Appointment[] = []
-constructor(private modal: NgbModal,  private token: TokenStorageService, private blogService: ServiceblogService) {}
+appointments: any;
+constructor(private modal: NgbModal,  private token: TokenStorageService, private blogService: ServiceblogService, private route: ActivatedRoute) {}
  
   ngOnInit(): void {
     this.getCurrentUser();
     if (this.token.getToken()) {
       this.isLoggedIn = true;
     }
+    this.getAllAppointments();
   }
 
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
@@ -165,6 +167,33 @@ constructor(private modal: NgbModal,  private token: TokenStorageService, privat
     //window.location.reload();
 
   }
+
+  getAllAppointments(): void {
+    this.blogService.getAllAppointments()
+      .subscribe(
+        data => {
+          this.appointments = data;
+          console.log(data, "dataaaaaaaaaaa");
+        },
+        error => {
+          console.log(error);
+        });
+  }
+
+  // getAppointmentByUser(id) {
+  //   this.blogService.getAppointmentByUser(id)
+  //     .subscribe(
+  //       data => {
+  //         this.appointments = data;
+  //         console.log(data, "dataaaaaaaaa")
+
+  //       },
+  //       error => {
+  //         console.log(error);
+  //       });
+
+  // }
+
 
   getCurrentUser(){
     this.currentUser = this.token.getUser().id
