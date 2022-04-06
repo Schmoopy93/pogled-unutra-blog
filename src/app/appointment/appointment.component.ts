@@ -23,6 +23,9 @@ import {
   CalendarEventTimesChangedEvent,
   CalendarView,
 } from 'angular-calendar';
+import { TokenStorageService } from '../services/token-storage.service';
+import { ServiceblogService } from '../services/blog-service';
+import { Appointment } from '../models/appointment';
 
 const colors: any = {
   red: {
@@ -57,9 +60,20 @@ const colors: any = {
   ],
 })
 export class AppointmentComponent implements OnInit {
-constructor(private modal: NgbModal) {}
+  form: any = {
+    content: null,
+  }
+currentUser = null;
+errorMessage = '';
+isLoggedIn = false;
+// appointment: Appointment[] = []
+constructor(private modal: NgbModal,  private token: TokenStorageService, private blogService: ServiceblogService) {}
  
   ngOnInit(): void {
+    this.getCurrentUser();
+    if (this.token.getToken()) {
+      this.isLoggedIn = true;
+    }
   }
 
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
@@ -138,21 +152,24 @@ constructor(private modal: NgbModal) {}
     this.modal.open(this.modalContent, { size: 'lg' });
   }
 
-  addEvent(): void {
-    this.events = [
-      ...this.events,
-      {
-        title: 'New event',
-        start: startOfDay(new Date()),
-        end: endOfDay(new Date()),
-        color: colors.red,
-        draggable: true,
-        resizable: {
-          beforeStart: true,
-          afterEnd: true,
-        },
+  onSubmit(): void {
+    const { content } = this.form;
+    this.blogService.addAppointment(content, this.currentUser).subscribe(
+      data => {
+        console.log(data);
       },
-    ];
+      err => {
+        this.errorMessage = err.error.message;
+      }
+    );
+    //window.location.reload();
+
+  }
+
+  getCurrentUser(){
+    this.currentUser = this.token.getUser().id
+    console.log(this.currentUser, "CRUSER")
+
   }
 
   deleteEvent(eventToDelete: CalendarEvent) {

@@ -1,4 +1,4 @@
-export class Comment
+export class Appointment
 {   id: number;
     content: string;
     createdAt: Date;

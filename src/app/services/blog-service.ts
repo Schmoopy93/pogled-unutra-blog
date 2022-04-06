@@ -110,11 +110,15 @@ export class ServiceblogService {
   }
 
   addComment(content: string, postId: number, userId:number): Observable<any> {
-    // const postId = this.route.snapshot.params;
-    //const userId =+ this.token.getUser().id;;
-
     return this.http.post(AUTH_API + 'comments', {
       postId,
+      content,
+      userId
+    }, httpOptions);
+  }
+
+  addAppointment(content: string, userId:number): Observable<any> {
+    return this.http.post(AUTH_API + 'createAppointments', {
       content,
       userId
     }, httpOptions);

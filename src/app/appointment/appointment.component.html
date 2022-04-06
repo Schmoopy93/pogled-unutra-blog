@@ -14,6 +14,32 @@
     </div>
     <div class="col-md-4">
         <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+        <button type="button" *ngIf="isLoggedIn" title="Create a comment" class="btn btn-outline-success" data-toggle="modal" data-target="#exampleModal">Discuss with us... <i class="fa fa-comment"></i></button>
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Create a comment</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="#" class="commenting-form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm">
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <textarea name="usercomment" id="usercomment" placeholder="Type your comment" class="form-control" name="content" [(ngModel)]="form.content" #content="ngModel"></textarea>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-outline-success btn-sm " (click)="onSubmit()">Post</button>
+                        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="col-md-4">
         <div class="btn-group">
@@ -43,21 +69,21 @@
 
 <br /><br /><br />
 
-<h3>
+<!-- <h3>
     Edit events
     <button class="btn btn-primary float-right" (click)="addEvent()">
       Add new
     </button>
     <div class="clearfix"></div>
-</h3>
+</h3> -->
 
-<div class="table-responsive" style="width: 50%;">
+<!-- <div class="table-responsive" style="width: 50%;">
     <table class="table table-bordered">
         <thead>
             <tr>
                 <th>Title</th>
-                <!-- <th>Primary color</th>
-                <th>Secondary color</th> -->
+                <th>Primary color</th>
+                <th>Secondary color</th>
                 <th>Starts at</th>
                 <th>Ends at</th>
                 <th>Remove</th>
@@ -69,12 +95,12 @@
                 <td>
                     <input type="text" class="form-control" [(ngModel)]="event.title" (keyup)="refresh.next()" />
                 </td>
-                <!-- <td>
+                <td>
                     <input type="color" [(ngModel)]="event.color.primary" (change)="refresh.next()" />
                 </td>
                 <td>
                     <input type="color" [(ngModel)]="event.color.secondary" (change)="refresh.next()" />
-                </td> -->
+                </td>
                 <td>
                     <input class="form-control" type="text" mwlFlatpickr [(ngModel)]="event.start" (ngModelChange)="refresh.next()" [altInput]="true" [convertModelValue]="true" [enableTime]="true" dateFormat="Y-m-dTH:i" altFormat="F j, Y H:i" placeholder="Not set" />
                 </td>
@@ -89,9 +115,9 @@
             </tr>
         </tbody>
     </table>
-</div>
+</div> -->
 
-<ng-template #modalContent let-close="close">
+<!-- <ng-template #modalContent let-close="close">
     <div class="modal-header">
         <h5 class="modal-title">Event action occurred</h5>
         <button type="button" class="close" (click)="close()">
@@ -113,4 +139,4 @@
         OK
       </button>
     </div>
-</ng-template>
+</ng-template> -->
