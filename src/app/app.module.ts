@@ -25,6 +25,7 @@ import { UpdateUserComponent } from './update-user/update-user.component';
 import { AboutMeComponent } from './about-me/about-me.component';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { ViewProfileComponent } from './view-profile/view-profile.component';
 
 
 
@@ -44,7 +45,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
     EditblogComponent,
     UsersListComponent,
     UpdateUserComponent,
-    AboutMeComponent
+    AboutMeComponent,
+    ViewProfileComponent
   ],
   imports: [
     BrowserModule,

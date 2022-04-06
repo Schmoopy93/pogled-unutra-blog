@@ -46,6 +46,7 @@ export class UsersListComponent implements OnInit {
         const { users, totalItems } = response;
         this.users = users;
         this.count = totalItems;
+        console.log(this.users, "users")
       },
       error => {
         console.log(error);
@@ -89,7 +90,7 @@ export class UsersListComponent implements OnInit {
     });
   }
 
-   compareAlphabeticallyAsc() : void {
+  compareAlphabeticallyAsc() : void {
     this.users.sort((a, b) => a.firstname.localeCompare(b.firstname))
   }
 

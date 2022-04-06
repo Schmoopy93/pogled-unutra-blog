@@ -14,6 +14,7 @@ import { RegisterComponent } from './register/register.component';
 import { AuthGuard } from './services/auth.guard';
 import { UpdateUserComponent } from './update-user/update-user.component';
 import { UsersListComponent } from './users-list/users-list.component';
+import { ViewProfileComponent } from './view-profile/view-profile.component';
 
 
 const routes: Routes = [
@@ -48,6 +49,11 @@ const routes: Routes = [
       },
       {
         path: 'about', component: AboutMeComponent
+      },
+      {
+        path: 'view-profile/:id', component: ViewProfileComponent, canActivate: [AuthGuard], data: {
+          roles: '[ROLE_ADMIN]'
+        }
       }
     ]
   }];
