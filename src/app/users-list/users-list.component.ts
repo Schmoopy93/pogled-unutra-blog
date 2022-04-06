@@ -85,7 +85,7 @@ export class UsersListComponent implements OnInit {
   deleteUser(id) {
     this.authService.deleteUser(id).subscribe(res => {
       console.log('Deleted');
-      this.router.navigate(['/all-users']).then(() => window.location.reload());
+      this.router.navigate(['/all-users']);
       this.ngOnInit();
     });
   }

@@ -47,7 +47,7 @@ export class ViewblogComponent implements OnInit {
   deletePost(id) {
     this.blogService.deletePost(id).subscribe(res => {
       console.log('Deleted');
-      this.router.navigate(['/recent-blogs']).then(() => window.location.reload());
+      this.router.navigate(['/recent-blogs']);
       this.ngOnInit();
     });
   }
