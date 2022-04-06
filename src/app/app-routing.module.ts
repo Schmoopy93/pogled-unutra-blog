@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AboutMeComponent } from './about-me/about-me.component';
+import { AppointmentComponent } from './appointment/appointment.component';
 import { AddblogComponent } from './blog/addblog/addblog.component';
 import { BlogComponent } from './blog/blog.component';
 import { BlogdetailComponent } from './blog/blogdetail/blogdetail.component';
@@ -49,6 +50,9 @@ const routes: Routes = [
       },
       {
         path: 'about', component: AboutMeComponent
+      },
+      {
+        path: 'appointments', component: AppointmentComponent
       },
       {
         path: 'view-profile/:id', component: ViewProfileComponent, canActivate: [AuthGuard], data: {
