@@ -126,3 +126,8 @@ button:focus {
 .h1 {
     font-family: 'Times New Roman', Times, serif;
 }
+
+.contactform {
+    margin: auto;
+    padding: 10px;
+}

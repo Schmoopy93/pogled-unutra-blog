@@ -41,7 +41,7 @@
                                 <hr>
                             </div>
                         </div>
-                        <div class="add-comment" *ngIf="isLoggedIn">
+                        <!-- <div class="add-comment" *ngIf="isLoggedIn">
                             <header>
                                 <h3 class="h6">Leave a reply {{replyUser.firstname}}</h3>
                             </header>
@@ -55,6 +55,32 @@
                                     </div>
                                 </div>
                             </form>
+                        </div> -->
+                        <button type="button" *ngIf="isLoggedIn" title="Search" class="btn btn-outline-success" data-toggle="modal" data-target="#exampleModal">Discuss with us... <i class="fa fa-comment"></i></button>
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Create a comment</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="#" class="commenting-form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <textarea name="usercomment" id="usercomment" placeholder="Type your comment" class="form-control" name="content" [(ngModel)]="form.content" #content="ngModel"></textarea>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-outline-success btn-sm " (click)="onSubmit()">Post</button>
+                                        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

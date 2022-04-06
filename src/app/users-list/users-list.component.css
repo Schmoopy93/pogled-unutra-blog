@@ -60,7 +60,13 @@ h4 {
     }
 }
 
-.dropdown{
+.dropdown {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.btn-dark {
     display: flex;
     justify-content: center;
     margin-top: 20px;
