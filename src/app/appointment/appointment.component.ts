@@ -56,31 +56,29 @@ export class AppointmentComponent implements OnInit {
           const event_id = evetData.event.extendedProps.id;
           Swal.fire({
             title: evetData.event.title,
-            //html: evetData.event.start,
-            html: '<a class="nav-link" href="/recent-blogs"><i class="fa fa-edit" aria-hidden="true"></i>Blog</a> <br> ',
-            icon: 'warning',
+            html: '<p>Check details on the button </p><br><a class="nav-link" href="/my-profile"><i class="fa fa-edit" aria-hidden="true"></i>Check an appointment details...</a> <br> ',
+            //icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
+            // confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!',
+            // confirmButtonText: 'Yes, delete it!',
             timer: 30000,
-          })
-          
-          .then((result) => {
-            if (result.value) {
-              //self.deleteEvent(event_id);
-              Swal.fire(
-                'Deleted!',
-                'Your file has been deleted.',
-                'success'
-              );
-              self.getAllEvents();
-            }
+          })    
+          // .then((result) => {
+          //   if (result.value) {
+          //     //self.deleteEvent(event_id);
+          //     Swal.fire(
+          //       'Deleted!',
+          //       'Your file has been deleted.',
+          //       'success'
+          //     );
+          //     self.getAllEvents();
+          //   }
 
-          }
-          ).catch(() => {
-            Swal.fire('Failed!', 'There was something went wrong.');
-          });
+          // }
+          // ).catch(() => {
+          //   Swal.fire('Failed!', 'There was something went wrong.');
+          // });
         }
       };
       console.log(data, "dataaaaaaaaaa")
@@ -98,30 +96,7 @@ export class AppointmentComponent implements OnInit {
       start: this.event.start
     };
     this.blogService.addAppointment(event)
-      .subscribe(
-        (response: any) => {
-          if (response.type === 'success') {
-            Swal.fire({
-              position: 'center',
-              icon: 'success',
-              title: 'Your Event has been added successfully',
-              showConfirmButton: false,
-              timer: 1500
-            });
-            //this.router.navigate(['/calendar']);
-          }
-        },
-        err => {
-          Swal.fire({
-            position: 'center',
-            icon: 'error',
-            title: 'Something went wrong',
-            showConfirmButton: false,
-            timer: 1500
-          });
-          this.event.title = '';
-          //this.event.date = '';
-        });
+      .subscribe();
         window.location.reload();
   }
 }
