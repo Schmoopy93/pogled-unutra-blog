@@ -122,11 +122,15 @@ export class ServiceblogService {
     }, httpOptions);
   }
 
-  addAppointment(content: string, userId:number): Observable<any> {
-    return this.http.post(AUTH_API + 'createAppointments', {
-      content,
-      userId
-    }, httpOptions);
+  // addAppointment(content: string, userId:number): Observable<any> {
+  //   return this.http.post(AUTH_API + 'createAppointments', {
+  //     content,
+  //     userId
+  //   }, httpOptions);
+  // }
+
+  addAppointment(event) {
+    return this.http.post(AUTH_API + 'createAppointments', event);
   }
 
 }

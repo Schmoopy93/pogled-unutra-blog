@@ -31,6 +31,14 @@ import { FlatpickrModule } from 'angularx-flatpickr';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import { FullCalendarModule } from '@fullcalendar/angular'; // the main connector. must go first
+import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin
+import interactionPlugin from '@fullcalendar/interaction';
+
+FullCalendarModule.registerPlugins([
+  dayGridPlugin,
+  interactionPlugin
+]);
 
 
 @NgModule({
@@ -51,7 +59,7 @@ import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
     UpdateUserComponent,
     AboutMeComponent,
     ViewProfileComponent,
-    AppointmentComponent
+    AppointmentComponent,
   ],
   imports: [
     BrowserModule,
@@ -73,6 +81,7 @@ import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
       provide: DateAdapter,
       useFactory: adapterFactory,
     }),
+    FullCalendarModule
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent]
