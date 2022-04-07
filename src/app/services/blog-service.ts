@@ -5,6 +5,8 @@ import { Post } from '../models/post';
 import { Comment } from '../models/comment'
 import { TokenStorageService } from './token-storage.service';
 import { ActivatedRoute } from '@angular/router';
+import { map, catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 const AUTH_API = 'http://localhost:4000/api/auth/';
 const httpOptions = {
@@ -44,6 +46,18 @@ export class ServiceblogService {
   getAllAppointments(): Observable<any> {
     return this.http.get<any>(`${AUTH_API}findAllAppointments`);
   }
+
+  // getAllAppointments() {
+  //   return this.http.get(AUTH_API + 'findAllAppointments').
+  //     pipe(
+  //       map((data: any) => {
+  //         console.log(data, "CLS");
+  //         return data;
+  //       }), catchError(error => {
+  //         return throwError('Something went wrong');
+  //       })
+  //     );
+  // }
 
   findByTitle(title: any): Observable<Post[]> {
     return this.http.get<Post[]>(`${(this.postsURL)}?title=${title}`);

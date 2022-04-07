@@ -1,6 +1,7 @@
 export class Appointment
 {   id: number;
-    content: string;
+    title: string;
+    start: string;
     createdAt: Date;
-    postId: number;
+    _id: string;
 }
