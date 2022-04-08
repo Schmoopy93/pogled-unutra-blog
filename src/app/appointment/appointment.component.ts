@@ -71,7 +71,6 @@ export class AppointmentComponent implements OnInit {
           const event_id = evetData.event.id;
           Swal.fire({
             title: evetData.event.title,
-            html: evetData.event.start,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
