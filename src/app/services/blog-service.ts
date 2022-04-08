@@ -27,14 +27,6 @@ export class ServiceblogService {
     this.commentURL = 'http://localhost:4000/api/auth/showComments'
    
   }
-
-  // getPost(id: any): Observable<Post> {
-  //   const url = `${this.postsURL}/${id}`;
-  //   return this.http.get<Post>(url).pipe(
-  //     tap(_ => console.log(`fetched post by id=${id}`)),
-  //     catchError(this.handleError<Post>(`getPost id=${id}`))
-  //   );
-  // }
   getAllPosts(params: any): Observable<any> {
     return this.http.get<any>(this.postsURL, { params });
   }
@@ -46,18 +38,6 @@ export class ServiceblogService {
   getAllAppointments(): Observable<any> {
     return this.http.get<any>(`${AUTH_API}findAllAppointments`);
   }
-
-  // getAllAppointments() {
-  //   return this.http.get(AUTH_API + 'findAllAppointments').
-  //     pipe(
-  //       map((data: any) => {
-  //         console.log(data, "CLS");
-  //         return data;
-  //       }), catchError(error => {
-  //         return throwError('Something went wrong');
-  //       })
-  //     );
-  // }
 
   findByTitle(title: any): Observable<Post[]> {
     return this.http.get<Post[]>(`${(this.postsURL)}?title=${title}`);
@@ -71,11 +51,6 @@ export class ServiceblogService {
     let params = new HttpParams().set('postId', postId);
     return this.http.get(`${this.commentURL}/`, { params: params });
   }
-
-  // public getAppointmentByUser(userId): Observable<any> {
-  //   let params = new HttpParams().set('userId', userId);
-  //   return this.http.get(`${AUTH_API}/findAllAppointments`, { params: params });
-  // }
 
   public getUserByComment(userId): Observable<any> {
     let params = new HttpParams().set('userId', userId);
@@ -135,16 +110,12 @@ export class ServiceblogService {
       userId
     }, httpOptions);
   }
-
-  // addAppointment(content: string, userId:number): Observable<any> {
-  //   return this.http.post(AUTH_API + 'createAppointments', {
-  //     content,
-  //     userId
-  //   }, httpOptions);
-  // }
-
   addAppointment(event) {
     return this.http.post(AUTH_API + 'createAppointments', event);
+  }
+
+  deleteAppointment(id: number): Observable<any> {
+    return this.http.delete(`${AUTH_API + 'findAllAppointments'}/${id}`, { responseType: 'text' });
   }
 
 }

@@ -16,12 +16,14 @@ export class NavbarComponent implements OnInit {
   roles: string[] = [];
   isNavbarCollapsed = true;
   _isNavbarCollapsedAnim = 'closed';
+  currentUser: any;
 
   ngOnInit(): void {
     if (this.tokenStorage.getToken()) {
       this.isLoggedIn = true;
       this.roles = this.tokenStorage.getUser().roles;
     }
+    this.currentUser = this.tokenStorage.getUser();
   }
 
   logout(): void {

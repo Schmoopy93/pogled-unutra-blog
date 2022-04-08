@@ -24,71 +24,25 @@ export class AppointmentComponent implements OnInit {
     start: '',
   };
   constructor(public http: HttpClient, private blogService: ServiceblogService, private token: TokenStorageService, private Http: HttpClient) {}
+  
+  
+  ngOnInit() {
+    this.getAllEvents();
+    this.getCurrentUser();
+ }
 
   handleDateClick(arg) {
+
   }
 
   onSelectx(event) {
 
   }
 
-  ngOnInit() {
-    this.getAllEvents();
-    this.getCurrentUser();
- }
-
-  // deleteEvent(id) {
-  //   this.apiService.deleteSingleEvent(id).subscribe((data: any) => {});
-  // }
-
-  getAllEvents() {
-    this.blogService.getAllAppointments().subscribe((data: any) => {
-      const self = this;
-      this.calendarOptions = {
-        initialView: 'dayGridMonth',
-        selectable: false,
-        editable: false,
-        // dateClick: this.handleDateClick.bind(this),
-        select: this.handleDateClick.bind(this),
-        events: data,
-        eventClick(evetData) {
-          // tslint:disable-next-line:variable-name
-          const event_id = evetData.event.extendedProps.id;
-          Swal.fire({
-            title: evetData.event.title,
-            html: '<p>Check details on the button </p><br><a class="nav-link" href="/my-profile"><i class="fa fa-edit" aria-hidden="true"></i>Check an appointment details...</a> <br> ',
-            //icon: 'warning',
-            showCancelButton: true,
-            // confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            // confirmButtonText: 'Yes, delete it!',
-            timer: 30000,
-          })    
-          // .then((result) => {
-          //   if (result.value) {
-          //     //self.deleteEvent(event_id);
-          //     Swal.fire(
-          //       'Deleted!',
-          //       'Your file has been deleted.',
-          //       'success'
-          //     );
-          //     self.getAllEvents();
-          //   }
-
-          // }
-          // ).catch(() => {
-          //   Swal.fire('Failed!', 'There was something went wrong.');
-          // });
-        }
-      };
-      console.log(data, "dataaaaaaaaaa")
-    });
-  }
-
   getCurrentUser(){
     this.event.userId = this.token.getUser().id 
   }
-
+  
   saveEvent() {
     const event = {
       title: this.event.title,
@@ -98,5 +52,50 @@ export class AppointmentComponent implements OnInit {
     this.blogService.addAppointment(event)
       .subscribe();
         window.location.reload();
+  }
+
+  deleteEvent(id) {
+    this.blogService.deleteAppointment(id).subscribe((data: any) => {});
+  }
+
+  getAllEvents() {
+    this.blogService.getAllAppointments().subscribe((data: any) => {
+      const self = this;
+      this.calendarOptions = {
+        initialView: 'dayGridMonth',
+        selectable: false,
+        editable: false,
+        select: this.handleDateClick.bind(this),
+        events: data,
+        eventClick(evetData) {
+          const event_id = evetData.event.id;
+          Swal.fire({
+            title: evetData.event.title,
+            html: evetData.event.start,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Delete this event!',
+            timer: 30000,
+          })    
+          .then((result) => {
+            if (result.value) {
+              self.deleteEvent(event_id);
+              Swal.fire(
+                'Deleted!',
+                'Your file has been deleted.',
+                'success'
+              );
+              self.getAllEvents();
+            }
+          }
+          ).catch(() => {
+            Swal.fire('Failed!', 'There was something went wrong.');
+          });
+        }
+      };
+      console.log(data, "dataaaaaaaaaa")
+    });
   }
 }
