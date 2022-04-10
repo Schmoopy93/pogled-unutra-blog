@@ -3,21 +3,29 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-6 col-md-3 item">
-                    <h3>Services</h3>
+                    <h3>Main Page</h3>
                     <ul>
-                        <li><a href="/">Home</a></li>
+                        <li><a routerLink="/">Home</a></li>
                         <br>
-                        <li><a href="/about">About</a></li>
+                        <li><a routerLink="/about">About</a></li>
                         <br>
-                        <!-- <li><a routerLink="#">Contact Us</a></li> -->
                     </ul>
                 </div>
-                <div class="col-sm-6 col-md-3 item">
+                <div class="col-sm-6 col-md-3 item" *ngIf="isLoggedIn">
+                    <h3>Services</h3>
+                    <ul>
+                        <li><a routerLink="/recent-blogs">Blog</a></li>
+                        <br>
+                        <li><a routerLink="/my-profile">My Profile</a></li>
+                        <br>
+                    </ul>
+                </div>
+                <div class="col-sm-6 col-md-3 item" *ngIf="!isLoggedIn">
                     <h3>Join Us</h3>
                     <ul>
-                        <li><a href="/register">Sign Up</a></li>
+                        <li><a routerLink="/register">Sign Up</a></li>
                         <br>
-                        <li><a href="/login">Sign In</a></li>
+                        <li><a routerLink="/login">Sign In</a></li>
                     </ul>
                 </div>
                 <div class="col-md-6 item text">
