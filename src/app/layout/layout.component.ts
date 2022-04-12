@@ -12,4 +12,10 @@ export class LayoutComponent implements OnInit {
   ngOnInit(): void {
   }
 
+   setMode = false;
+
+  receiveMode($event) {
+    this.setMode = $event;
+  }
+
 }

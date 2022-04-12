@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { TokenStorageService } from '../services/token-storage.service';
@@ -9,9 +9,11 @@ import {  trigger,state,style, animate, transition } from '@angular/animations';
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
-
+@Output() mode = new EventEmitter<boolean>();
   constructor(private authService: AuthService, private tokenStorage: TokenStorageService, private router: Router) { }
+ 
 
+  setDark = false;
   isLoggedIn = false;
   roles: string[] = [];
   isNavbarCollapsed = true;
@@ -32,5 +34,11 @@ export class NavbarComponent implements OnInit {
     .then(() => {
       window.location.reload();
     });
+  }
+
+  onChangeToggle() {
+    this.setDark = !this.setDark;
+    this.mode.emit(this.setDark);
+    console.log(this.setDark);
   }
 }

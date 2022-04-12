@@ -1,0 +1,24 @@
+#main-container {
+    width: 100%;
+    min-height: 100vh;
+}
+
+#main-container.darkTheme {
+    background-color: rgb(235, 213, 213);
+}
+
+#main-container.darkTheme h1 {
+    color: white;
+}
+
+#main-container.darkTheme nav {
+    background-color: #fafafa;
+}
+
+#main-container.darkTheme .nav-link {
+    color: #000;
+}
+
+#main-container.darkTheme .nav-link.is-active {
+    color: #cb2d67;
+}

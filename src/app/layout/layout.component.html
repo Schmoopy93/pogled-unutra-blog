@@ -1,5 +1,5 @@
-<app-navbar></app-navbar>
-<div>
+<app-navbar (mode)="receiveMode($event)"></app-navbar>
+<div id="main-container" [ngClass]="[setMode ? 'darkTheme' : '']">
     <router-outlet></router-outlet>
 </div>
 <app-footer></app-footer>

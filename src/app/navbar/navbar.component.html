@@ -47,6 +47,11 @@
                     <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
                         <a class="nav-link" *ngIf="isLoggedIn" (click)="logout()"> <i class="fas fa-sign-out-alt" aria-hidden="true"></i> Sign Out</a>
                     </li>
+                    <div class="custom-control custom-switch" style="padding-top: 7px;">
+                        <input type="checkbox" class="custom-control-input" id="customSwitches" (click)="onChangeToggle()">
+                        <label class="custom-control-label" for="customSwitches"></label>
+                    </div>
+
                 </ul>
             </div>
         </div>
