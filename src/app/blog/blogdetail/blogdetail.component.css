@@ -47,7 +47,8 @@ section {
     overflow-x: hidden;
 }
 
-button,
+
+/* button,
 input {
     outline: none !important;
     font-family: "Open Sans", sans-serif;
@@ -55,7 +56,7 @@ input {
 
 button {
     cursor: pointer;
-}
+} */
 
 main,
 aside {
@@ -130,9 +131,11 @@ i[class*="icon-"] {
     transform: translateY(3px);
 }
 
+
+/* 
 #style-switch-button {
     z-index: 9999 !important;
-}
+} */
 
 
 /*=== Helpers ===*/
@@ -976,13 +979,14 @@ STYLE SWITCHER FOR DEMO
 
 */
 
-#style-switch-button {
+
+/* #style-switch-button {
     position: fixed;
     top: 120px;
     left: 0px;
     border-radius: 0;
     z-index: 100000;
-}
+} */
 
 #style-switch {
     width: 300px;

@@ -2,6 +2,7 @@ import { AfterContentChecked, AfterContentInit, AfterViewInit, Component, DoChec
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Post } from 'src/app/models/post';
+import { Comment } from 'src/app/models/comment'
 import { ServiceblogService } from 'src/app/services/blog-service';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -34,9 +35,12 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
   count = 0;
   pageSize = 10;
   pageSizes = [10, 20, 30];
-  commentsPagination: Comment[] = [];
+  commentPaginate: Comment[] = [];
   currentIndex = -1;
   replyUser = null;
+  public popoverTitle: string = 'WARNING';
+  public popoverMessage: string = 'Are you sure you want to delete this post???'
+  public cancelClicked: boolean = false;
 
   constructor(private blogService: ServiceblogService, private authService: AuthService, public sanitizer: DomSanitizer,
     private router: Router, private route: ActivatedRoute, private token: TokenStorageService, private modalService: NgbModal) {
@@ -53,11 +57,18 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
     }
     this.getCurrentUser();
     this.replyUser = this.token.getUser();
+    this.retrieveComments();
+
+    this.route.params.subscribe(
+      params => {
+          const id = +params['id'];
+          this.getCommentByPost(id);
+      }
+  );
   }
 
   getCurrentUser(){
     this.currentUser = this.token.getUser().id
-
   }
 
   setActiveComment(comment: Comment, index: number): void {
@@ -77,13 +88,13 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
   }
 
   retrieveComments(): void {
-    const params = this.getRequestParams(this.content, this.page, this.pageSize);
+    const params = this.getRequestParams(this.currentPost, this.page, this.pageSize);
 
     this.blogService.getAllComments(params)
     .subscribe(
       response => {
-        const { commentsPagination, totalItems } = response;
-        this.commentsPagination = commentsPagination;
+        const { commentPaginate, totalItems } = response;
+        this.commentPaginate = commentPaginate;
         this.count = totalItems;
       },
       error => {
@@ -168,23 +179,30 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
 
   }
 
-  open(content) {
-    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+  deletePost(id) {
+    this.blogService.deleteComment(id).subscribe(res => {
+      console.log('Deleted');
+      this.ngOnInit();
     });
   }
 
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return `with: ${reason}`;
-    }
-  }
+  // open(content) {
+  //   this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+  //     this.closeResult = `Closed with: ${result}`;
+  //   }, (reason) => {
+  //     this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+  //   });
+  // }
+
+  // private getDismissReason(reason: any): string {
+  //   if (reason === ModalDismissReasons.ESC) {
+  //     return 'by pressing ESC';
+  //   } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+  //     return 'by clicking on a backdrop';
+  //   } else {
+  //     return `with: ${reason}`;
+  //   }
+  // }
   
 
 }

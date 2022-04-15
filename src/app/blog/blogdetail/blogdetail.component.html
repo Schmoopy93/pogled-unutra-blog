@@ -37,7 +37,14 @@
                                 </div>
                                 <div class="comment-body">
                                     <p>{{comment?.content}}</p>
+                                    <br>
+                                    <a class="btn btn-outline-danger btn-sm " *ngIf="replyUser.roles== 'ROLE_ADMIN'" style="float: right;">
+                                        <span mwlConfirmationPopover placement="left" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deletePost(comment.id)" (cancel)="cancelClicked = true"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                                    </a>
                                 </div>
+
+
+
                                 <hr>
                             </div>
                         </div>

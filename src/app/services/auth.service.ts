@@ -15,9 +15,7 @@ const httpOptions = {
 })
 export class AuthService {
   usersURL: string;
-  constructor(private http: HttpClient) {
-    //this.usersURL = 'http://localhost:4000/api/auth/users';
-   }
+  constructor(private http: HttpClient) {}
   login(username: string, password: string): Observable<any> {
     return this.http.post(AUTH_API + 'signin', {
       username,

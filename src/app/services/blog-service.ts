@@ -21,10 +21,12 @@ export class ServiceblogService {
   Posts: Post[];
   postsURL: string;
   commentURL: string;
+  commURL: string;
 
   constructor(private http: HttpClient, private token: TokenStorageService, private route: ActivatedRoute) {
     this.postsURL = 'http://localhost:4000/api/auth/posts';
     this.commentURL = 'http://localhost:4000/api/auth/showComments'
+    this.commURL = 'http://localhost:4000/api/auth/'
    
   }
   getAllPosts(params: any): Observable<any> {
@@ -32,7 +34,7 @@ export class ServiceblogService {
   }
 
   getAllComments(params: any): Observable<any> {
-    return this.http.get<any>(this.commentURL, { params });
+    return this.http.get<any>(this.commURL + 'showAllPaginatedComments', { params });
   }
 
   getAllAppointments(): Observable<any> {
@@ -43,8 +45,8 @@ export class ServiceblogService {
     return this.http.get<Post[]>(`${(this.postsURL)}?title=${title}`);
   }
 
-  public findAllComments(): Observable<Comment[]> {
-    return this.http.get<Comment[]>(this.commentURL);
+  public findAllComments(params: any): Observable<Comment[]> {
+    return this.http.get<Comment[]>(this.commentURL, { params });
   }
 
   public getCommentsByPost(postId): Observable<any> {
@@ -110,6 +112,11 @@ export class ServiceblogService {
       userId
     }, httpOptions);
   }
+
+  deleteComment(id: number): Observable<any> {
+    return this.http.delete(`${this.commentURL}/${id}`, { responseType: 'text' });
+  }
+
   addAppointment(event) {
     return this.http.post(AUTH_API + 'createAppointments', event);
   }
