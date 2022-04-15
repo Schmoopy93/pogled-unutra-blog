@@ -1,52 +1,44 @@
-<body style="background-image: url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp'); padding-bottom: 100px;">
-    <br>
-    <h1 class="h1">Create a post</h1>
-    <br>
-    <div class="container">
-        <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate id="signup-form" class="signup-form">
-            <div class="row">
-                <div class="col-25">
-                    <label for="fname">Title</label>
-                </div>
-                <div class="col-75" data-validate="Title is required">
-                    <input type="text" class="input100" name="title" [(ngModel)]="form.title" required minlength="3" #title="ngModel" placeholder="Type your title">
-                </div>
-            </div>
-            <br>
-            <div class="alert-danger" *ngIf="title.errors && f.submitted">
-                <div *ngIf="title.errors.required">Title is required</div>
-                <div *ngIf="title.errors.minlength">
-                    Title must be at least 3 characters
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-25">
-                    <label for="subject">Text</label>
-                </div>
-                <div class="col-75" data-validate="Text is required">
-                    <textarea type="text" class="input100" name="content" [(ngModel)]="form.content" required content #content="ngModel" placeholder="Type your text" style="height: 200px;"></textarea>
-                </div>
-            </div>
-            <div class="alert-danger" *ngIf="content.errors && f.submitted">
-                <div *ngIf="content.errors.required">Text is required</div>
-                <div *ngIf="content.errors.content">
-                    Text must be a valid
-                </div>
-            </div>
-            <br>
-            <div class="row">
-                <div class="col-25">
-                    <label for="subject">Picture</label>
-                </div>
-                <div class="col-75">
-                    <input type="file" class="form-control" id="customFile" (change)="selectFile($event)" style="height: auto;" />
+<section class="vh-150 bg-image" style="background-image: url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp');">
+    <div class="mask d-flex align-items-center h-150 gradient-custom-3" style="padding-top:50px">
+        <div class="container h-150">
+            <div class="row d-flex justify-content-center align-items-center h-150">
+                <div class="col-12 col-md-9 col-lg-7 col-xl-6" style="padding-bottom:50px">
+                    <div class="card" style="border-radius: 15px;">
+                        <div class="card-body p-5">
+                            <h2 class="text-uppercase text-center mb-5">Create a post</h2>
+                            <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate id="signup-form" class="signup-form">
+                                <div class="form-outline mb-4" data-validate="Title is required">
+                                    <input type="text" class="form-control form-control-lg" name="title" [(ngModel)]="form.title" required minlength="3" #title="ngModel" placeholder="Type your title">
+                                </div>
+                                <div class="alert-danger" *ngIf="title.errors && f.submitted">
+                                    <div *ngIf="title.errors.required">Title is required</div>
+                                    <div *ngIf="title.errors.minlength">
+                                        Title must be at least 3 characters
+                                    </div>
+                                </div>
+                                <div class="form-outline mb-4" data-validate="Text is required">
+                                    <textarea type="text" class="form-control form-control-lg" name="content" [(ngModel)]="form.content" required content #content="ngModel" placeholder="Type your text" style="height: 200px;"></textarea>
+                                </div>
+                                <div class="alert-danger" *ngIf="content.errors && f.submitted">
+                                    <div *ngIf="content.errors.required">Text is required</div>
+                                    <div *ngIf="content.errors.content">
+                                        Text must be a valid
+                                    </div>
+                                </div>
+                                <div class="form-outline mb-4t">
+                                    <input type="file" class="form-control" id="customFile" (change)="selectFile($event)" style="height: auto;" />
+                                    <label class="form-label" for="form3Example3cg">Blog photo</label>
+                                </div>
+
+                                <div class="d-flex justify-content-center">
+                                    <input type="submit" value="Submit" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" style="width: 50%;margin: auto; padding: 10px;">
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <br>
-            <div class="row">
-                <input type="submit" value="Submit" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" style="width: 50%;margin: auto;
-                padding: 10px;">
-            </div>
-        </form>
+        </div>
     </div>
-</body>
+</section>

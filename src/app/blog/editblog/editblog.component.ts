@@ -12,6 +12,11 @@ export class EditblogComponent implements OnInit {
 
   post: any = {};
   angForm: FormGroup;
+  form: any = {
+    title: null,
+    content: null,
+
+  };
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -30,7 +35,6 @@ export class EditblogComponent implements OnInit {
   updatePost(title, content) {
     this.route.params.subscribe(params => {
       this.bs.updatePost(title, content, params.id);
-      alert('You have succesfully changed a Post');
       this.router.navigate(['/recent-blogs']);
 
         

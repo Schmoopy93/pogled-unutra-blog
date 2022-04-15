@@ -1,4 +1,4 @@
-<body style="background-image: url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp'); padding-bottom: 150px; padding-top: 100px;">
+<!-- <body style="background-image: url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp'); padding-bottom: 150px; padding-top: 100px;">
     <h1 class="h1">Edit a post</h1>
     <br>
     <div class="container">
@@ -38,36 +38,41 @@
             </div>
         </form>
     </div>
-</body>
+</body> -->
 
-<!-- <div class="container login-container ">
-    <div class="row ">
-        <div class="col-md-6 login-form-2 ">
-            <h3>Edit the Student !</h3>
-            <form [formGroup]="angForm " novalidate>
-                <div class="form-group ">
-                    <label class="col-xs-4 ">Title: </label>
-                    <input type="text " class="form-control " formControlName="title " #title [(ngModel)]="post.title " />
-                </div>
-                <div *ngIf="angForm.controls[ 'title'].invalid && (angForm.controls[ 'title'].dirty || angForm.controls[ 'title'].touched) " class="alert alert-danger ">
-                    <div *ngIf="angForm.controls[ 'title'].errors.required ">
-                        Title is required.
+<section class="vh-150 bg-image" style="background-image: url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp');">
+    <div class="mask d-flex align-items-center h-150 gradient-custom-3" style="padding-top:50px">
+        <div class="container h-150">
+            <div class="row d-flex justify-content-center align-items-center h-150">
+                <div class="col-12 col-md-9 col-lg-7 col-xl-6" style="padding-bottom:50px">
+                    <div class="card" style="border-radius: 15px;">
+                        <div class="card-body p-5">
+                            <h2 class="text-uppercase text-center mb-5">Edit a post</h2>
+                            <form [formGroup]="angForm" novalidate class="signup-form" (ngSubmit)="updatePost(title.value, content.value)">
+                                <div class="form-outline mb-4" data-validate="Title is required">
+                                    <input type="text" class="form-control" formControlName="title" #title [(ngModel)]="post.title" />
+                                </div>
+                                <div *ngIf="angForm.controls['title'].invalid && (angForm.controls['title'].dirty || angForm.controls['title'].touched)" class="alert alert-danger">
+                                    <div *ngIf="angForm.controls['title'].errors.required">
+                                        Title is required.
+                                    </div>
+                                </div>
+                                <div class="form-outline mb-4" data-validate="Text is required">
+                                    <textarea type="text" class="form-control" formControlName="content" #content [(ngModel)]="post.content" style="height: 200px;"></textarea>
+                                </div>
+                                <div *ngIf="angForm.controls['content'].invalid && (angForm.controls['content'].dirty || angForm.controls['content'].touched)" class="alert alert-danger">
+                                    <div *ngIf="angForm.controls['content'].errors.required">
+                                        Text is required.
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    <input type="submit" value="Submit" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" style="width: 50%;margin: auto; padding: 10px;" [disabled]="angForm.invalid">
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group ">
-                    <label class="col-xs-4 ">Text: </label>
-                    <input type="text " class="form-control " formControlName="content " #content [(ngModel)]="post.content " />
-                </div>
-                <div *ngIf="angForm.controls[ 'content'].invalid && (angForm.controls[ 'content'].dirty || angForm.controls[ 'content'].touched) " class="alert alert-danger ">
-                    <div *ngIf="angForm.controls[ 'content'].errors.required ">
-                        Text is required.
-                    </div>
-                </div>
-                <div class="form-group " style="padding-top:20px; ">
-                    <button (click)="updatePost(title.value, content.value) " [disabled]="angForm.invalid " class="btn btn-primary "><i class="fa fa-refresh "></i>
-            Update Post</button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
-</div> -->
+</section>
