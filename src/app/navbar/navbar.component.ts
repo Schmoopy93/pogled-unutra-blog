@@ -40,5 +40,6 @@ export class NavbarComponent implements OnInit {
     this.setDark = !this.setDark;
     this.mode.emit(this.setDark);
     console.log(this.setDark);
+    localStorage.setItem("theme", JSON.stringify(this.setDark === true));
   }
 }
