@@ -21,9 +21,6 @@
                         <a class="nav-link" *ngIf="!isLoggedIn" routerLink="/login"><i class="fa fa-user" aria-hidden="true"></i> Sign In</a>
                     </li>
                     <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
-                        <a class="nav-link" *ngIf="isLoggedIn" routerLink="/my-profile"><i class="fa fa-user-circle" aria-hidden="true"></i> My Profile</a>
-                    </li>
-                    <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
                         <a class="nav-link" routerLink="/recent-blogs"><i class="fa fa-edit" aria-hidden="true"></i> Blog</a>
                     </li>
                     <li class="nav-item" data-toggle="dropdown" data-target=".navbar-collapse.show" *ngIf="currentUser?.roles== 'ROLE_ADMIN'">
@@ -45,7 +42,10 @@
                         </div>
                     </li>
                     <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
-                        <a class="nav-link" *ngIf="isLoggedIn" (click)="logout()"> <i class="fas fa-sign-out-alt" aria-hidden="true"></i> Sign Out</a>
+                        <a class="nav-link" *ngIf="isLoggedIn" routerLink="/my-profile" title="My Profile"><i class="fa fa-user-circle" aria-hidden="true"></i></a>
+                    </li>
+                    <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
+                        <a class="nav-link" *ngIf="isLoggedIn" (click)="logout()" title="Sign Out"> <i class="fas fa-sign-out-alt" aria-hidden="true"></i></a>
                     </li>
                     <!--<div class="custom-control custom-switch" style="padding-top: 7px;">
                         <input type="checkbox" class="custom-control-input" id="customSwitches" (click)="onChangeToggle()">
