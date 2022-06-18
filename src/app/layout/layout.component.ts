@@ -12,11 +12,11 @@ export class LayoutComponent implements OnInit {
   ngOnInit(): void {
   }
 
-   setMode = false;
+  //  setMode = false;
 
-  receiveMode($event) {
-    this.setMode = $event;
-    localStorage.setItem("theme", JSON.stringify(this.setMode === true));
-  }
+  // receiveMode($event) {
+  //   this.setMode = $event;
+  //   localStorage.setItem("theme", JSON.stringify(this.setMode === true));
+  // }
 
 }

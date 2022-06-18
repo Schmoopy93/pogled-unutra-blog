@@ -36,10 +36,10 @@ export class NavbarComponent implements OnInit {
     });
   }
 
-  onChangeToggle() {
-    this.setDark = !this.setDark;
-    this.mode.emit(this.setDark);
-    console.log(this.setDark);
-    localStorage.setItem("theme", JSON.stringify(this.setDark === true));
-  }
+  // onChangeToggle() {
+  //   this.setDark = !this.setDark;
+  //   this.mode.emit(this.setDark);
+  //   console.log(this.setDark);
+  //   sessionStorage.setItem("theme", JSON.stringify(this.setDark === true));
+  // }
 }
