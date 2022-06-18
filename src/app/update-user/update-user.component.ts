@@ -20,10 +20,9 @@ export class UpdateUserComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.authService.editUser(params.id).subscribe(res => {
         this.user = res;
+      });
     });
-  });
   }
-
     updateUser(username, phone, adress, town) {
     this.route.params.subscribe(params => {
       this.authService.updateUser(username, phone, adress, town, params.id);

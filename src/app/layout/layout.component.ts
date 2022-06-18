@@ -16,6 +16,7 @@ export class LayoutComponent implements OnInit {
 
   receiveMode($event) {
     this.setMode = $event;
+    localStorage.setItem("theme", JSON.stringify(this.setMode === true));
   }
 
 }
