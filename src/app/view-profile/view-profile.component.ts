@@ -39,11 +39,11 @@ export class ViewProfileComponent implements OnInit {
     if(id === this.userId){
       this.getTimeline();
     }
-    this.route.params.subscribe(params => {
-      this.blogService.editTimeline(params.id).subscribe(res => {
-        this.user = res;
-      });
-    });
+    // this.route.params.subscribe(params => {
+    //   this.blogService.editTimeline(params.id).subscribe(res => {
+    //     this.user = res;
+    //   });
+    // });
   }
 
   updateTimelineById(text) {
