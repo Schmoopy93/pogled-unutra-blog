@@ -123,6 +123,25 @@ export class ServiceblogService {
       userId
     }, httpOptions);
   }
+  deleteTimeline(id: number): Observable<any> {
+    return this.http.delete(`${AUTH_API}deleteTimelines/${id}`, { responseType: 'text' });
+  }
+
+  editTimeline(id) {
+    return this
+      .http
+      .get(`${AUTH_API}showTimelines/${id}`);
+  }
+  updateTimeline(text, id) {
+
+    const obj = {
+      text: text
+    };
+    this
+      .http
+      .put(`${AUTH_API}timelines/${id}`, obj)
+      .subscribe(res => console.log('Done'));
+  }
 
   deleteComment(id: number): Observable<any> {
     return this.http.delete(`${this.commentURL}/${id}`, { responseType: 'text' });

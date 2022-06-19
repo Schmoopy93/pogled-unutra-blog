@@ -83,12 +83,26 @@
                                 <button *ngIf="currentUser?.roles== 'ROLE_ADMIN'" class="btn btn-outline-success btn-sm" style="margin-right:3px;" routerLink="/all-users">List of Users</button>
                                 <button class="btn btn-outline-success btn-sm" style="margin-right:3px;" data-toggle="modal" data-target="#exampleModal">My Info</button>
                                 <button class="btn btn-outline-success btn-sm" style="margin-right:3px;" routerLink="/edit-user/{{ currentUser?.id }}">Edit My Info</button>
+                                <button class="btn btn-outline-success btn-sm dropdown-toggle" style="margin-right: 10px;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Sort Timelines By Date
+                                  </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" (click)="compareAlphabeticallyAsc()">Asc <i class="fas fa-arrow-up"></i></a>
+                                    <a class="dropdown-item" (click)="compareAlphabeticallyDesc()">Desc <i class="fas fa-arrow-down"></i></a>
+                                </div>
                             </div>
                         </div>
-                        <ul class="profile-header-tab nav nav-tabs">
-                            <li class="nav-item"><a href="#profile-post" class="nav-link active show" data-toggle="tab">TIMELINE</a></li>
+                        <ul class="profile-header-tab nav nav-tabs" style="margin-top: 35px;">
+                            <li class="nav-item"><a class="nav-link active show" data-toggle="tab">TIMELINE</a></li>
                         </ul>
                     </div>
+                </div>
+                <div class="paginate">
+                    <select class="browser-default custom-select" style="width: 7%;" (change)="handlePageSizeChange($event) ">
+                        <option *ngFor="let size of pageSizes " [ngValue]="size ">
+                          {{ size }}
+                        </option>
+                      </select>
                 </div>
                 <div class="modal fade" id="exampleModalTimeline" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelTimeline" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -115,24 +129,28 @@
                         </div>
                     </div>
                 </div>
-                <div class="row d-flex justify-content-center" *ngFor="let timeline of timelines | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveUser(user, i)" style="margin-top: 10px;">
-                    <div class="col-md-8 col-lg-6">
-                        <div class="card shadow-0 border" style="background-color: #f0f2f5;">
-                            <div class="card-body p-4">
-                                <div class="card mb-4">
-                                    <div class="card-body">
+                <div class="row d-flex justify-content-center" *ngFor="let timeline of timelines | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" style="margin-top: 10px; ">
+                    <div class="col-md-8 col-lg-6 ">
+                        <div class="card shadow-0 border " style="background-color: #f0f2f5; ">
+                            <div class="card-body p-4 ">
+                                <div class="card mb-4 ">
+                                    <div class="card-body ">
                                         <p>{{timeline?.text}}</p>
-                                        <div class="d-flex justify-content-between">
-                                            <div class="d-flex flex-row align-items-center">
-                                                <img src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="avatar" width="25" height="25" />
-                                                <p class="small mb-0 ms-2">{{ user?.firstname }} {{ user?.lastname }}</p>
+                                        <div class="d-flex justify-content-between ">
+                                            <div class="d-flex flex-row align-items-center ">
+                                                <img src="http://localhost:4000/uploads/userphoto/{{user?.photoName}} " alt="avatar " width="25 " height="25 " />
+                                                <p class="small mb-0 ms-2 ">{{ user?.firstname }} {{ user?.lastname }}</p>
                                             </div>
-                                            <div class="d-flex flex-row align-items-center">
-                                                <p class="small mb-0 ms-2">{{ timeline?.createdAt | date: "MMM d, y h:mm:ss a" }}</p>
+                                            <div class="d-flex flex-row align-items-center ">
+                                                <p class="small mb-0 ms-2 ">{{ timeline?.createdAt | date: "MMM d, y h:mm:ss a " }}</p>
                                             </div>
-                                            <div class="d-flex flex-row align-items-center">
-                                                <p class="small text-muted mb-0">Upvote?</p>
-                                                <i class="far fa-thumbs-up mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i>
+                                            <div class="d-flex flex-row align-items-center ">
+                                                <p class="small text-muted mb-0 ">Upvote?</p>
+                                                <i class="far fa-thumbs-up mx-2 fa-xs text-black " style="margin-top: -0.16rem; "></i>
+                                            </div>
+                                            <div>
+                                                <button *ngIf="currentUser.id === user?.id" type="button" title="Delete timeline" class="btn btn-danger" mwlConfirmationPopover placement="top-left" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteTimelineById(timeline.id)"
+                                                    (cancel)="cancelClicked = true"><i class="far fa-trash-alt"></i></button>
                                             </div>
                                         </div>
                                     </div>
@@ -145,15 +163,6 @@
         </div>
     </div>
 </div>
-<div class="paginate">
-    <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
-</div>
-<div class="paginate">
-    <h2 style="font-size: 1.5em; font-weight: bolder;">Show more timelines:
-        <select (change)="handlePageSizeChange($event)">
-      <option *ngFor="let size of pageSizes" [ngValue]="size">
-        {{ size }}
-      </option>
-    </select>
-    </h2>
+<div class="paginate ">
+    <pagination-controls previousLabel="Prev " nextLabel="Next " [responsive]="true " (pageChange)="handlePageChange($event) "></pagination-controls>
 </div>

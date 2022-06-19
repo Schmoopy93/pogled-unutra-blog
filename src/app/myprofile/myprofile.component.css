@@ -9,6 +9,7 @@ body {
 }
 
 .profile-header .profile-header-cover {
+    background-image: url(../../assets/images/background-timeline.jpg);
     width: 100%;
     background-size: cover;
     background-position: center;

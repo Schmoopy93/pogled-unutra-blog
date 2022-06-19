@@ -29,6 +29,9 @@ export class MyprofileComponent implements OnInit {
   pageSizes = [5, 10, 15];
   sortedItems: any;
   errorMessage = '';
+  public popoverTitle: string = 'WARNING';
+  public popoverMessage: string = 'Are you sure you want to delete this user???'
+  public cancelClicked: boolean = false;
   
   constructor(private router: Router, private route: ActivatedRoute, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService, private blogService: ServiceblogService) { }
 
@@ -83,6 +86,7 @@ export class MyprofileComponent implements OnInit {
         this.timelines = timelines;
         this.count = totalItems;
         this.userId = userId;
+        this.timelines.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
       },
       error => {
         console.log(error);
@@ -123,5 +127,21 @@ export class MyprofileComponent implements OnInit {
     );
     window.location.reload();
 
+  }
+
+  deleteTimelineById(id) {
+    this.blogService.deleteTimeline(id).subscribe(res => {
+      console.log('Deleted');
+      //this.router.navigate(['/all-users']);
+      this.ngOnInit();
+    });
+  }
+
+  compareAlphabeticallyAsc() : void {
+    this.timelines.sort((a, b) => a.createdAt.localeCompare(b.createdAt))
+  }
+
+  compareAlphabeticallyDesc(): void {
+    this.timelines.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
   }
 }
