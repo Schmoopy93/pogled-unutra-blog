@@ -1,86 +1,142 @@
-<div class="container" style="padding-top: 50px; padding-bottom: 90px;">
-    <div class="main-body">
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex flex-column align-items-center text-center">
-                            <img src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="Admin" class="rounded-squad" width="110" style="overflow: hidden;">
-                            <div class="mt-3">
-                                <h4>{{ user?.firstname }} {{ user?.lastname }}</h4>
-                                <p class="text-secondary mb-1">Joined At: {{ user?.createdAt | date: "MMM d, y" }}</p>
-                                <p class="text-muted font-size-sm">{{user?.address}}, {{user?.town}}</p>
-                                <div class="buttons" *ngIf="currentUser?.roles== 'ROLE_ADMIN'">
-                                    <button class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" routerLink="/add-blog"> Create a post</button>
-                                </div>
-                                <br>
-                                <div class="buttons" *ngIf="currentUser?.roles== 'ROLE_ADMIN'">
-                                    <button class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" routerLink="/all-users">List of Users</button>
-                                </div>
-                                <br>
-                                <div class="buttons">
-                                    <button class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" (click)="viewBlog()">View My Blog</button>
-                                </div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">My Info</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <h6 class="mb-0">Full Name</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        <input type="text" class="form-control" value="{{ user?.firstname }} {{ user?.lastname }}" disabled>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <h6 class="mb-0">Email</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        <input type="text" class="form-control" value="{{ user?.email }}" disabled>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <h6 class="mb-0">Username</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        <input type="text" class="form-control" value="{{ user?.username }}" disabled>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <h6 class="mb-0">Phone</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        <input type="text" class="form-control" value="{{ user?.phone }}" disabled>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <h6 class="mb-0">Address</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        <input type="text" class="form-control" value="{{ user?.address }}" disabled>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <h6 class="mb-0">Town</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        <input type="text" class="form-control" value="{{ user?.town }}" disabled>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container" style="padding-bottom: 100px;">
+    <div class="row">
+        <div class="col-md-12">
+            <div id="content" class="content content-full-width">
+                <div class="profile">
+                    <div class="profile-header">
+                        <div class="profile-header-cover"></div>
+                        <div class="profile-header-content">
+                            <div class="profile-header-img">
+                                <img src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="">
+                            </div>
+                            <div class="profile-header-info">
+                                <h4 class="m-t-10 m-b-5">{{ user?.firstname }} {{ user?.lastname }}</h4>
+                                <p class="m-b-10">Joined At: {{ user?.createdAt | date: "MMM d, y" }}</p>
+                                <p class="m-b-10">Total timelines: {{count}}</p>
+                                <button *ngIf="currentUser?.roles== 'ROLE_ADMIN'" class="btn btn-outline-success btn-sm" style="margin-right:3px;" routerLink="/add-blog"> Create a post</button>
+                                <button type="button" style="margin-right:3px;" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#exampleModalTimeline">Add to timeline </button>
+                                <button *ngIf="currentUser?.roles== 'ROLE_ADMIN'" class="btn btn-outline-success btn-sm" style="margin-right:3px;" routerLink="/all-users">List of Users</button>
+                                <button class="btn btn-outline-success btn-sm" style="margin-right:3px;" data-toggle="modal" data-target="#exampleModal">My Info</button>
+                                <button class="btn btn-outline-success btn-sm" style="margin-right:3px;" routerLink="/edit-user/{{ currentUser?.id }}">Edit My Info</button>
+                            </div>
+                        </div>
+                        <ul class="profile-header-tab nav nav-tabs">
+                            <li class="nav-item"><a href="#profile-post" class="nav-link active show" data-toggle="tab">TIMELINE</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal fade" id="exampleModalTimeline" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelTimeline" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabelTimeline">Add what's on your mind today...</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="#" class="commenting-form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm">
+                                    <div class="row">
+                                        <div class="form-group col-md-12">
+                                            <textarea name="usercomment" id="usercomment" placeholder="Add to timeline" class="form-control" name="text" [(ngModel)]="form.text" #content="ngModel"></textarea>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-outline-success btn-sm " (click)="onSubmit()">Post</button>
+                                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-8">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">Full Name</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary">
-                                <input type="text" class="form-control" value="{{ user?.firstname }} {{ user?.lastname }}" disabled>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">Email</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary">
-                                <input type="text" class="form-control" value="{{ user?.email }}" disabled>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">Username</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary">
-                                <input type="text" class="form-control" value="{{ user?.username }}" disabled>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">Phone</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary">
-                                <input type="text" class="form-control" value="{{ user?.phone }}" disabled>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">Address</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary">
-                                <input type="text" class="form-control" value="{{ user?.address }}" disabled>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">Town</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary">
-                                <input type="text" class="form-control" value="{{ user?.town }}" disabled>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-3"></div>
-                            <div class="col-sm-9 text-secondary">
-                                <input type="button" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" value="Edit User" routerLink="/edit-user/{{ currentUser?.id }}">
+                <div class="row d-flex justify-content-center" *ngFor="let timeline of timelines | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveUser(user, i)" style="margin-top: 10px;">
+                    <div class="col-md-8 col-lg-6">
+                        <div class="card shadow-0 border" style="background-color: #f0f2f5;">
+                            <div class="card-body p-4">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <p>{{timeline?.text}}</p>
+                                        <div class="d-flex justify-content-between">
+                                            <div class="d-flex flex-row align-items-center">
+                                                <img src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="avatar" width="25" height="25" />
+                                                <p class="small mb-0 ms-2">{{ user?.firstname }} {{ user?.lastname }}</p>
+                                            </div>
+                                            <div class="d-flex flex-row align-items-center">
+                                                <p class="small mb-0 ms-2">{{ timeline?.createdAt | date: "MMM d, y h:mm:ss a" }}</p>
+                                            </div>
+                                            <div class="d-flex flex-row align-items-center">
+                                                <p class="small text-muted mb-0">Upvote?</p>
+                                                <i class="far fa-thumbs-up mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -88,4 +144,16 @@
             </div>
         </div>
     </div>
+</div>
+<div class="paginate">
+    <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
+</div>
+<div class="paginate">
+    <h2 style="font-size: 1.5em; font-weight: bolder;">Show more timelines:
+        <select (change)="handlePageSizeChange($event)">
+      <option *ngFor="let size of pageSizes" [ngValue]="size">
+        {{ size }}
+      </option>
+    </select>
+    </h2>
 </div>

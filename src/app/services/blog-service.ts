@@ -41,6 +41,10 @@ export class ServiceblogService {
     return this.http.get<any>(`${AUTH_API}findAllAppointments`);
   }
 
+  getAllTimelines(params: any): Observable<any> {
+    return this.http.get<any>(this.commURL + 'showAllPaginatedTimelines', { params });
+  }
+
   findByTitle(title: any): Observable<Post[]> {
     return this.http.get<Post[]>(`${(this.postsURL)}?title=${title}`);
   }
@@ -109,6 +113,13 @@ export class ServiceblogService {
     return this.http.post(AUTH_API + 'comments', {
       postId,
       content,
+      userId
+    }, httpOptions);
+  }
+
+  addTimeline(text: string, userId:number): Observable<any> {
+    return this.http.post(AUTH_API + 'timelines', {
+      text,
       userId
     }, httpOptions);
   }
