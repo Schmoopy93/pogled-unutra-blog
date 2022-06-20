@@ -34,6 +34,8 @@ import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { FullCalendarModule } from '@fullcalendar/angular'; // the main connector. must go first
 import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin
 import interactionPlugin from '@fullcalendar/interaction';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { NewPasswordComponent } from './new-password/new-password.component';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -60,6 +62,8 @@ FullCalendarModule.registerPlugins([
     AboutMeComponent,
     ViewProfileComponent,
     AppointmentComponent,
+    ForgotPasswordComponent,
+    NewPasswordComponent,
   ],
   imports: [
     BrowserModule,

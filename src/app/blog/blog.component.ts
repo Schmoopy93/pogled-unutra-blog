@@ -19,16 +19,10 @@ export class BlogComponent implements OnInit {
   user: User;
   confirmationCode: string;
 
-  constructor(private blogService: ServiceblogService, private authService: AuthService, private route: ActivatedRoute,
-    private router: Router,) {
-    //this.confirmationCode = this.route.snapshot.params['confirmationCode'];
+  constructor(private blogService: ServiceblogService, private authService: AuthService, private route: ActivatedRoute, private router: Router) {
   }
 
   ngOnInit() {
-    // this.blogService.findAll().subscribe(data => {
-    //   this.posts = data;
-    // });
-
     // const el = document.querySelector('.counter')
     // counterUp(el, {
     //   duration: 1000,
@@ -48,7 +42,4 @@ export class BlogComponent implements OnInit {
       });
     console.log(this.confirmationCode);
   }
-
-
-
 }

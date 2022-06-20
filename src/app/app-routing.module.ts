@@ -7,10 +7,12 @@ import { BlogComponent } from './blog/blog.component';
 import { BlogdetailComponent } from './blog/blogdetail/blogdetail.component';
 import { EditblogComponent } from './blog/editblog/editblog.component';
 import { ViewblogComponent } from './blog/viewblog/viewblog.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { LayoutComponent } from './layout/layout.component';
 import { LoginComponent } from './login/login.component';
 
 import { MyprofileComponent } from './myprofile/myprofile.component';
+import { NewPasswordComponent } from './new-password/new-password.component';
 import { RegisterComponent } from './register/register.component';
 import { AuthGuard } from './services/auth.guard';
 import { UpdateUserComponent } from './update-user/update-user.component';
@@ -58,7 +60,13 @@ const routes: Routes = [
         path: 'view-profile/:id', component: ViewProfileComponent, canActivate: [AuthGuard], data: {
           roles: '[ROLE_ADMIN]'
         }
-      }
+      },
+      {
+        path: 'forgot-password', component: ForgotPasswordComponent
+      },
+      {
+        path: 'reset-password/:token', component: NewPasswordComponent
+      },
     ]
   }];
 

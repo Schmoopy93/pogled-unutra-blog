@@ -16,6 +16,7 @@ const httpOptions = {
 export class AuthService {
   usersURL: string;
   constructor(private http: HttpClient) {}
+  
   login(username: string, password: string): Observable<any> {
     return this.http.post(AUTH_API + 'signin', {
       username,
@@ -84,11 +85,25 @@ export class AuthService {
     return this.http.get(`${AUTH_API}confirm/` + confirmationCode);
   }
 
+  setNewPassword(password: any, token: string): Observable<any> {
+    return this.http.post(USER_API + '/new-password', {
+      password,
+      token
+    }, httpOptions);
+  }
+
+
   getUserByToken(confirmationCode: any){
     return this.http.get(`${AUTH_API}confirm/` + confirmationCode);
   }
 
   getAllUsers(params: any): Observable<any> {
     return this.http.get<any>(`${USER_API}`, { params });
+  }
+  
+  forgotPassword(email: any): Observable<any> {
+    return this.http.post(USER_API + '/retrieve-password', {
+      email,
+    }, httpOptions);
   }
 }
