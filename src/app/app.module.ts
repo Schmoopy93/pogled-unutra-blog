@@ -37,6 +37,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { NewPasswordComponent } from './new-password/new-password.component';
 
+
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
   interactionPlugin
