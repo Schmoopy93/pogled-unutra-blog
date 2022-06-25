@@ -14,6 +14,7 @@ import { LoginComponent } from './login/login.component';
 import { MyprofileComponent } from './myprofile/myprofile.component';
 import { NewPasswordComponent } from './new-password/new-password.component';
 import { RegisterComponent } from './register/register.component';
+import { SearchFriendComponent } from './search-friend/search-friend.component';
 import { AuthGuard } from './services/auth.guard';
 import { UpdateUserComponent } from './update-user/update-user.component';
 import { UsersListComponent } from './users-list/users-list.component';
@@ -67,6 +68,10 @@ const routes: Routes = [
       {
         path: 'reset-password/:token', component: NewPasswordComponent
       },
+      {
+        path: 'search-friends', component: SearchFriendComponent
+      },
+
     ]
   }];
 

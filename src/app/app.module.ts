@@ -36,6 +36,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin
 import interactionPlugin from '@fullcalendar/interaction';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { NewPasswordComponent } from './new-password/new-password.component';
+import { SearchFriendComponent } from './search-friend/search-friend.component';
 
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
@@ -64,6 +65,7 @@ FullCalendarModule.registerPlugins([
     AppointmentComponent,
     ForgotPasswordComponent,
     NewPasswordComponent,
+    SearchFriendComponent,
   ],
   imports: [
     BrowserModule,
@@ -85,7 +87,7 @@ FullCalendarModule.registerPlugins([
       provide: DateAdapter,
       useFactory: adapterFactory,
     }),
-    FullCalendarModule
+    FullCalendarModule,
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent]
