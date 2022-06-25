@@ -38,6 +38,7 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { NewPasswordComponent } from './new-password/new-password.component';
 import { SearchFriendComponent } from './search-friend/search-friend.component';
 
+
 FullCalendarModule.registerPlugins([
   dayGridPlugin,
   interactionPlugin

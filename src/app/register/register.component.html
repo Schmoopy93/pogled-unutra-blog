@@ -56,9 +56,14 @@
                                     </div>
                                 </div>
                                 <div class="form-outline mb-4t">
-                                    <input type="file" class="form-control" id="customFile" (change)="selectFile($event)" style="height: auto;" />
+                                    <input type="file" class="form-control" id="customFile" (change)="fileChangeEvent($event)" style="height: auto;" />
                                     <label class="form-label" for="form3Example3cg">Your profile photo</label>
                                 </div>
+                                <div class="col-md-8" style="margin: auto;">
+                                    <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="4 / 4" [resizeToWidth]="256" format="png" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()" (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()">
+                                    </image-cropper>
+                                </div>
+                                <br>
                                 <div class="alert alert-warning" *ngIf="f.submitted && isSignUpFailed">
                                     Signup failed!<br />{{ message }}
                                 </div>
