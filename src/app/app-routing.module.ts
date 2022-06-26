@@ -58,9 +58,7 @@ const routes: Routes = [
         path: 'appointments', component: AppointmentComponent
       },
       {
-        path: 'view-profile/:id', component: ViewProfileComponent, canActivate: [AuthGuard], data: {
-          roles: '[ROLE_ADMIN]'
-        }
+        path: 'view-profile/:id', component: ViewProfileComponent
       },
       {
         path: 'forgot-password', component: ForgotPasswordComponent

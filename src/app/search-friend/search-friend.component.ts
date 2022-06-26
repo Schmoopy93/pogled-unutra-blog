@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../models/user';
 import { AuthService } from '../services/auth.service';
-
+import { TokenStorageService } from '../services/token-storage.service';
+import { map } from 'rxjs/operators';
 @Component({
   selector: 'app-search-friend',
   templateUrl: './search-friend.component.html',
@@ -10,7 +11,7 @@ import { AuthService } from '../services/auth.service';
 })
 export class SearchFriendComponent implements OnInit {
   users: User[] = [];
-  currentUser = null;
+  currentUser:any;
   user: any = {};
   currentIndex = -1;
   firstname = '';
@@ -20,12 +21,13 @@ export class SearchFriendComponent implements OnInit {
   pageSizes = [10, 20, 30];
   sortedItems: any;
   countAll: any;
+  currUser: any;
 
-
-  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router) { }
+  constructor(private authService: AuthService, private token: TokenStorageService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     this.retrieveUsers();
+    this.currUser = JSON.parse(window.sessionStorage.getItem('auth-user')).id;
   }
 
   setActiveUser(user: User, index: number): void {
@@ -42,7 +44,7 @@ export class SearchFriendComponent implements OnInit {
         const { users, totalItems } = response;
         this.users = users;
         this.count = totalItems;
-        console.log(this.users, "users")
+        
       },
       error => {
         console.log(error);
@@ -76,6 +78,14 @@ export class SearchFriendComponent implements OnInit {
     }
 
     return params;
+  }
+
+  compareAlphabeticallyAsc() : void {
+    this.users.sort((a, b) => a.firstname.localeCompare(b.firstname))
+  }
+
+  compareAlphabeticallyDesc(): void {
+    this.users.sort((a, b) => b.firstname.localeCompare(a.firstname))
   }
 
 }

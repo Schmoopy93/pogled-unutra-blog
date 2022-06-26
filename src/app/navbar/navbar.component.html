@@ -50,7 +50,7 @@
                     <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
                         <a class="nav-link" *ngIf="isLoggedIn" (click)="logout()" title="Sign Out"> <i class="fas fa-sign-out-alt" aria-hidden="true"></i> Sign Out</a>
                     </li>
-                    <div class="custom-control custom-switch" style="padding-top: 7px;">
+                    <div class="custom-control custom-switch" style="padding-top: 7px;" data-toggle="collapse" data-target=".navbar-collapse.show">
                         <input type="checkbox" class="custom-control-input" id="customSwitches" [(ngModel)]="setDark" title="Switch theme" (click)="onChangeToggle()">
                         <label class="custom-control-label" for="customSwitches"></label>
                     </div>

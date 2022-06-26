@@ -7,6 +7,7 @@ import { TokenStorageService } from './token-storage.service';
 import { ActivatedRoute } from '@angular/router';
 import { map, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { Followers } from '../models/followers';
 
 const AUTH_API = 'http://localhost:4000/api/auth/';
 const httpOptions = {
@@ -17,7 +18,6 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class ServiceblogService {
-  private post$ = new Subject<Post[]>();
   Posts: Post[];
   postsURL: string;
   commentURL: string;
@@ -123,6 +123,7 @@ export class ServiceblogService {
       userId
     }, httpOptions);
   }
+  
   deleteTimeline(id: number): Observable<any> {
     return this.http.delete(`${AUTH_API}deleteTimelines/${id}`, { responseType: 'text' });
   }
@@ -155,4 +156,18 @@ export class ServiceblogService {
     return this.http.delete(`${AUTH_API + 'findAllAppointments'}/${id}`, { responseType: 'text' });
   }
 
+  follow(userId: number, followerId:number): Observable<any> {
+    return this.http.post(AUTH_API + 'following', {
+      userId,
+      followerId
+    }, httpOptions);
+  }
+
+  getFollows(params: any): Observable<any> {
+    return this.http.get<any>(AUTH_API + 'followRequest', { params });
+  }
+
+  unfollow(id: number): Observable<any> {
+    return this.http.delete(`${AUTH_API + 'unfollow'}/${id}`, { responseType: 'text' });
+  }
 }

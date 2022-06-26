@@ -1,21 +1,24 @@
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { Followers } from '../models/followers';
 import { User } from '../models/user';
 import { AuthService } from '../services/auth.service';
 import { ServiceblogService } from '../services/blog-service';
 import { TokenStorageService } from '../services/token-storage.service';
-
 @Component({
   selector: 'app-view-profile',
   templateUrl: './view-profile.component.html',
   styleUrls: ['./view-profile.component.css'],
 })
 export class ViewProfileComponent implements OnInit {
-
   currentUser: any;
+  currentUserId: any;
   user: any;
   userId: any;
+  followerId: any;
+  followRequest = false;
   timelines: any;
   currentTimeline = null;
   currentIndex = -1;
@@ -26,6 +29,8 @@ export class ViewProfileComponent implements OnInit {
   pageSizes = [10, 20, 30];
   sortedItems: any;
   errorMessage = '';
+  res: any = {};
+  resId: any;
   public popoverTitle: string = 'WARNING';
   public popoverMessage: string = 'Are you sure you want to delete this user???'
   public cancelClicked: boolean = false;
@@ -35,16 +40,46 @@ export class ViewProfileComponent implements OnInit {
     this.currentUser = this.token.getUser();
     this.getUserById(this.route.snapshot.params.id);
     let id = this.route.snapshot.params.id;
+    this.followerId = this.route.snapshot.params.id;
+    this.currentUserId = this.token.getUser().id;
     this.userId = id;
     if(id === this.userId){
       this.getTimeline();
     }
-    // this.route.params.subscribe(params => {
-    //   this.blogService.editTimeline(params.id).subscribe(res => {
-    //     this.user = res;
-    //   });
-    // });
+    this.getFollowing();;
+    
   }
+  
+  getFollowing(): void {
+    const params = this.getRequestParamsForFollow(this.followerId,  this.currentUserId);
+    this.blogService.getFollows(params)
+    .subscribe(
+      response => {
+        const { followerId, currentUserId } = response;
+        this.followerId = followerId;
+        this.currentUserId = currentUserId;
+        this.res = response;
+        if(this.res){
+          this.res = this.res.find(i => i.id);
+          this.resId = this.res?.id;
+        }
+        if(typeof response !== 'undefined' && response.length > 0){
+          this.followRequest = true;
+        }else{
+          this.followRequest = false;
+        }
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
+  unfollow(id) {
+    this.blogService.unfollow(this.resId).subscribe(res => {
+      this.ngOnInit();
+    });
+  }
+
 
   updateTimelineById(text) {
     this.route.params.subscribe(params => {
@@ -101,7 +136,6 @@ export class ViewProfileComponent implements OnInit {
         this.count = totalItems;
         this.userId = userId;
         this.timelines.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-        console.log(response, "res")
       },
       error => {
         console.log(error);
@@ -130,6 +164,21 @@ export class ViewProfileComponent implements OnInit {
     return params;
   }
 
+  getRequestParamsForFollow(followerId: number, currentUserId: number): any {
+    let params: any = {};
+
+    if (followerId) {
+      params[`followerId`] = followerId;
+    }
+
+    if (currentUserId) {
+      params[`userId`] = currentUserId;
+    }
+
+    return params;
+  }
+
+
   deleteTimelineById(id) {
     this.blogService.deleteTimeline(id).subscribe(res => {
       console.log('Deleted');
@@ -144,5 +193,19 @@ export class ViewProfileComponent implements OnInit {
 
   compareAlphabeticallyDesc(): void {
     this.timelines.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+  }
+
+  onSubmit(): void {
+    this.userId = this.currentUser.id;
+    this.followerId = this.route.snapshot.params.id;
+    this.blogService.follow(this.userId, this.followerId).subscribe(
+      data => {
+        console.log(data);
+      },
+      err => {
+        this.errorMessage = err.error.message;
+      }
+    );
+    window.location.reload();
   }
 }

@@ -72,7 +72,7 @@
         </div>
     </div>
 </div>
-<div class="container" style="padding-bottom: 100px;">
+<div class="container" style="padding-bottom: 150px;">
     <div class="row">
         <div class="col-md-12">
             <div id="content" class="content content-full-width">
@@ -87,8 +87,10 @@
                                 <h4 class="m-t-10 m-b-5">{{ user?.firstname }} {{ user?.lastname }}</h4>
                                 <p class="m-b-10">Joined At: {{ user?.createdAt | date: "MMM d, y" }}</p>
                                 <p class="m-b-10">Total timelines: {{count}}</p>
-                                <button class="btn btn-outline-success btn-sm" style="margin-right:3px;" data-toggle="modal" data-target="#exampleModal">About {{ user?.firstname }} {{ user?.lastname }}</button>
-                                <button class="btn btn-outline-success btn-sm dropdown-toggle" style="margin-right: 10px;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button *ngIf="!followRequest" class="btn btn-outline-success btn-sm" style="margin-right:3px;" (click)="onSubmit()">Follow {{user?.firstname}} {{user?.lastname}}</button>
+                                <button *ngIf="followRequest" class="btn btn-outline-success btn-sm" style="margin-right:3px;" (click)="unfollow(resId)">Unfollow {{user?.firstname}} {{user?.lastname}}</button>
+                                <button *ngIf="followRequest" class="btn btn-outline-success btn-sm" style="margin-right:3px;" data-toggle="modal" data-target="#exampleModal">About {{ user?.firstname }} {{ user?.lastname }}</button>
+                                <button *ngIf="followRequest" class="btn btn-outline-success btn-sm dropdown-toggle" style="margin-right: 10px;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Sort Timelines By Date
                                   </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -109,30 +111,32 @@
                         </option>
                       </select>
                 </div>
-                <div class="row d-flex justify-content-center" *ngFor="let timeline of timelines | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveUser(user, i)" style="margin-top: 10px;">
-                    <div class="col-md-8 col-lg-6">
-                        <div class="card shadow-0 border" style="background-color: #f0f2f5;">
-                            <div class="card-body p-4">
-                                <div class="card mb-4">
-                                    <div class="card-body">
-                                        <p>{{timeline?.text}}</p>
-                                        <div class="d-flex justify-content-between">
-                                            <div class="d-flex flex-row align-items-center">
-                                                <img src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="avatar" width="25" height="25" />
-                                                <p class="small mb-0 ms-2">{{ user?.firstname }} {{ user?.lastname }}</p>
-                                            </div>
-                                            <div class="d-flex flex-row align-items-center">
-                                                <p class="small mb-0 ms-2">{{ timeline?.createdAt | date: "MMM d, y h:mm:ss a" }}</p>
-                                            </div>
-                                            <div class="d-flex flex-row align-items-center">
-                                                <p class="small text-muted mb-0">Upvote?</p>
-                                                <i class="far fa-thumbs-up mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i>
-                                            </div>
-                                            <div>
-                                                <button *ngIf="currentUser.id === user?.id" type="button" title="Delete timeline" class="btn btn-danger" mwlConfirmationPopover placement="top-left" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteTimelineById(timeline.id)"
-                                                    (cancel)="cancelClicked = true"><i class="far fa-trash-alt"></i></button>
-                                            </div>
+                <div *ngIf="followRequest">
+                    <div class="row d-flex justify-content-center" *ngFor="let timeline of timelines | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveUser(user, i)" style="margin-top: 10px;">
+                        <div class="col-md-8 col-lg-6">
+                            <div class="card shadow-0 border" style="background-color: #f0f2f5;">
+                                <div class="card-body p-4">
+                                    <div class="card mb-4">
+                                        <div class="card-body">
+                                            <p>{{timeline?.text}}</p>
+                                            <div class="d-flex justify-content-between">
+                                                <div class="d-flex flex-row align-items-center">
+                                                    <img src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="avatar" width="25" height="25" />
+                                                    <p class="small mb-0 ms-2">{{ user?.firstname }} {{ user?.lastname }}</p>
+                                                </div>
+                                                <div class="d-flex flex-row align-items-center">
+                                                    <p class="small mb-0 ms-2">{{ timeline?.createdAt | date: "MMM d, y h:mm:ss a" }}</p>
+                                                </div>
+                                                <div class="d-flex flex-row align-items-center">
+                                                    <p class="small text-muted mb-0">Upvote?</p>
+                                                    <i class="far fa-thumbs-up mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i>
+                                                </div>
+                                                <div>
+                                                    <button *ngIf="currentUser.id === user?.id" type="button" title="Delete timeline" class="btn btn-danger" mwlConfirmationPopover placement="top-left" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteTimelineById(timeline.id)"
+                                                        (cancel)="cancelClicked = true"><i class="far fa-trash-alt"></i></button>
+                                                </div>
 
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -140,6 +144,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
