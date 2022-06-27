@@ -4,6 +4,7 @@ import { User } from '../models/user';
 import { AuthService } from '../services/auth.service';
 import { TokenStorageService } from '../services/token-storage.service';
 import { map } from 'rxjs/operators';
+import { LeadingComment } from '@angular/compiler';
 @Component({
   selector: 'app-search-friend',
   templateUrl: './search-friend.component.html',
@@ -22,7 +23,9 @@ export class SearchFriendComponent implements OnInit {
   sortedItems: any;
   countAll: any;
   currUser: any;
-
+  res: any;
+  resFinalArray: any;
+  result: any;
   constructor(private authService: AuthService, private token: TokenStorageService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
@@ -37,14 +40,17 @@ export class SearchFriendComponent implements OnInit {
 
   retrieveUsers(): void {
     const params = this.getRequestParams(this.firstname, this.page, this.pageSize);
-
     this.authService.getAllUsers(params)
     .subscribe(
       response => {
         const { users, totalItems } = response;
         this.users = users;
         this.count = totalItems;
-        
+        this.res = users.filter(users => !(users.id == this.currUser));
+        for(var i = 0, len = users.length; i < len; i++){
+          this.resFinalArray = users[i].followers.filter(followers => !(followers.userId != this.currUser));
+          console.log(this.resFinalArray, "RESRANDOM")
+        }
       },
       error => {
         console.log(error);
