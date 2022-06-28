@@ -44,7 +44,7 @@ export class SearchFriendComponent implements OnInit {
 
   retrieveUsers(): void {
     const params = this.getRequestParams(this.firstname, this.page, this.pageSize);
-    this.authService.getAllUsers(params)
+    this.authService.getAllUsersForSearch(params)
     .subscribe(
       response => {
         const { users, totalItems } = response;
@@ -60,7 +60,7 @@ export class SearchFriendComponent implements OnInit {
           
         // }
         // this.res = users.filter(users => (users.id != this.currUser && (users.id !== this.followerId && users.id !== this.userId)));
-        // console.log(this.res, "RES")
+        console.log(this.res, "RES")
         },
         error => {
           console.log(error);

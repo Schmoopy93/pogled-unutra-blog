@@ -98,6 +98,10 @@ export class AuthService {
   }
 
   getAllUsers(params: any): Observable<any> {
+    return this.http.get<any>(`${USER_API}/list-users`, { params });
+  }
+
+  getAllUsersForSearch(params: any): Observable<any> {
     return this.http.get<any>(`${USER_API}`, { params });
   }
   

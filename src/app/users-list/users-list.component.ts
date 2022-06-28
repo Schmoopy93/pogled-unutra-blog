@@ -26,6 +26,7 @@ export class UsersListComponent implements OnInit {
   sortedItems: any;
   countAll: any;
   currentUser_id: any;
+  res: any;
   constructor(private authService: AuthService, private token: TokenStorageService , private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
@@ -49,8 +50,7 @@ export class UsersListComponent implements OnInit {
         const { users, totalItems } = response;
         this.users = users;
         this.count = totalItems;
-        // this.res = response;
-        // console.log(this.res, "RES")
+        console.log(users, "USERS")
       },
       error => {
         console.log(error);
