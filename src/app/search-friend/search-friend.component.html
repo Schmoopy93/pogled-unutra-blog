@@ -69,8 +69,8 @@
     <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
 </div>
 <div class="col-md-12">
-    <h2 style="font-size: 1.4em; font-weight: bolder;">Users per Page:
-        <select class="browser-default custom-select" style="width: 25%;" (change)="handlePageSizeChange($event)">
+    <h2 style="font-size: 1.1em; font-weight: bolder;">Users per Page:
+        <select class="browser-default custom-select" style="width: 30%;" (change)="handlePageSizeChange($event)">
 <option *ngFor="let size of pageSizes" [ngValue]="size">
 {{ size }}
 </option>

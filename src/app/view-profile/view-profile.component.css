@@ -669,3 +669,11 @@ select.form-control:not([size]):not([multiple]) {
     display: flex;
     justify-content: center;
 }
+
+.link-muted {
+    color: #aaa;
+}
+
+.link-muted:hover {
+    color: #1266f1;
+}

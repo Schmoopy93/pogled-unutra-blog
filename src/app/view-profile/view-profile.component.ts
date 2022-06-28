@@ -32,7 +32,7 @@ export class ViewProfileComponent implements OnInit {
   res: any = {};
   resId: any;
   public popoverTitle: string = 'WARNING';
-  public popoverMessage: string = 'Are you sure you want to delete this user???'
+  public popoverMessage: string = 'Are you sure you want to delete this timeline post???'
   public cancelClicked: boolean = false;
   constructor(private blogService: ServiceblogService, private route : ActivatedRoute, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService) { }
 

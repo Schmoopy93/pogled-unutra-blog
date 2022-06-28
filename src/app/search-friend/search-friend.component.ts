@@ -26,6 +26,10 @@ export class SearchFriendComponent implements OnInit {
   res: any;
   resFinalArray: any;
   result: any;
+  userId:any;
+  followerId: any;
+  user_Id: any;
+  follower_Id: any;
   constructor(private authService: AuthService, private token: TokenStorageService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
@@ -46,15 +50,21 @@ export class SearchFriendComponent implements OnInit {
         const { users, totalItems } = response;
         this.users = users;
         this.count = totalItems;
-        this.res = users.filter(users => !(users.id == this.currUser));
-        for(var i = 0, len = users.length; i < len; i++){
-          this.resFinalArray = users[i].followers.filter(followers => !(followers.userId != this.currUser));
-          console.log(this.resFinalArray, "RESRANDOM")
-        }
-      },
-      error => {
-        console.log(error);
-      });
+        this.res = users.filter(users => (users.id != this.currUser));
+        // for(var i = 0, len = users.length; i < len; i++){
+        //   this.resFinalArray = users[i].followers.filter(followers => !(followers.userId != this.currUser));
+        //   this.followerId = users[i].followers.map((followers) => followers.followerId);
+        //   this.userId = users[i].followers.map((followers) => followers.userId);
+        //   this.user_Id = users.map((users) => users.id);
+        //   this.follower_Id = users.map((users) => users.id);
+          
+        // }
+        // this.res = users.filter(users => (users.id != this.currUser && (users.id !== this.followerId && users.id !== this.userId)));
+        // console.log(this.res, "RES")
+        },
+        error => {
+          console.log(error);
+        });
   }
 
   handlePageChange(event: number): void {

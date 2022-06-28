@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../models/user';
 import { AuthService } from '../services/auth.service';
+import { TokenStorageService } from '../services/token-storage.service';
 
 @Component({
   selector: 'app-users-list',
@@ -24,11 +25,13 @@ export class UsersListComponent implements OnInit {
   pageSizes = [10, 20, 30];
   sortedItems: any;
   countAll: any;
-
-  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router) { }
+  currentUser_id: any;
+  constructor(private authService: AuthService, private token: TokenStorageService , private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     this.retrieveUsers();
+    this.currentUser_id = this.token.getUser().id;
+    console.log(this.currentUser_id)
 
   }
 
@@ -46,7 +49,8 @@ export class UsersListComponent implements OnInit {
         const { users, totalItems } = response;
         this.users = users;
         this.count = totalItems;
-        console.log(this.users, "users")
+        // this.res = response;
+        // console.log(this.res, "RES")
       },
       error => {
         console.log(error);

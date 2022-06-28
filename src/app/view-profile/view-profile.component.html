@@ -104,46 +104,41 @@
                         </ul>
                     </div>
                 </div>
-                <div class="paginate">
-                    <select class="browser-default custom-select" style="width: 7%;" (change)="handlePageSizeChange($event) ">
-                        <option *ngFor="let size of pageSizes " [ngValue]="size ">
-                          {{ size }}
-                        </option>
-                      </select>
-                </div>
-                <div *ngIf="followRequest">
-                    <div class="row d-flex justify-content-center" *ngFor="let timeline of timelines | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveUser(user, i)" style="margin-top: 10px;">
-                        <div class="col-md-8 col-lg-6">
-                            <div class="card shadow-0 border" style="background-color: #f0f2f5;">
-                                <div class="card-body p-4">
-                                    <div class="card mb-4">
-                                        <div class="card-body">
-                                            <p>{{timeline?.text}}</p>
-                                            <div class="d-flex justify-content-between">
-                                                <div class="d-flex flex-row align-items-center">
-                                                    <img src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="avatar" width="25" height="25" />
-                                                    <p class="small mb-0 ms-2">{{ user?.firstname }} {{ user?.lastname }}</p>
-                                                </div>
-                                                <div class="d-flex flex-row align-items-center">
-                                                    <p class="small mb-0 ms-2">{{ timeline?.createdAt | date: "MMM d, y h:mm:ss a" }}</p>
-                                                </div>
-                                                <div class="d-flex flex-row align-items-center">
-                                                    <p class="small text-muted mb-0">Upvote?</p>
-                                                    <i class="far fa-thumbs-up mx-2 fa-xs text-black" style="margin-top: -0.16rem;"></i>
+                <section *ngIf="followRequest">
+                    <div class="container my-5 py-5">
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-md-12 col-lg-10" *ngFor="let timeline of timelines | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveUser(user, i)" style="margin-top: 10px;">
+                                <div class="card text-dark">
+                                    <div class="card-body p-4">
+                                        <h4 class="mb-0">Timeline posts</h4>
+                                        <p class="fw-light mb-4 pb-2">Latest timeline section </p>
+                                        <div class="d-flex flex-start">
+                                            <img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="avatar" width="60" height="60" />
+                                            <div>
+                                                <h6 class="fw-bold mb-1">{{ user?.firstname }} {{ user?.lastname }}</h6>
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <p class="mb-0">
+                                                        {{ timeline?.createdAt | date: "MMM d, y h:mm:ss a" }}
+                                                        <span class="badge bg-success">Active</span>
+                                                    </p>
                                                 </div>
                                                 <div>
-                                                    <button *ngIf="currentUser.id === user?.id" type="button" title="Delete timeline" class="btn btn-danger" mwlConfirmationPopover placement="top-left" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteTimelineById(timeline.id)"
-                                                        (cancel)="cancelClicked = true"><i class="far fa-trash-alt"></i></button>
+                                                    <a href="#!" class="link-muted"><i class="fas fa-pencil-alt ms-2"></i></a>
+                                                    <a style="margin-left: 10px;" href="#!" class="link-muted"><i class="fas fa-heart ms-2"></i></a>
+                                                    <a style="margin-left: 10px;" *ngIf="currentUser.id === user?.id" mwlConfirmationPopover placement="top-left" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteTimelineById(timeline.id)" (cancel)="cancelClicked = true"><i class="fas fa-trash ms-2"></i></a>
                                                 </div>
-
+                                                <p class="mb-0">
+                                                    {{timeline?.text}}
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
+                                    <hr class="my-0" />
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </section>
 
             </div>
         </div>
@@ -151,4 +146,13 @@
 </div>
 <div class="paginate">
     <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
+</div>
+<div class="paginate">
+    <h2 style="font-size: 1.1em; font-weight: bolder;">Timelines per Page:
+        <select class="browser-default custom-select" style="width: 24.5%;" (change)="handlePageSizeChange($event)">
+<option *ngFor="let size of pageSizes" [ngValue]="size">
+{{ size }}
+</option>
+</select>
+    </h2>
 </div>

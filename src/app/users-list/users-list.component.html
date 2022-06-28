@@ -55,7 +55,7 @@
                         <td>{{user?.email}}</td>
                         <td>{{user?.createdAt | date:"MMM d, y h:mm:ss a"}}</td>
                         <td>
-                            <button type="button" title="Show profile" style="margin-right: 10px;" class="btn btn-primary" routerLink="/view-profile/{{ user.id }}"><i class="fas fa-eye"></i></button>
+                            <button type="button" title="Show profile" *ngIf="user.id != currentUser_id" style="margin-right: 10px;" class="btn btn-primary" routerLink="/view-profile/{{ user.id }}"><i class="fas fa-eye"></i></button>
                             <button type="button" title="Edit profile" style="margin-right: 10px;" class="btn btn-success" routerLink="/edit-user/{{ user.id }}"><i class="fas fa-edit"></i></button>
                             <button type="button" title="Delete profile" style="margin-right: 10px;" class="btn btn-danger" mwlConfirmationPopover placement="top-right" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteUser(user.id)" (cancel)="cancelClicked = true"><i class="far fa-trash-alt"></i></button>
                         </td>
@@ -67,8 +67,8 @@
             <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
         </div>
         <div class="col-md-12">
-            <h2 style="font-size: 1.4em; font-weight: bolder;">Users per Page:
-                <select class="browser-default custom-select" style="width: 24%;" (change)="handlePageSizeChange($event)">
+            <h2 style="font-size: 1.1em; font-weight: bolder;">Users per Page:
+                <select class="browser-default custom-select" style="width: 30%;" (change)="handlePageSizeChange($event)">
       <option *ngFor="let size of pageSizes" [ngValue]="size">
         {{ size }}
       </option>
