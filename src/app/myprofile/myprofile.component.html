@@ -79,9 +79,9 @@
                                 <p class="m-b-10">Joined At: {{ user?.createdAt | date: "MMM d, y" }}</p>
                                 <p class="m-b-10">Last time updated: {{ user?.updatedAt | date: "MMM d, y h:mm:ss a" }}</p>
                                 <p class="m-b-10">Total timelines: {{count}}</p>
-                                <button *ngIf="currentUser?.roles== 'ROLE_ADMIN'" class="btn btn-outline-success btn-sm" style="margin-right:3px;" routerLink="/add-blog"> Create a post</button>
+                                <button *ngIf="role_user == 'ROLE_ADMIN'" class="btn btn-outline-success btn-sm" style="margin-right:3px;" routerLink="/add-blog"> Create a post</button>
                                 <button type="button" style="margin-right:3px;" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#exampleModalTimeline">Add to timeline </button>
-                                <button *ngIf="currentUser?.roles== 'ROLE_ADMIN'" class="btn btn-outline-success btn-sm" style="margin-right:3px;" routerLink="/all-users">List of Users</button>
+                                <button *ngIf="role_user == 'ROLE_ADMIN'" class="btn btn-outline-success btn-sm" style="margin-right:3px;" routerLink="/all-users">List of Users</button>
                                 <button class="btn btn-outline-success btn-sm" style="margin-right:3px;" data-toggle="modal" data-target="#exampleModal">My Info</button>
                                 <button class="btn btn-outline-success btn-sm" style="margin-right:3px;" routerLink="/edit-user/{{ currentUser?.id }}">Edit My Info</button>
                                 <button class="btn btn-outline-success btn-sm dropdown-toggle" style="margin-right: 10px;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -129,7 +129,6 @@
                             <div class="col-md-12 col-lg-10" *ngFor="let timeline of timelines | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveUser(user, i)" style="margin-top: 10px;">
                                 <div class="card text-dark">
                                     <div class="card-body p-4">
-                                        <hr>
                                         <div class="d-flex flex-start">
                                             <img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="avatar" width="60" height="60" />
                                             <div>
@@ -151,7 +150,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <hr class="my-0" />
                                 </div>
                             </div>
                         </div>

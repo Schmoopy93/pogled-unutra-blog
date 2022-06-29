@@ -674,3 +674,9 @@ select.form-control:not([size]):not([multiple]) {
 .link-muted1:hover {
     color: #f11212;
 }
+
+.text-dark {
+    border: 1px solid;
+    padding: 10px;
+    box-shadow: 5px 10px #888888;
+}
