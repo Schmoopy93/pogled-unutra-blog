@@ -35,6 +35,7 @@ export class SearchFriendComponent implements OnInit {
   ngOnInit(): void {
     this.retrieveUsers();
     this.currUser = JSON.parse(window.sessionStorage.getItem('auth-user')).id;
+
   }
 
   setActiveUser(user: User, index: number): void {
@@ -50,17 +51,16 @@ export class SearchFriendComponent implements OnInit {
         const { users, totalItems } = response;
         this.users = users;
         this.count = totalItems;
-        this.res = users.filter(users => (users.id != this.currUser));
-        // for(var i = 0, len = users.length; i < len; i++){
-        //   this.resFinalArray = users[i].followers.filter(followers => !(followers.userId != this.currUser));
-        //   this.followerId = users[i].followers.map((followers) => followers.followerId);
-        //   this.userId = users[i].followers.map((followers) => followers.userId);
-        //   this.user_Id = users.map((users) => users.id);
-        //   this.follower_Id = users.map((users) => users.id);
-          
-        // }
-        // this.res = users.filter(users => (users.id != this.currUser && (users.id !== this.followerId && users.id !== this.userId)));
-        console.log(this.res, "RES")
+
+        const currentUserFollowers = users.filter(user => user.id === this.currUser)[0].followers.map(el => el.followerId);
+        this.res = users.filter(user => (!currentUserFollowers.includes(user.id) && user.id !==this.currUser));
+        const user = [{
+          userID:123,
+          name: 'Marko',
+          godine:25
+        }];
+        console.log(user[0].userID);
+        
         },
         error => {
           console.log(error);
