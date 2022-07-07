@@ -32,8 +32,6 @@ export class UsersListComponent implements OnInit {
   ngOnInit(): void {
     this.retrieveUsers();
     this.currentUser_id = this.token.getUser().id;
-    console.log(this.currentUser_id)
-
   }
 
   setActiveUser(user: User, index: number): void {
@@ -50,7 +48,6 @@ export class UsersListComponent implements OnInit {
         const { users, totalItems } = response;
         this.users = users;
         this.count = totalItems;
-        console.log(users, "USERS")
       },
       error => {
         console.log(error);
@@ -88,7 +85,6 @@ export class UsersListComponent implements OnInit {
 
   deleteUser(id) {
     this.authService.deleteUser(id).subscribe(res => {
-      console.log('Deleted');
       this.router.navigate(['/all-users']);
       this.ngOnInit();
     });

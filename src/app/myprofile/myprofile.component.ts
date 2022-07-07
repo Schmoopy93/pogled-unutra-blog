@@ -121,9 +121,7 @@ export class MyprofileComponent implements OnInit {
   onSubmit(): void {
     const { text } = this.form;
     this.blogService.addTimeline(text, this.currentUser.id).subscribe(
-      data => {
-        console.log(data);
-      },
+      data => {},
       err => {
         this.errorMessage = err.error.message;
       }
@@ -134,8 +132,6 @@ export class MyprofileComponent implements OnInit {
 
   deleteTimelineById(id) {
     this.blogService.deleteTimeline(id).subscribe(res => {
-      console.log('Deleted');
-      //this.router.navigate(['/all-users']);
       this.ngOnInit();
     });
   }

@@ -181,7 +181,6 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
 
   deletePost(id) {
     this.blogService.deleteComment(id).subscribe(res => {
-      console.log('Deleted');
       this.ngOnInit();
     });
   }
