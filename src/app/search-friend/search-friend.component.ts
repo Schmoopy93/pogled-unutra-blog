@@ -51,9 +51,10 @@ export class SearchFriendComponent implements OnInit {
         const { users, totalItems } = response;
         this.users = users;
         this.count = totalItems;
-
+        this.res = users;
         const currentUserFollowers = users.filter(user => user.id === this.currUser)[0].followers.map(el => el.followerId);
         this.res = users.filter(user => (!currentUserFollowers.includes(user.id) && user.id !==this.currUser));
+        console.log(this.res, "RES")
         },
         error => {
           console.log(error);
@@ -90,11 +91,11 @@ export class SearchFriendComponent implements OnInit {
   }
 
   compareAlphabeticallyAsc() : void {
-    this.users.sort((a, b) => a.firstname.localeCompare(b.firstname))
+    this.res.sort((a, b) => a.firstname.localeCompare(b.firstname))
   }
 
   compareAlphabeticallyDesc(): void {
-    this.users.sort((a, b) => b.firstname.localeCompare(a.firstname))
+    this.res.sort((a, b) => b.firstname.localeCompare(a.firstname))
   }
 
 }
