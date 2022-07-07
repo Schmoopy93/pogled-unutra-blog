@@ -82,6 +82,7 @@
                                 <button *ngIf="role_user == 'ROLE_ADMIN'" class="btn btn-outline-success btn-sm" style="margin-right:3px;" routerLink="/add-blog"> Create a post</button>
                                 <button type="button" style="margin-right:3px;" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#exampleModalTimeline">Add to timeline </button>
                                 <button *ngIf="role_user == 'ROLE_ADMIN'" class="btn btn-outline-success btn-sm" style="margin-right:3px;" routerLink="/all-users">List of Users</button>
+                                <button class="btn btn-outline-success btn-sm" style="margin-right:3px;" routerLink="/followers">Followers</button>
                                 <button class="btn btn-outline-success btn-sm" style="margin-right:3px;" data-toggle="modal" data-target="#exampleModal">My Info</button>
                                 <button class="btn btn-outline-success btn-sm" style="margin-right:3px;" routerLink="/edit-user/{{ currentUser?.id }}">Edit My Info</button>
                                 <button class="btn btn-outline-success btn-sm dropdown-toggle" style="margin-right: 10px;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -155,19 +156,21 @@
                         </div>
                     </div>
                 </section>
+                <div>
+                    <div class="paginate">
+                        <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
+                    </div>
+                    <div class="paginate">
+                        <h2 style="font-size: 1.1em; font-weight: bolder;">Timelines per Page:
+                            <select class="browser-default custom-select" style="width: 24.5%;" (change)="handlePageSizeChange($event)">
+                    <option *ngFor="let size of pageSizes" [ngValue]="size">
+                    {{ size }}
+                    </option>
+                    </select>
+                        </h2>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div class="paginate">
-    <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
-</div>
-<div class="paginate">
-    <h2 style="font-size: 1.1em; font-weight: bolder;">Timelines per Page:
-        <select class="browser-default custom-select" style="width: 24.5%;" (change)="handlePageSizeChange($event)">
-<option *ngFor="let size of pageSizes" [ngValue]="size">
-{{ size }}
-</option>
-</select>
-    </h2>
 </div>

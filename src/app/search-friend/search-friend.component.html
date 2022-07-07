@@ -32,7 +32,7 @@
     </div>
 </div>
 <ng-container>
-    <div class="container profile-page" style="margin-top: 50px; padding-bottom: 100px;">
+    <div class="container profile-page" style="padding-bottom: 500px;">
         <div class="row">
             <div class="col-xl-6 col-lg-7 col-md-12" *ngFor="let user of res | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveUser(user, i)">
                 <div class="card profile-header">
@@ -64,16 +64,17 @@
         </div>
     </div>
 </ng-container>
-
-<div class="col-md-12">
-    <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
-</div>
-<div class="col-md-12">
-    <h2 style="font-size: 1.1em; font-weight: bolder;">Users per Page:
-        <select class="browser-default custom-select" style="width: 30%;" (change)="handlePageSizeChange($event)">
-<option *ngFor="let size of pageSizes" [ngValue]="size">
-{{ size }}
-</option>
-</select>
-    </h2>
+<div>
+    <div class="col-md-12">
+        <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
+    </div>
+    <div class="col-md-12">
+        <h2 style="font-size: 1.1em; font-weight: bolder;">Users per Page:
+            <select class="browser-default custom-select" style="width: 30%;" (change)="handlePageSizeChange($event)">
+    <option *ngFor="let size of pageSizes" [ngValue]="size">
+    {{ size }}
+    </option>
+    </select>
+        </h2>
+    </div>
 </div>

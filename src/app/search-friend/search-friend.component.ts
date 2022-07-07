@@ -54,13 +54,6 @@ export class SearchFriendComponent implements OnInit {
 
         const currentUserFollowers = users.filter(user => user.id === this.currUser)[0].followers.map(el => el.followerId);
         this.res = users.filter(user => (!currentUserFollowers.includes(user.id) && user.id !==this.currUser));
-        const user = [{
-          userID:123,
-          name: 'Marko',
-          godine:25
-        }];
-        console.log(user[0].userID);
-        
         },
         error => {
           console.log(error);
