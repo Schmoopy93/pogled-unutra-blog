@@ -37,6 +37,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { NewPasswordComponent } from './new-password/new-password.component';
 import { SearchFriendComponent } from './search-friend/search-friend.component';
+import { FollowersListComponent } from './followers-list/followers-list.component';
 
 
 FullCalendarModule.registerPlugins([
@@ -67,6 +68,7 @@ FullCalendarModule.registerPlugins([
     ForgotPasswordComponent,
     NewPasswordComponent,
     SearchFriendComponent,
+    FollowersListComponent,
   ],
   imports: [
     BrowserModule,
