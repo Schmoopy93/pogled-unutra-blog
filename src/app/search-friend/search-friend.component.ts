@@ -4,6 +4,7 @@ import { User } from '../models/user';
 import { AuthService } from '../services/auth.service';
 import { TokenStorageService } from '../services/token-storage.service';
 import { map } from 'rxjs/operators';
+import { LeadingComment } from '@angular/compiler';
 @Component({
   selector: 'app-search-friend',
   templateUrl: './search-friend.component.html',
@@ -22,12 +23,19 @@ export class SearchFriendComponent implements OnInit {
   sortedItems: any;
   countAll: any;
   currUser: any;
-
+  res: any;
+  resFinalArray: any;
+  result: any;
+  userId:any;
+  followerId: any;
+  user_Id: any;
+  follower_Id: any;
   constructor(private authService: AuthService, private token: TokenStorageService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     this.retrieveUsers();
     this.currUser = JSON.parse(window.sessionStorage.getItem('auth-user')).id;
+
   }
 
   setActiveUser(user: User, index: number): void {
@@ -37,18 +45,19 @@ export class SearchFriendComponent implements OnInit {
 
   retrieveUsers(): void {
     const params = this.getRequestParams(this.firstname, this.page, this.pageSize);
-
-    this.authService.getAllUsers(params)
+    this.authService.getAllUsersForSearch(params)
     .subscribe(
       response => {
         const { users, totalItems } = response;
         this.users = users;
         this.count = totalItems;
-        
-      },
-      error => {
-        console.log(error);
-      });
+        this.res = users;
+        const currentUserFollowers = users.filter(user => user.id === this.currUser)[0].followers.map(el => el.followerId);
+        this.res = users.filter(user => (!currentUserFollowers.includes(user.id) && user.id !==this.currUser));
+        },
+        error => {
+          console.log(error);
+        });
   }
 
   handlePageChange(event: number): void {
@@ -81,11 +90,11 @@ export class SearchFriendComponent implements OnInit {
   }
 
   compareAlphabeticallyAsc() : void {
-    this.users.sort((a, b) => a.firstname.localeCompare(b.firstname))
+    this.res.sort((a, b) => a.firstname.localeCompare(b.firstname))
   }
 
   compareAlphabeticallyDesc(): void {
-    this.users.sort((a, b) => b.firstname.localeCompare(a.firstname))
+    this.res.sort((a, b) => b.firstname.localeCompare(a.firstname))
   }
 
 }

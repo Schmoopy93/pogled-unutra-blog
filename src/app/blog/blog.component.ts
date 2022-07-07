@@ -40,6 +40,5 @@ export class BlogComponent implements OnInit {
           this.router.navigate(['/'], { relativeTo: this.route });
         }
       });
-    console.log(this.confirmationCode);
   }
 }

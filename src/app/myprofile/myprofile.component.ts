@@ -29,6 +29,7 @@ export class MyprofileComponent implements OnInit {
   pageSizes = [5, 10, 15];
   sortedItems: any;
   errorMessage = '';
+  role_user:any;
   public popoverTitle: string = 'WARNING';
   public popoverMessage: string = 'Are you sure you want to delete this user???'
   public cancelClicked: boolean = false;
@@ -38,10 +39,12 @@ export class MyprofileComponent implements OnInit {
   ngOnInit(): void {
     this.currentUser = this.token.getUser();
     this.getUserById(this.currentUser.id);
-    this.userId = this.currentUser.id;
+    this.userId = JSON.parse(window.sessionStorage.getItem('auth-user')).id;
     if(this.currentUser.id === this.userId){
       this.getTimeline();
     }
+
+    this.role_user = JSON.parse(window.sessionStorage.getItem('auth-user')).roles;
   }
   
   setActiveUser(user: User, index: number): void {
@@ -118,9 +121,7 @@ export class MyprofileComponent implements OnInit {
   onSubmit(): void {
     const { text } = this.form;
     this.blogService.addTimeline(text, this.currentUser.id).subscribe(
-      data => {
-        console.log(data);
-      },
+      data => {},
       err => {
         this.errorMessage = err.error.message;
       }
@@ -131,8 +132,6 @@ export class MyprofileComponent implements OnInit {
 
   deleteTimelineById(id) {
     this.blogService.deleteTimeline(id).subscribe(res => {
-      console.log('Deleted');
-      //this.router.navigate(['/all-users']);
       this.ngOnInit();
     });
   }

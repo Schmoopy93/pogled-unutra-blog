@@ -7,6 +7,7 @@ import { BlogComponent } from './blog/blog.component';
 import { BlogdetailComponent } from './blog/blogdetail/blogdetail.component';
 import { EditblogComponent } from './blog/editblog/editblog.component';
 import { ViewblogComponent } from './blog/viewblog/viewblog.component';
+import { FollowersListComponent } from './followers-list/followers-list.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { LayoutComponent } from './layout/layout.component';
 import { LoginComponent } from './login/login.component';
@@ -41,6 +42,7 @@ const routes: Routes = [
           roles: '[ROLE_ADMIN]'
         }
       },
+      { path: 'followers', component: FollowersListComponent },
       { path: 'recent-blogs', component: ViewblogComponent },
       { path: 'blogDetail/:id', component: BlogdetailComponent },
       {

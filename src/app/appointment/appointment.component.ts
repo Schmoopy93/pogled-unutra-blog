@@ -94,7 +94,6 @@ export class AppointmentComponent implements OnInit {
           });
         }
       };
-      console.log(data, "dataaaaaaaaaa")
     });
   }
 }

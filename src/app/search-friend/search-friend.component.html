@@ -31,46 +31,50 @@
         <a class="dropdown-item" (click)="compareAlphabeticallyDesc()">Desc <i class="fas fa-arrow-down"></i></a>
     </div>
 </div>
-<div class="container profile-page" style="margin-top: 50px; padding-bottom: 100px;">
-    <div class="row">
-        <div class="col-xl-6 col-lg-7 col-md-12" *ngFor="let user of users | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveUser(user, i)">
-            <div class="card profile-header">
-                <div class="body">
-                    <div class="row">
-                        <div class="col-lg-4 col-md-4 col-12">
-                            <div class="profile-image float-md-right"> <img src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt=""> </div>
-                        </div>
-                        <div class="col-lg-8 col-md-8 col-12">
-                            <h4 class="m-t-0 m-b-0"><strong>{{user?.firstname}}</strong> {{user?.lastname}}</h4>
-                            <span class="job_post">Member since: {{ user?.createdAt | date: "MMM, y" }}</span>
-                            <p>{{user?.town}}</p>
-                            <div>
-                                <button class="btn btn-outline-success btn-sm" style="margin-right:10px;" routerLink="/view-profile/{{ user.id }}">View Profile</button>
-                                <button *ngIf="currUser != user?.id" class="btn btn-outline-success btn-sm">Message</button>
+<ng-container>
+    <div class="container profile-page" style="padding-bottom: 500px;">
+        <div class="row">
+            <div class="col-xl-6 col-lg-7 col-md-12" *ngFor="let user of res | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveUser(user, i)">
+                <div class="card profile-header" style="border-radius: 15px; border: 1px solid rgb(199, 199, 199);">
+                    <div class="body">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 col-12">
+                                <div class="profile-image float-md-right"> <img src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt=""> </div>
                             </div>
-                            <!--<p class="social-icon m-t-5 m-b-0">
-                                <a title="Twitter" href="javascript:void(0);"><i class="fa fa-twitter"></i></a>
-                                <a title="Facebook" href="javascript:void(0);"><i class="fa fa-facebook"></i></a>
-                                <a title="Google-plus" href="javascript:void(0);"><i class="fa fa-twitter"></i></a>
-                                <a title="Behance" href="javascript:void(0);"><i class="fa fa-behance"></i></a>
-                                <a title="Instagram" href="javascript:void(0);"><i class="fa fa-instagram "></i></a>
-                            </p>-->
+                            <div class="col-lg-8 col-md-8 col-12">
+                                <h4 class="m-t-0 m-b-0"><strong>{{user?.firstname}} {{user?.lastname}}</strong> </h4>
+                                <span class="job_post">Member since: {{ user?.createdAt | date: "MMM, y" }}</span>
+                                <p>{{user?.town}}</p>
+                                <div>
+                                    <button class="btn btn-outline-success btn-sm" style="margin-right:10px;" routerLink="/view-profile/{{ user.id }}">View Profile</button>
+                                    <button *ngIf="currUser != user?.id" class="btn btn-outline-success btn-sm">Message</button>
+                                </div>
+                                <!-- <p class="social-icon m-t-5 m-b-0">
+                                    <a title="Twitter" href="javascript:void(0);"><i class="fa fa-twitter"></i></a>
+                                    <a title="Facebook" href="javascript:void(0);"><i class="fa fa-facebook"></i></a>
+                                    <a title="Google-plus" href="javascript:void(0);"><i class="fa fa-twitter"></i></a>
+                                    <a title="Behance" href="javascript:void(0);"><i class="fa fa-behance"></i></a>
+                                    <a title="Instagram" href="javascript:void(0);"><i class="fa fa-instagram "></i></a>
+                                </p> -->
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="col-md-12">
-    <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
-</div>
-<div class="col-md-12">
-    <h2 style="font-size: 1.4em; font-weight: bolder;">Users per Page:
-        <select class="browser-default custom-select" style="width: 25%;" (change)="handlePageSizeChange($event)">
-<option *ngFor="let size of pageSizes" [ngValue]="size">
-{{ size }}
-</option>
-</select>
-    </h2>
+</ng-container>
+<div>
+    <div class="col-md-12">
+        <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
+    </div>
+    <div class="col-md-12">
+        <h2 style="font-size: 1.1em; font-weight: bolder;">Users per Page:
+            <select class="browser-default custom-select" style="width: 30%;" (change)="handlePageSizeChange($event)">
+    <option *ngFor="let size of pageSizes" [ngValue]="size">
+    {{ size }}
+    </option>
+    </select>
+        </h2>
+    </div>
 </div>

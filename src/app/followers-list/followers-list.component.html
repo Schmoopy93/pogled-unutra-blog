@@ -1,0 +1,55 @@
+<!-- <div class="container text-dark" style="padding-bottom: 500px;">
+    <div class="row bootstrap snippets bootdeys">
+        <div class="col-md-9 col-sm-7">
+            <h2 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif">Friends List</h2>
+        </div>
+    </div>
+    <div class="member-entry" *ngFor="let follower of users">
+        <a class="member-img">
+            <img src="http://localhost:4000/uploads/userphoto/{{follower?.photoName}}" class="img-rounded">
+
+        </a>
+        <div class="member-details">
+            <h4> <a>{{follower.firstname}} {{follower.lastname}}</a> </h4>
+            <div class="row info-list">
+                <div class="col-sm-4">
+                    <button class="btn btn-outline-success btn-sm" style="margin-right:10px;" routerLink="/view-profile/{{ follower.id }}">View Profile</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->
+<ng-container>
+    <div class="container profile-page" style="padding-bottom: 500px;">
+        <div class="row">
+            <div class="col-md-9 col-sm-7" style="padding-top: 10px;">
+                <h2 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif">Friends List</h2>
+            </div>
+            <div class="col-xl-6 col-lg-7 col-md-12" *ngFor="let follower of users">
+                <div class="card profile-header" style="border-radius: 15px; border: 1px solid rgb(199, 199, 199);">
+                    <div class="body">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 col-12">
+                                <div class="profile-image float-md-right"> <img src="http://localhost:4000/uploads/userphoto/{{follower?.photoName}}" alt=""> </div>
+                            </div>
+                            <div class="col-lg-8 col-md-8 col-12">
+                                <h4 class="m-t-0 m-b-0"><strong>{{follower?.firstname}}</strong> {{follower?.lastname}}</h4>
+                                <span class="job_post">Member since: {{ follower?.createdAt | date: "MMM, y" }}</span>
+                                <div>
+                                    <button class="btn btn-outline-success btn-sm" style="margin-right:10px;" routerLink="/view-profile/{{ follower.id }}">View Profile</button>
+                                </div>
+                                <!-- <p class="social-icon m-t-5 m-b-0">
+                                    <a title="Twitter" href="javascript:void(0);"><i class="fa fa-twitter"></i></a>
+                                    <a title="Facebook" href="javascript:void(0);"><i class="fa fa-facebook"></i></a>
+                                    <a title="Google-plus" href="javascript:void(0);"><i class="fa fa-twitter"></i></a>
+                                    <a title="Behance" href="javascript:void(0);"><i class="fa fa-behance"></i></a>
+                                    <a title="Instagram" href="javascript:void(0);"><i class="fa fa-instagram "></i></a>
+                                </p> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>

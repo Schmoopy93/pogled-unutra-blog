@@ -102,7 +102,7 @@ export class ServiceblogService {
     this
       .http
       .put(`${this.postsURL}/${id}`, obj)
-      .subscribe(res => console.log('Done'));
+      .subscribe();
   }
 
   deletePost(id: number): Observable<any> {
@@ -141,7 +141,7 @@ export class ServiceblogService {
     this
       .http
       .put(`${AUTH_API}timelines/${id}`, obj)
-      .subscribe(res => console.log('Done'));
+      .subscribe();
   }
 
   deleteComment(id: number): Observable<any> {

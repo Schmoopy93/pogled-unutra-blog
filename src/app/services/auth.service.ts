@@ -60,7 +60,7 @@ export class AuthService {
     this
       .http
       .put(`${USER_API}/${id}`, obj)
-      .subscribe(res => console.log('Done'));
+      .subscribe();
   }
 
   fillYourData(address, phone, id) {
@@ -72,7 +72,7 @@ export class AuthService {
     this
       .http
       .put(`${USER_API}`, obj)
-      .subscribe(res => console.log('Done'));
+      .subscribe();
   }
   deleteUser(id: number): Observable<any> {
     return this.http.delete(`${USER_API}/${id}`, { responseType: 'text' });
@@ -98,6 +98,10 @@ export class AuthService {
   }
 
   getAllUsers(params: any): Observable<any> {
+    return this.http.get<any>(`${USER_API}/list-users`, { params });
+  }
+
+  getAllUsersForSearch(params: any): Observable<any> {
     return this.http.get<any>(`${USER_API}`, { params });
   }
   

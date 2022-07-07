@@ -32,7 +32,7 @@ export class ViewProfileComponent implements OnInit {
   res: any = {};
   resId: any;
   public popoverTitle: string = 'WARNING';
-  public popoverMessage: string = 'Are you sure you want to delete this user???'
+  public popoverMessage: string = 'Are you sure you want to delete this timeline post???'
   public cancelClicked: boolean = false;
   constructor(private blogService: ServiceblogService, private route : ActivatedRoute, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService) { }
 
@@ -181,7 +181,6 @@ export class ViewProfileComponent implements OnInit {
 
   deleteTimelineById(id) {
     this.blogService.deleteTimeline(id).subscribe(res => {
-      console.log('Deleted');
       //this.router.navigate(['/all-users']);
       this.ngOnInit();
     });
@@ -199,9 +198,7 @@ export class ViewProfileComponent implements OnInit {
     this.userId = this.currentUser.id;
     this.followerId = this.route.snapshot.params.id;
     this.blogService.follow(this.userId, this.followerId).subscribe(
-      data => {
-        console.log(data);
-      },
+      data => {},
       err => {
         this.errorMessage = err.error.message;
       }

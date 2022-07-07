@@ -30,8 +30,6 @@ export class NewPasswordComponent implements OnInit {
       next: () => {}
     });
   //Namestiti rutiranje i prikazivanje diva
-  //this.router.navigateByUrl('/login', { skipLocationChange: false })
-  console.log(this.token);
-  console.log(password, "PASS")
+  this.router.navigateByUrl('/login', { skipLocationChange: false })
   }
 }

@@ -48,21 +48,6 @@
                                 <hr>
                             </div>
                         </div>
-                        <!-- <div class="add-comment" *ngIf="isLoggedIn">
-                            <header>
-                                <h3 class="h6">Leave a reply {{replyUser.firstname}}</h3>
-                            </header>
-                            <form action="#" class="commenting-form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm">
-                                <div class="row">
-                                    <div class="form-group col-md-12">
-                                        <textarea name="usercomment" id="usercomment" placeholder="Type your comment" class="form-control" name="content" [(ngModel)]="form.content" #content="ngModel"></textarea>
-                                    </div>
-                                    <div class="form-group col-md-12">
-                                        <button type="submit" class="btn btn-secondary">Submit Comment</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div> -->
                         <button type="button" *ngIf="isLoggedIn" title="Create a comment" class="btn btn-outline-success" data-toggle="modal" data-target="#exampleModal">Discuss with us... <i class="fa fa-comment"></i></button>
                         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
@@ -124,8 +109,8 @@
     <div class="paginate">
         <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
     </div>
-    <div class="col-md-12">
-        <h2 style="font-size: 1.4em; font-weight: bolder;">Comments per Page:
+    <div class="paginate">
+        <h2 style="font-size: 1.1em; font-weight: bolder;">Comments per Page:
             <select class="browser-default custom-select" style="width: 24%;" (change)="handlePageSizeChange($event)">
   <option *ngFor="let size of pageSizes" [ngValue]="size">
     {{ size }}
@@ -134,66 +119,3 @@
         </h2>
     </div>
 </div>
-<!-- <div class="container mt-5">
-    <div class="row">
-        <div class="col-lg-8">
-            <article>
-                <header class="mb-4">
-                    <h1 class="fw-bolder mb-1">{{ currentPost?.title }}</h1>
-                    <div class="text-muted fst-italic mb-2">Posted on {{ currentPost?.createdAt | date:"MMM d, y h:mm:ss a" }}</div>
-                    <div class="text-muted fst-italic mb-2">Authored By: {{user?.firstname}} {{user?.lastname}}</div>
-                </header>
-                <figure class="mb-4"><img class="img-fluid rounded" src="http://localhost:4000/uploads/{{currentPost?.name}}" alt="..." /></figure>
-                <section class="mb-5">
-                    <p class="fs-5 mb-4">{{ currentPost?.content }}</p>
-                </section>
-                <div class="text-muted fst-italic mb-2">Last time updated on {{ currentPost?.updatedAt | date:"MMM d, y h:mm:ss a" }}</div>
-            </article>
-            <div *ngIf="isLoggedIn">
-                <hr>
-                <button type="button" mdbBtn color="default" data-toggle="modal" data-target="#basicExample" (click)="open(content)" mdbWavesEffect>Discuss with us...</button>
-                <ng-template #content let-modal>
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="modal-basic-title">Create a comment</h4>
-                        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate id="signup-form" class="signup-form">
-                            <div class="form-outline mb-4">
-                                <textarea class="form-control" id="form3Example1q" type="text" name="content" [(ngModel)]="form.content" #content="ngModel" placeholder="Discuss with us... "></textarea>
-                                <span class="focus-input100"></span>
-                            </div>
-                            <div class="modal-footer d-flex justify-content-center">
-                                <button type="submit" mdbBtn color="default" class="waves-light" mdbWavesEffect>Submit</button>
-                            </div>
-                        </form>
-                    </div>
-                </ng-template>
-            </div>
-            <br>
-            <div class="container-fluid mt-100" *ngFor="let comment of comments">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <div class="media flex-wrap w-100 align-items-center"> <img src="https://i.imgur.com/iNmBizf.jpg" class="d-block ui-w-40 rounded-circle" alt="">
-                                    <div class="media-body ml-3"><a>{{comment?.userId}}</a>
-                                        <div class="text-muted small">Published: {{comment?.createdAt | date:"MMM d, y h:mm:ss a" }}</div>
-                                    </div>
-                                    <div class="text-muted small ml-3">
-                                        <div>Member since <strong>01/1/2019</strong></div>
-                                        <div><strong>134</strong> posts</div>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <p>{{comment?.content}}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->

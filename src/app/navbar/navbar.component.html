@@ -48,9 +48,9 @@
                         <a class="nav-link" *ngIf="isLoggedIn" routerLink="/my-profile" title="My Profile"><i class="fa fa-user-circle" aria-hidden="true"></i> My Profile</a>
                     </li>
                     <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
-                        <a class="nav-link" *ngIf="isLoggedIn" (click)="logout()" title="Sign Out"> <i class="fas fa-sign-out-alt" aria-hidden="true"></i> Sign Out</a>
+                        <a class="nav-link" *ngIf="isLoggedIn" (click)="logout()" title="Sign Out"> <i class="fas fa-sign-out-alt" aria-hidden="true"></i> </a>
                     </li>
-                    <div class="custom-control custom-switch" style="padding-top: 7px;" data-toggle="collapse" data-target=".navbar-collapse.show">
+                    <div class="custom-control custom-switch" style="padding-top: 6px; padding-right: 25px;" data-toggle="collapse" data-target=".navbar-collapse.show">
                         <input type="checkbox" class="custom-control-input" id="customSwitches" [(ngModel)]="setDark" title="Switch theme" (click)="onChangeToggle()">
                         <label class="custom-control-label" for="customSwitches"></label>
                     </div>
