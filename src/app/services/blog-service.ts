@@ -2,12 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpEvent, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
 import { Observable, of, Subject } from 'rxjs';
 import { Post } from '../models/post';
-import { Comment } from '../models/comment'
 import { TokenStorageService } from './token-storage.service';
 import { ActivatedRoute } from '@angular/router';
-import { map, catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
-import { Followers } from '../models/followers';
 
 const AUTH_API = 'http://localhost:4000/api/auth/';
 const httpOptions = {
@@ -47,20 +43,6 @@ export class ServiceblogService {
 
   findByTitle(title: any): Observable<Post[]> {
     return this.http.get<Post[]>(`${(this.postsURL)}?title=${title}`);
-  }
-
-  public findAllComments(params: any): Observable<Comment[]> {
-    return this.http.get<Comment[]>(this.commentURL, { params });
-  }
-
-  public getCommentsByPost(postId): Observable<any> {
-    let params = new HttpParams().set('postId', postId);
-    return this.http.get(`${this.commentURL}/`, { params: params });
-  }
-
-  public getUserByComment(userId): Observable<any> {
-    let params = new HttpParams().set('userId', userId);
-    return this.http.get(`${this.commentURL}/`, { params: params });
   }
 
   public getPostById(id: number) {
