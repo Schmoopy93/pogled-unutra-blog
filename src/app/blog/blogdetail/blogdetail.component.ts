@@ -39,7 +39,7 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
   postId: any;
   currPostId: any;
   public popoverTitle: string = 'WARNING';
-  public popoverMessage: string = 'Are you sure you want to delete this post???'
+  public popoverMessage: string = 'Are you sure you want to delete this comment???'
   public cancelClicked: boolean = false;
 
   constructor(private blogService: ServiceblogService, private authService: AuthService, public sanitizer: DomSanitizer, private route: ActivatedRoute, private token: TokenStorageService) {}
