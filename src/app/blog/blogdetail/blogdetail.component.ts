@@ -13,7 +13,7 @@ import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './blogdetail.component.html',
   styleUrls: ['./blogdetail.component.css']
 })
-export class BlogdetailComponent implements OnInit {
+export class BlogdetailComponent implements OnInit, AfterContentChecked {
 
   form: any = {
     content: null,
@@ -55,6 +55,12 @@ export class BlogdetailComponent implements OnInit {
     this.getCurrentUser();
   }
 
+  ngAfterContentChecked(): void {
+    if (!this.user) {
+      this.user = this.getUserById(this.currentPost?.userId);
+    }
+  }
+
   getCurrentUser(){
     this.currentUser = this.token.getUser().id
   }
@@ -84,7 +90,6 @@ export class BlogdetailComponent implements OnInit {
         this.comments = comments;
         this.count = totalItems;
         this.postId = postId;
-        console.log(this.comments);
         
       },
       error => {
@@ -108,12 +113,6 @@ export class BlogdetailComponent implements OnInit {
     }
 
     return params;
-  }
-
-  ngAfterContentChecked(): void {
-    if (!this.user) {
-      this.user = this.getUserById(this.currentPost?.userId);
-    }
   }
 
   getPost(id) {
@@ -141,7 +140,6 @@ export class BlogdetailComponent implements OnInit {
   }
 
 
-
   onSubmit(): void {
     const { content } = this.form;
     this.blogService.addComment(content, this.currentPost.id, this.currentUser).subscribe(
@@ -156,10 +154,18 @@ export class BlogdetailComponent implements OnInit {
 
   }
 
-  deletePost(id) {
+  deleteComment(id) {
     this.blogService.deleteComment(id).subscribe(res => {
       this.ngOnInit();
     });
+  }
+
+  compareAlphabeticallyAsc() : void {
+    this.comments.sort((a, b) => a.createdAt.localeCompare(b.createdAt))
+  }
+
+  compareAlphabeticallyDesc(): void {
+    this.comments.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
   }
 
 }
