@@ -89,8 +89,7 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
         const { comments, totalItems, postId } = response;
         this.comments = comments;
         this.count = totalItems;
-        this.postId = postId;
-        
+        this.postId = this.route.snapshot.params.id;
       },
       error => {
         console.log(error);
