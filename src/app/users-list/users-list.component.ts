@@ -14,7 +14,7 @@ export class UsersListComponent implements OnInit {
   public popoverTitle: string = 'WARNING';
   public popoverMessage: string = 'Are you sure you want to delete this user???'
   public cancelClicked: boolean = false;
-  users: User[] = [];
+  users: any;
   currentUser = null;
   user: any = {};
   currentIndex = -1;
@@ -27,11 +27,23 @@ export class UsersListComponent implements OnInit {
   countAll: any;
   currentUser_id: any;
   res: any;
+  roles:any;
   constructor(private authService: AuthService, private token: TokenStorageService , private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     this.retrieveUsers();
+    this.retrieveRoles();
     this.currentUser_id = this.token.getUser().id;
+  }
+
+  retrieveRoles(): void {
+    this.authService.getRoles().subscribe(
+      data => {
+        this.roles = data;
+      },
+      error => {
+        console.log(error)
+      });
   }
 
   setActiveUser(user: User, index: number): void {
@@ -48,6 +60,7 @@ export class UsersListComponent implements OnInit {
         const { users, totalItems } = response;
         this.users = users;
         this.count = totalItems;
+        console.log(users, "USERS");
       },
       error => {
         console.log(error);

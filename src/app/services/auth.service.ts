@@ -44,10 +44,12 @@ export class AuthService {
   getUsers(){
     return this.http.get(USER_API);
   }
+
+  getRoles(){
+    return this.http.get(`${AUTH_API}roles`);
+  }
   editUser(id) {
-    return this
-      .http
-      .get(`${USER_API}/${id}`);
+    return this.http.get(`${USER_API}/${id}`);
   }
   updateUser(username,phone, address, town, id) {
 
@@ -60,6 +62,28 @@ export class AuthService {
     this
       .http
       .put(`${USER_API}/${id}`, obj)
+      .subscribe();
+  }
+
+  promoteToAdmin(roleId, userId) {
+
+    const obj = {
+      roleId: 3,
+    };
+    this
+      .http
+      .put(`${AUTH_API}roles/${userId}`, obj)
+      .subscribe();
+  }
+
+  demoteToUser(roleId, userId) {
+
+    const obj = {
+      roleId: 1,
+    };
+    this
+      .http
+      .put(`${AUTH_API}roles/${userId}`, obj)
       .subscribe();
   }
 

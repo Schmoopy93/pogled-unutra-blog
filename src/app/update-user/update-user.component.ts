@@ -13,6 +13,7 @@ export class UpdateUserComponent implements OnInit {
 
   users: User[];
   user: any = {};
+  roleAdmin: any;
   constructor(private authService: AuthService, private route: ActivatedRoute,
     private router: Router, private token: TokenStorageService) { }
 
@@ -20,13 +21,30 @@ export class UpdateUserComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.authService.editUser(params.id).subscribe(res => {
         this.user = res;
+        this.roleAdmin = this.user.roles.filter(t=>t.name === "admin")[0];
       });
     });
   }
-    updateUser(username, phone, adress, town) {
+  updateUser(username, phone, adress, town) {
     this.route.params.subscribe(params => {
       this.authService.updateUser(username, phone, adress, town, params.id);
       this.router.navigate(['/my-profile'])
+    });
+  }
+
+  promoteToAdmin(userId, roleId) {
+    userId = this.route.snapshot.params.id;
+    this.route.params.subscribe(params => {
+      this.authService.promoteToAdmin(roleId, userId);
+      this.router.navigate(['/all-users']).then(() => window.location.reload());
+    });
+  }
+
+  demoteToUser(userId, roleId) {
+    userId = this.route.snapshot.params.id;
+    this.route.params.subscribe(params => {
+      this.authService.demoteToUser(roleId, userId);
+      this.router.navigate(['/all-users']).then(() => window.location.reload());
     });
   }
 

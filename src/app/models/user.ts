@@ -5,7 +5,7 @@ export class User
     password: string;
     firstname: string;
     lastname: string;
-    role: string;
+    roles: string;
     createdAt: Date;
     confirmationCode: string;
     data: ArrayBuffer;

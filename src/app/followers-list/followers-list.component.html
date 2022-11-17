@@ -35,6 +35,8 @@
                             <div class="col-lg-8 col-md-8 col-12">
                                 <h4 class="m-t-0 m-b-0"><strong>{{follower?.firstname}}</strong> {{follower?.lastname}}</h4>
                                 <span class="job_post">Member since: {{ follower?.createdAt | date: "MMM, y" }}</span>
+                                <br>
+                                <br>
                                 <div>
                                     <button class="btn btn-outline-success btn-sm" style="margin-right:10px;" routerLink="/view-profile/{{ follower.id }}">View Profile</button>
                                 </div>
