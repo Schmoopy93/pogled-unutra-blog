@@ -76,6 +76,18 @@ export class AuthService {
       .subscribe();
   }
 
+  
+  promoteToModerator(roleId, userId) {
+
+    const obj = {
+      roleId: 2,
+    };
+    this
+      .http
+      .put(`${AUTH_API}roles/${userId}`, obj)
+      .subscribe();
+  }
+
   demoteToUser(roleId, userId) {
 
     const obj = {

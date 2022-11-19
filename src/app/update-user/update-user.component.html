@@ -6,19 +6,17 @@
                     <div class="card" style="border-radius: 15px; border: 1px solid rgb(199, 199, 199);">
                         <div class="card-body p-5">
                             <h2 class="text-uppercase text-center mb-5">Change your profile data</h2>
-                            <div class="d-flex justify-content-center">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <div class="btn-group" *ngIf="currentUser != adminId">
+                                <button type="button" class="btn btn-secondary btn-lg dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                   Permissions
                                 </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" *ngIf="!roleAdmin">
-                                    <button class="dropdown-item" (click)="promoteToAdmin(user.userId, user.roleId)">Promote to admin</button>
-                                </div>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" *ngIf="roleAdmin">
-                                    <button class="dropdown-item" (click)="demoteToUser(user.userId, user.roleId)">Demote to user</button>
+                                <div class="dropdown-menu">
+                                    <button class="dropdown-item" *ngIf="roleModerator || roleAdmin" (click)="demoteToUser(user.userId, user.roleId)">Demote to User</button>
+                                    <button class="dropdown-item" *ngIf="!roleModerator && !roleAdmin" (click)="promoteToModerator(user.userId, user.roleId)">Promote to Moderator</button>
+                                    <button class="dropdown-item" *ngIf="!roleAdmin" (click)="promoteToAdmin(user.userId, user.roleId)">Promote to Admin</button>
                                 </div>
                             </div>
-                            <br>
-                            <form name="form">
+                            <form name="form" style="padding-top:20px;">
                                 <div class="form-outline mb-4">
                                     <input type="text" id="form3Example1cg" class="form-control form-control-lg" name="username" placeholder="Enter your username" [(ngModel)]="user.username" required #username="ngModel" disabled/>
                                 </div>
