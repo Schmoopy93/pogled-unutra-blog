@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../models/user';
 import { AuthService } from '../services/auth.service';
 import { TokenStorageService } from '../services/token-storage.service';
+import {jsPDF} from 'jspdf';
 
 @Component({
   selector: 'app-users-list',
@@ -10,7 +11,7 @@ import { TokenStorageService } from '../services/token-storage.service';
   styleUrls: ['./users-list.component.css']
 })
 export class UsersListComponent implements OnInit {
-
+  @ViewChild('content', {static: false}) content: ElementRef;
   public popoverTitle: string = 'WARNING';
   public popoverMessage: string = 'Are you sure you want to delete this user???'
   public cancelClicked: boolean = false;
@@ -34,6 +35,18 @@ export class UsersListComponent implements OnInit {
     this.retrieveUsers();
     this.retrieveRoles();
     this.currentUser_id = this.token.getUser().id;
+  }
+
+ 
+  public onExport() {
+    const doc = new jsPDF("l", "pt", "a3");
+    const source = document.getElementById("content");
+    doc.setFontSize(6)
+    doc.html(source, {
+      callback: function(pdf) {
+        doc.output("dataurlnewwindow"); // preview pdf file when exported
+      }
+    });
   }
 
   retrieveRoles(): void {
