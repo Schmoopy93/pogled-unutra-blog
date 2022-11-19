@@ -34,7 +34,7 @@ const routes: Routes = [
       { path: 'my-profile', component: MyprofileComponent },
       {
         path: 'add-blog', component: AddblogComponent, canActivate: [AuthGuard], data: {
-          roles: '[ROLE_ADMIN]'
+          roles: '[ROLE_ADMIN, ROLE_MODERATOR]'
         }
       },
       {
@@ -47,7 +47,7 @@ const routes: Routes = [
       { path: 'blogDetail/:id', component: BlogdetailComponent },
       {
         path: 'edit-post/:id', component: EditblogComponent, canActivate: [AuthGuard], data: {
-          roles: '[ROLE_ADMIN]'
+          roles: '[ROLE_ADMIN, ROLE_MODERATOR]'
         }
       },
       {
