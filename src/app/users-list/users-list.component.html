@@ -48,8 +48,8 @@
                         <th scope="col">Email</th>
                         <th scope="col">Joined</th>
                         <th scope="col">Roles</th>
-                        <th scope="col">View Profile</th>
                         <th scope="col">Edit Profile</th>
+                        <th scope="col">View Profile</th>
                         <th scope="col">Delete Profile</th>
                     </tr>
                 </thead>
@@ -63,10 +63,10 @@
                         <td>{{user?.createdAt | date:"MMM d, y h:mm:ss a"}}</td>
                         <td>Current role: {{ user?.roles[0].name | uppercase }}</td>
                         <td>
-                            <button type="button" title="Show profile" *ngIf="user.id != currentUser_id" style="margin-right: 10px;" class="btn btn-primary" routerLink="/view-profile/{{ user.id }}"><i class="fas fa-eye"></i></button>
+                            <button type="button" title="Edit profile" style="margin-right: 10px;" class="btn btn-success" routerLink="/edit-user/{{ user.id }}"><i class="fas fa-edit"></i></button>
                         </td>
                         <td>
-                            <button type="button" title="Edit profile" style="margin-right: 10px;" class="btn btn-success" routerLink="/edit-user/{{ user.id }}"><i class="fas fa-edit"></i></button>
+                            <button type="button" title="Show profile" *ngIf="user.id != currentUser_id" style="margin-right: 10px;" class="btn btn-primary" routerLink="/view-profile/{{ user.id }}"><i class="fas fa-eye"></i></button>
                         </td>
                         <td>
                             <button type="button" title="Delete profile" *ngIf="user.id != currentUser_id" style="margin-right: 10px;" class="btn btn-danger" mwlConfirmationPopover placement="top-right" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteUser(user.id)"
