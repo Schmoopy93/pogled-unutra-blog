@@ -99,6 +99,18 @@ export class ServiceblogService {
     }, httpOptions);
   }
 
+  likePost(userId: number, postId:number): Observable<any> {
+    return this.http.post(this.postsURL + '/likes', {
+      userId,
+      postId,
+    }, httpOptions);
+  }
+
+  getLikesByPostId(params: any): Observable<any> {
+    return this.http.get<any>(`${AUTH_API}showLikesByPost`, { params });
+  }
+
+
   addTimeline(text: string, userId:number): Observable<any> {
     return this.http.post(AUTH_API + 'timelines', {
       text,

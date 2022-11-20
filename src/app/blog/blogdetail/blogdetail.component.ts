@@ -32,17 +32,21 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
   content = '';
   page = 1;
   count = 0;
+  countLikes = 0;
   pageSize = 10;
   pageSizes = [10, 20, 30];
   currentIndex = -1;
   replyUser : any;
   postId: any;
   currPostId: any;
+  firstname = '';
   public popoverTitle: string = 'WARNING';
   public popoverMessage: string = 'Are you sure you want to delete this comment???'
   public cancelClicked: boolean = false;
+  users: any;
+  likes:any;
 
-  constructor(private blogService: ServiceblogService, private authService: AuthService, public sanitizer: DomSanitizer, private route: ActivatedRoute, private token: TokenStorageService) {}
+  constructor(private blogService: ServiceblogService, private router: Router, private authService: AuthService, public sanitizer: DomSanitizer, private route: ActivatedRoute, private token: TokenStorageService) {}
   
   ngOnInit(): void {
     if (this.token.getToken()) {
@@ -53,6 +57,7 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
     this.retrieveComments();
     this.replyUser = this.token.getUser();
     this.getCurrentUser();
+    this.retrieveLikes();
   }
 
   ngAfterContentChecked(): void {
@@ -153,6 +158,51 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
 
   }
 
+  // retrieveUsers(): void {
+  //   const params = this.getRequestParamsForLikes(this.page, this.pageSize, this.firstname);
+  //   this.authService.getAllUsers(params)
+  //   .subscribe(
+  //     response => {
+  //       const { users } = response;
+  //       this.users = users;
+  //       //this.userLike = this.users.find(i => i.id === this.currentUser.id);
+  //     },
+  //     error => {
+  //       console.log(error);
+  //     });
+  // }
+
+  likePost(): void {
+    this.blogService.likePost(this.currentUser, this.postId).subscribe(
+      data => {
+        console.log(data);
+      },
+      err => {
+        this.errorMessage = err.error.message;
+      },
+    );
+     if(!this.errorMessage){
+      window.setTimeout(function(){location.reload()},800)
+     }
+  }
+
+  retrieveLikes(): void {
+    const params = this.getRequestParams(this.page, this.pageSize, this.postId);
+
+    this.blogService.getLikesByPostId(params)
+    .subscribe(
+      response => {
+        const { likes, totalItems } = response;
+        this.likes = likes;
+        this.countLikes = totalItems;
+        console.log(this.likes, "LIKES")
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
+  
   deleteComment(id) {
     this.blogService.deleteComment(id).subscribe(res => {
       this.ngOnInit();

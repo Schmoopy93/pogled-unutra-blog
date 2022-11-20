@@ -17,6 +17,12 @@
                                 <div class="title"><i class="icon-clock"></i> {{ currentPost?.createdAt | date:"MMM d, y h:mm:ss a" }}</div>
                             </a>
                         </div>
+                        <button (click)="likePost();" class="btn btn-outline-success btn-sm" style="margin-top:10px;"><i class="far fa-thumbs-up "></i> <strong> Likes: {{ countLikes }} </strong> </button>
+                        <!-- <a class="btn btn-outline-danger btn-sm" style="margin-top:10px;"><i class="far fa-thumbs-down "></i> <strong> Dislikes </strong> </a> -->
+                        <div class="alert alert-danger alert-dismissible" *ngIf="errorMessage" style="width: 50%; margin-top:10px;">
+                            <a class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong>{{ errorMessage }}</strong>
+                        </div>
                         <div class="post-body">
                             <p class="lead" style="font-family: cursive;">{{currentPost?.content}}</p>
 
