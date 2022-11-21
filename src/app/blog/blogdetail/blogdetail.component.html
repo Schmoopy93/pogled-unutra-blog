@@ -23,6 +23,9 @@
                             <a class="close" data-dismiss="alert" aria-label="close">&times;</a>
                             <strong>{{ errorMessage }}</strong>
                         </div>
+                        <div *ngFor="let like of likes">
+                            {{like?.user.firstname}} {{like?.user.lastname}}
+                        </div>
                         <div class="post-body">
                             <p class="lead" style="font-family: cursive;">{{currentPost?.content}}</p>
 

@@ -6,7 +6,6 @@ import { Comment } from 'src/app/models/comment'
 import { ServiceblogService } from 'src/app/services/blog-service';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-blogdetail',
@@ -158,20 +157,6 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
 
   }
 
-  // retrieveUsers(): void {
-  //   const params = this.getRequestParamsForLikes(this.page, this.pageSize, this.firstname);
-  //   this.authService.getAllUsers(params)
-  //   .subscribe(
-  //     response => {
-  //       const { users } = response;
-  //       this.users = users;
-  //       //this.userLike = this.users.find(i => i.id === this.currentUser.id);
-  //     },
-  //     error => {
-  //       console.log(error);
-  //     });
-  // }
-
   likePost(): void {
     this.blogService.likePost(this.currentUser, this.postId).subscribe(
       data => {
@@ -195,7 +180,6 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
         const { likes, totalItems } = response;
         this.likes = likes;
         this.countLikes = totalItems;
-        console.log(this.likes, "LIKES")
       },
       error => {
         console.log(error);
