@@ -1,4 +1,4 @@
-import { AfterContentChecked, AfterContentInit, AfterViewInit, Component, DoCheck, OnInit } from '@angular/core';
+import { AfterContentChecked, AfterContentInit, AfterViewChecked, AfterViewInit, Component, DoCheck, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Post } from 'src/app/models/post';
@@ -6,13 +6,14 @@ import { Comment } from 'src/app/models/comment'
 import { ServiceblogService } from 'src/app/services/blog-service';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { Likes } from 'src/app/models/likes';
 
 @Component({
   selector: 'app-blogdetail',
   templateUrl: './blogdetail.component.html',
   styleUrls: ['./blogdetail.component.css']
 })
-export class BlogdetailComponent implements OnInit, AfterContentChecked {
+export class BlogdetailComponent implements OnInit  {
 
   form: any = {
     content: null,
@@ -44,26 +45,32 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
   public cancelClicked: boolean = false;
   users: any;
   likes:any;
+  pageLikes = 1;
+  pageSizeLikes = 5;
+  pageSizesLikes = [5, 10, 15];
+  currentIndexLikes = -1;
+  currentLike = null;
 
   constructor(private blogService: ServiceblogService, private router: Router, private authService: AuthService, public sanitizer: DomSanitizer, private route: ActivatedRoute, private token: TokenStorageService) {}
   
   ngOnInit(): void {
     if (this.token.getToken()) {
       this.isLoggedIn = true;
-    }  
+    } 
     this.getPost(this.route.snapshot.params.id);
     this.postId = this.route.snapshot.params.id;
     this.retrieveComments();
+    this.retrieveLikes();
     this.replyUser = this.token.getUser();
     this.getCurrentUser();
-    this.retrieveLikes();
   }
 
-  ngAfterContentChecked(): void {
-    if (!this.user) {
-      this.user = this.getUserById(this.currentPost?.userId);
-    }
-  }
+  // ngAfterContentChecked(): void {
+  //   if (!this.user) {
+  //     this.user = this.getUserById(this.currentPost?.userId);
+      
+  //   }
+  // }
 
   getCurrentUser(){
     this.currentUser = this.token.getUser().id
@@ -85,15 +92,30 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
     this.retrieveComments();
   }
 
+  setActiveLikes(like: Likes, index: number): void {
+    this.currentLike = like;
+    this.currentIndexLikes = index;
+  }
+
+  handlePageChangeLikes(event: number): void {
+    this.pageLikes = event;
+    this.retrieveLikes();
+  }
+
+  handlePageSizeChangeLikes(event: any): void {
+    this.pageSizeLikes = event.target.value;
+    this.pageLikes = 1;
+    this.retrieveLikes();
+  }
+
   retrieveComments(): void {
     const params = this.getRequestParams(this.page, this.pageSize, this.postId);
     this.blogService.getAllComments(params)
     .subscribe(
       response => {
-        const { comments, totalItems, postId } = response;
+        const { comments, totalItems } = response;
         this.comments = comments;
         this.count = totalItems;
-        this.postId = this.route.snapshot.params.id;
       },
       error => {
         console.log(error);
@@ -118,6 +140,7 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
     return params;
   }
 
+  
   getPost(id) {
     if (!id) return;
     this.blogService.getPostById(id)
@@ -172,7 +195,7 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
   }
 
   retrieveLikes(): void {
-    const params = this.getRequestParams(this.page, this.pageSize, this.postId);
+    const params = this.getRequestParamsLikes(this.pageLikes, this.pageSizeLikes, this.postId);
 
     this.blogService.getLikesByPostId(params)
     .subscribe(
@@ -186,6 +209,23 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
       });
   }
 
+  getRequestParamsLikes(pageLikes: number, pageSizeLikes: number, postId: number): any {
+    let params: any = {};
+
+    if (pageLikes) {
+      params[`pageLikes`] = pageLikes - 1;
+    }
+
+    if (pageSizeLikes) {
+      params[`pageSizeLikes`] = pageSizeLikes;
+    }
+
+    if (postId) {
+      params[`postId`] = postId;
+    }
+    return params;
+    
+  }
   
   deleteComment(id) {
     this.blogService.deleteComment(id).subscribe(res => {

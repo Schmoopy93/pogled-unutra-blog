@@ -912,6 +912,15 @@ a.text-primary:hover {
     display: flex;
     justify-content: center;
     margin-top: 20px;
+    padding-right: 50px;
+}
+
+.paginate2 {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    padding-right: 50px;
+    padding-left: 70px;
 }
 
 .dropdown {
