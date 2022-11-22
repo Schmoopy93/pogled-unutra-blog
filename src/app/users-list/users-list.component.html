@@ -60,7 +60,7 @@
                         <td>{{user?.firstname}}</td>
                         <td>{{user?.lastname}}</td>
                         <td>{{user?.email}}</td>
-                        <td>{{user?.createdAt | date:"MMM d, y h:mm:ss a"}}</td>
+                        <td>{{user?.createdAt | date:"MMM d, y"}}</td>
                         <td>Current role: {{ user?.roles[0].name | uppercase }}</td>
                         <td>
                             <button type="button" title="Edit profile" style="margin-right: 10px;" class="btn btn-success" routerLink="/edit-user/{{ user.id }}"><i class="fas fa-edit"></i></button>
