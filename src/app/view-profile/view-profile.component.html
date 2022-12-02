@@ -125,7 +125,6 @@
                                                 <div>
                                                     <a href="#!" class="link-muted"><i class="fas fa-pencil-alt ms-2"></i></a>
                                                     <a style="margin-left: 10px;" href="#!" class="link-muted"><i class="fas fa-heart ms-2"></i></a>
-                                                    <a style="margin-left: 10px;" *ngIf="currentUser.id === user?.id" mwlConfirmationPopover placement="top-left" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteTimelineById(timeline.id)" (cancel)="cancelClicked = true"><i class="fas fa-trash ms-2"></i></a>
                                                 </div>
                                                 <p class="mb-0">
                                                     {{timeline?.text}}

@@ -203,7 +203,6 @@ export class BlogdetailComponent implements OnInit  {
         const { likes, totalItems } = response;
         this.likes = likes;
         this.countLikes = totalItems;
-        console.log(this.likes, "LIKES");
       },
       error => {
         console.log(error);

@@ -34,6 +34,9 @@
 <ng-container>
     <div class="container profile-page" style="padding-bottom: 500px;">
         <div class="row">
+            <div class="col-md-9 col-sm-7" style="padding-top: 10px;">
+                <h2 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif">Search friends</h2>
+            </div>
             <div class="col-xl-6 col-lg-7 col-md-12" *ngFor="let user of res | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveUser(user, i)">
                 <div class="card profile-header" style="border-radius: 15px; border: 1px solid rgb(199, 199, 199);">
                     <div class="body">

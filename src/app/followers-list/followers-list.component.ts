@@ -27,6 +27,17 @@ export class FollowersListComponent implements OnInit {
     this.retrieveUsers();
   }
 
+  handlePageChange(event: number): void {
+    this.page = event;
+    this.retrieveUsers();
+  }
+
+  handlePageSizeChange(event: any): void {
+    this.pageSize = event.target.value;
+    this.page = 1;
+    this.retrieveUsers();
+  }
+
   retrieveUsers(): void {
     this.authService.getUsers()
     .subscribe(

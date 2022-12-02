@@ -73,7 +73,6 @@ export class UsersListComponent implements OnInit {
         const { users, totalItems } = response;
         this.users = users;
         this.count = totalItems;
-        console.log(users, "USERS");
       },
       error => {
         console.log(error);
