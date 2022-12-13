@@ -72,7 +72,7 @@
         </div>
     </div>
 </div>
-<div class="container" style="padding-bottom: 150px;">
+<div class="container" style="padding-bottom: 600px;">
     <div class="row">
         <div class="col-md-12">
             <div id="content" class="content content-full-width">
@@ -107,26 +107,29 @@
                 <section *ngIf="followRequest">
                     <div class="container my-5 py-5">
                         <div class="row d-flex justify-content-center">
-                            <div class="col-md-12 col-lg-10" *ngFor="let timeline of timelines | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveUser(user, i)" style="margin-top: 10px;">
+                            <div class="col-md-12 col-lg-10" *ngFor="let timeline of timelines | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveTimeline(timeline, i)" style="margin-top: 10px;">
                                 <div class="card text-dark">
                                     <div class="card-body p-4">
-                                        <h4 class="mb-0">Timeline posts</h4>
-                                        <p class="fw-light mb-4 pb-2">Latest timeline section </p>
                                         <div class="d-flex flex-start">
                                             <img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="avatar" width="60" height="60" />
                                             <div>
-                                                <h6 class="fw-bold mb-1">{{ user?.firstname }} {{ user?.lastname }}</h6>
+                                                <h6 class="fw-bold mb-1"><strong>{{ user?.firstname }} {{ user?.lastname }}</strong></h6>
                                                 <div class="d-flex align-items-center mb-3">
-                                                    <p class="mb-0">
-                                                        {{ timeline?.createdAt | date: "MMM d, y h:mm:ss a" }}
-                                                        <span class="badge bg-success">Active</span>
+                                                    <p class="mb-0" style="padding-left: 3px;">
+                                                        {{ timeline?.createdAt | date: "MMM d, y" }}
+                                                        <!-- <span class="badge bg-success">Active</span> -->
                                                     </p>
                                                 </div>
                                                 <div>
-                                                    <a href="#!" class="link-muted"><i class="fas fa-pencil-alt ms-2"></i></a>
-                                                    <a style="margin-left: 10px;" href="#!" class="link-muted"><i class="fas fa-heart ms-2"></i></a>
+                                                    <!-- <a href="#!" style=""class="link-muted"><i class="fas fa-pencil-alt ms-2"></i></a> -->
+                                                    <button class="btn btn-outline-success dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <i class="far fa-thumbs-up "></i><strong *ngIf="timeline?.id == timelineId">{{ countLikes }}</strong></button>
+                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                        <button (click)="likeTimeline(timeline?.id);" class="dropdown-item" style="margin-top:10px; margin-right:3px;"><i class="far fa-thumbs-up "></i>Like</button>
+                                                        <button style="margin-top:10px;" class="dropdown-item" data-toggle="modal" data-target="#exampleModalTimeline"><i class="far fa-user "></i>Who liked</button>
+                                                    </div>
                                                 </div>
-                                                <p class="mb-0">
+                                                <p class="mb-0" style="padding-top: 20px;">
                                                     {{timeline?.text}}
                                                 </p>
                                             </div>
@@ -135,6 +138,10 @@
                                     <hr class="my-0" />
                                 </div>
                             </div>
+                            <!-- <div class="alert alert-danger alert-dismissible" *ngIf="errorMessage" style="margin-top:10px;">
+                                <a class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                <strong>{{ errorMessage }}</strong>
+                            </div> -->
                         </div>
                     </div>
                 </section>
@@ -143,10 +150,10 @@
         </div>
     </div>
 </div>
-<div class="paginate">
+<div class="paginate" *ngIf="followRequest">
     <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
 </div>
-<div class="paginate">
+<div class="paginate" *ngIf="followRequest">
     <h2 style="font-size: 1.1em; font-weight: bolder;">Timelines per Page:
         <select class="browser-default custom-select" style="width: 24.5%;" (change)="handlePageSizeChange($event)">
 <option *ngFor="let size of pageSizes" [ngValue]="size">

@@ -110,6 +110,12 @@ export class ServiceblogService {
     return this.http.get<any>(`${AUTH_API}showLikesByPost`, { params });
   }
 
+  getLikesByTimelineId(params: any): Observable<any> {
+    console.log(params, "PARAMS");
+    return this.http.get<any>(`${AUTH_API}showLikesByTimeline`, { params });
+    
+  }
+
 
   addTimeline(text: string, userId:number): Observable<any> {
     return this.http.post(AUTH_API + 'timelines', {
@@ -122,11 +128,19 @@ export class ServiceblogService {
     return this.http.delete(`${AUTH_API}deleteTimelines/${id}`, { responseType: 'text' });
   }
 
-  editTimeline(id) {
+  likeTimeline(userId: number, timelineId:number): Observable<any> {
+    return this.http.post(AUTH_API + 'timeline/likesTimeline', {
+      userId,
+      timelineId,
+    }, httpOptions);
+  }
+
+  getTimelineById(id) {
     return this
       .http
       .get(`${AUTH_API}showTimelines/${id}`);
   }
+
   updateTimeline(text, id) {
 
     const obj = {

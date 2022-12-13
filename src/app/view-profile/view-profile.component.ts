@@ -2,7 +2,9 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { getTime } from 'date-fns';
 import { Followers } from '../models/followers';
+import { Timeline } from '../models/timeline';
 import { User } from '../models/user';
 import { AuthService } from '../services/auth.service';
 import { ServiceblogService } from '../services/blog-service';
@@ -31,9 +33,21 @@ export class ViewProfileComponent implements OnInit {
   errorMessage = '';
   res: any = {};
   resId: any;
+  timeline:any;
+  timelineId: any;
+  currentUserLike: any;
+  likes:any;
+  pageLikes = 1;
+  pageSizeLikes = 5;
+  pageSizesLikes = [5, 10, 15];
+  currentIndexLikes = -1;
+  currentLike = null;
+  countLikes = 0;
   public popoverTitle: string = 'WARNING';
   public popoverMessage: string = 'Are you sure you want to delete this timeline post???'
   public cancelClicked: boolean = false;
+  check: any;
+  timeline_Id: any;
   constructor(private blogService: ServiceblogService, private route : ActivatedRoute, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService) { }
 
   ngOnInit(): void {
@@ -46,8 +60,12 @@ export class ViewProfileComponent implements OnInit {
     if(id === this.userId){
       this.getTimeline();
     }
-    this.getFollowing();;
-    
+    this.getFollowing();
+    this.getCurrentUser();
+  }
+
+  getCurrentUser(){
+    this.currentUserLike = this.token.getUser().id;
   }
   
   getFollowing(): void {
@@ -88,8 +106,8 @@ export class ViewProfileComponent implements OnInit {
     });
   }
 
-  setActiveUser(user: User, index: number): void {
-    this.currentUser = user;
+  setActiveTimeline(timeline: Timeline, index: number): void {
+    this.timeline = timeline;
     this.currentIndex = index;
   }
 
@@ -125,7 +143,6 @@ export class ViewProfileComponent implements OnInit {
         });
   }
 
-
   getTimeline(): void {
     const params = this.getRequestParams(this.text, this.page, this.pageSize, this.userId);
     this.blogService.getAllTimelines(params)
@@ -136,10 +153,67 @@ export class ViewProfileComponent implements OnInit {
         this.count = totalItems;
         this.userId = userId;
         this.timelines.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+        this.timeline_Id = this.timelines.map(e => e.id);
+        for (let index = 0; index < timelines.length; index++) {
+          this.timelineId = timelines[index].id;
+          console.log(this.timelineId);
+          this.check = this.timeline_Id.includes(this.timelineId)
+          if(this.check){
+            this.retrieveLikesTimeline();
+          }
+        }
       },
       error => {
         console.log(error);
       });
+  }
+
+  likeTimeline(id): void {
+    this.blogService.likeTimeline(this.currentUserLike, this.timeline.id).subscribe(
+      data => {
+        console.log(data);
+      },
+      err => {
+        this.errorMessage = err.error.message;
+      },
+    );
+    //  if(!this.errorMessage){
+    //   window.setTimeout(function(){location.reload()},800)
+    //  }
+  }
+
+  retrieveLikesTimeline(): void {
+    const params = this.getRequestParamsLikesTimeline(this.pageLikes, this.pageSizeLikes, this.timelineId);
+      this.blogService.getLikesByTimelineId(params)
+      .subscribe(
+        response => {
+          const { likes, totalItems } = response;
+          this.likes = likes;
+          this.countLikes = totalItems;
+          console.log(response, "LIKES");
+        },
+        error => {
+          console.log(error);
+        });
+    }
+
+
+  getRequestParamsLikesTimeline(pageLikes: number, pageSizeLikes: number, timelineId: number): any {
+    let params: any = {};
+
+    if (pageLikes) {
+      params[`pageLikes`] = pageLikes - 1;
+    }
+
+    if (pageSizeLikes) {
+      params[`pageSizeLikes`] = pageSizeLikes;
+    }
+
+    if (timelineId) {
+      params[`timelineId`] = timelineId;
+    }
+    return params;
+    
   }
 
   getRequestParams(searchTitle: string, page: number, pageSize: number, userId: number): any {
