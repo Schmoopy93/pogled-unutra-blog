@@ -1,9 +1,3 @@
-.paginate {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
-
 body {
     margin-top: 20px;
     background: #eee;
@@ -665,15 +659,24 @@ select.form-control:not([size]):not([multiple]) {
     margin-top: 20px;
 }
 
-.deleteTimeline {
-    display: flex;
-    justify-content: center;
-}
-
 .link-muted {
     color: #aaa;
 }
 
 .link-muted:hover {
     color: #1266f1;
+}
+
+.link-muted1 {
+    color: #aaa;
+}
+
+.link-muted1:hover {
+    color: #f11212;
+}
+
+.text-dark {
+    border: 1px solid;
+    padding: 10px;
+    box-shadow: 5px 10px #888888;
 }

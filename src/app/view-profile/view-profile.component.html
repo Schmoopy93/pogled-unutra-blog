@@ -72,7 +72,38 @@
         </div>
     </div>
 </div>
-<div class="container" style="padding-bottom: 600px;">
+<div>
+    <div>
+        <div class="modal fade" id="exampleModalTimeline" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelTimeline" aria-hidden="true">
+
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabelTimeline">People who liked this timeline</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="#" class="commenting-form" *ngFor="let like of likeArrayByTimeline">
+                            <div class="row" *ngIf="toDisplayGroup['id'] === like?.timelineId && like?.userId === like?.user.id">
+                                <div class="form-group col-md-12">
+                                    <div>
+                                        <a routerLink=" " style="font-size: 30px; font-weight: bold; "><img class="rounded-circle shadow-1-strong me-3 " src="http://localhost:4000/uploads/userphoto/{{like?.user.photoName}}
+                                            " alt="avatar " width="60 " height="60 " /><strong> {{like?.user.firstname}} {{like?.user.lastname}}</strong> </a>
+                                        <hr>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container" style="padding-bottom: 350px;">
     <div class="row">
         <div class="col-md-12">
             <div id="content" class="content content-full-width">
@@ -86,7 +117,7 @@
                             <div class="profile-header-info">
                                 <h4 class="m-t-10 m-b-5">{{ user?.firstname }} {{ user?.lastname }}</h4>
                                 <p class="m-b-10">Joined At: {{ user?.createdAt | date: "MMM d, y" }}</p>
-                                <p class="m-b-10">Total timelines: {{count}}</p>
+                                <!-- <p class="m-b-10">Total timelines: {{count}}</p> -->
                                 <button *ngIf="!followRequest" class="btn btn-outline-success btn-sm" style="margin-right:3px;" (click)="onSubmit()">Follow {{user?.firstname}} {{user?.lastname}}</button>
                                 <button *ngIf="followRequest" class="btn btn-outline-success btn-sm" style="margin-right:3px;" (click)="unfollow(resId)">Unfollow {{user?.firstname}} {{user?.lastname}}</button>
                                 <button *ngIf="followRequest" class="btn btn-outline-success btn-sm" style="margin-right:3px;" data-toggle="modal" data-target="#exampleModal">About {{ user?.firstname }} {{ user?.lastname }}</button>
@@ -113,20 +144,19 @@
                                         <div class="d-flex flex-start">
                                             <img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="avatar" width="60" height="60" />
                                             <div>
-                                                <h6 class="fw-bold mb-1"><strong>{{ user?.firstname }} {{ user?.lastname }}</strong></h6>
+                                                <h6 class="fw-bold mb-1">{{ user?.firstname }} {{ user?.lastname }}</h6>
                                                 <div class="d-flex align-items-center mb-3">
-                                                    <p class="mb-0" style="padding-left: 3px;">
-                                                        {{ timeline?.createdAt | date: "MMM d, y" }}
-                                                        <!-- <span class="badge bg-success">Active</span> -->
+                                                    <p class="mb-0">
+                                                        {{ timeline?.createdAt | date: "MMM d, y h:mm a" }}
                                                     </p>
                                                 </div>
                                                 <div>
-                                                    <!-- <a href="#!" style=""class="link-muted"><i class="fas fa-pencil-alt ms-2"></i></a> -->
-                                                    <button class="btn btn-outline-success dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        <i class="far fa-thumbs-up "></i><strong *ngIf="timeline?.id == timelineId">{{ countLikes }}</strong></button>
-                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                        <button (click)="likeTimeline(timeline?.id);" class="dropdown-item" style="margin-top:10px; margin-right:3px;"><i class="far fa-thumbs-up "></i>Like</button>
-                                                        <button style="margin-top:10px;" class="dropdown-item" data-toggle="modal" data-target="#exampleModalTimeline"><i class="far fa-user "></i>Who liked</button>
+                                                    <div>
+                                                        <button class="btn btn-outline-success dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <i class="far fa-thumbs-up "></i><strong>{{ timeline.likesTimeline.length }}</strong></button>
+                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                            <button style="margin-top:10px;" (click)="toDisplayGroup = timeline" class="dropdown-item" data-toggle="modal" data-target="#exampleModalTimeline"><i class="far fa-user "></i>Who liked</button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <p class="mb-0" style="padding-top: 20px;">
@@ -135,30 +165,31 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <hr class="my-0" />
                                 </div>
+
                             </div>
-                            <!-- <div class="alert alert-danger alert-dismissible" *ngIf="errorMessage" style="margin-top:10px;">
-                                <a class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <!-- <div class="alert alert-danger alert-dismissible " *ngIf="errorMessage " style="margin-top:10px; ">
+                                <a class="close " data-dismiss="alert " aria-label="close ">&times;</a>
                                 <strong>{{ errorMessage }}</strong>
                             </div> -->
                         </div>
                     </div>
+                    <div>
+                        <div class="paginate " *ngIf="followRequest ">
+                            <pagination-controls previousLabel="Prev " nextLabel="Next " [responsive]="true " (pageChange)="handlePageChange($event) "></pagination-controls>
+                        </div>
+                        <div class="paginate " *ngIf="followRequest ">
+                            <h2 style="font-size: 1.1em; font-weight: bolder; ">Timelines per Page:
+                                <select class="browser-default custom-select " style="width: 24.5%; " (change)="handlePageSizeChange($event) ">
+                        <option *ngFor="let size of pageSizes " [ngValue]="size ">
+                        {{ size }}
+                        </option>
+                        </select>
+                            </h2>
+                        </div>
+                    </div>
                 </section>
-
             </div>
         </div>
     </div>
-</div>
-<div class="paginate" *ngIf="followRequest">
-    <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
-</div>
-<div class="paginate" *ngIf="followRequest">
-    <h2 style="font-size: 1.1em; font-weight: bolder;">Timelines per Page:
-        <select class="browser-default custom-select" style="width: 24.5%;" (change)="handlePageSizeChange($event)">
-<option *ngFor="let size of pageSizes" [ngValue]="size">
-{{ size }}
-</option>
-</select>
-    </h2>
 </div>

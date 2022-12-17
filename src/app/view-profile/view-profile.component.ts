@@ -1,10 +1,12 @@
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-import { Component, OnInit } from '@angular/core';
+import { AfterContentChecked, AfterContentInit, Component, DoCheck, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { getTime } from 'date-fns';
 import { Followers } from '../models/followers';
+import { Likes } from '../models/likes';
 import { Timeline } from '../models/timeline';
+import { TimelineLikes } from '../models/timelineLikes';
 import { User } from '../models/user';
 import { AuthService } from '../services/auth.service';
 import { ServiceblogService } from '../services/blog-service';
@@ -14,7 +16,7 @@ import { TokenStorageService } from '../services/token-storage.service';
   templateUrl: './view-profile.component.html',
   styleUrls: ['./view-profile.component.css'],
 })
-export class ViewProfileComponent implements OnInit {
+export class ViewProfileComponent implements OnInit{
   currentUser: any;
   currentUserId: any;
   user: any;
@@ -27,8 +29,8 @@ export class ViewProfileComponent implements OnInit {
   text = '';
   page = 1;
   count = 0;
-  pageSize = 10;
-  pageSizes = [10, 20, 30];
+  pageSize = 5;
+  pageSizes = [5, 10, 15];
   sortedItems: any;
   errorMessage = '';
   res: any = {};
@@ -46,8 +48,13 @@ export class ViewProfileComponent implements OnInit {
   public popoverTitle: string = 'WARNING';
   public popoverMessage: string = 'Are you sure you want to delete this timeline post???'
   public cancelClicked: boolean = false;
-  check: any;
+  getLikes: any;
+  getEachLike:  any;
   timeline_Id: any;
+  likeArrayByTimeline : any = [];
+  likeArrayByTimeline1 : any = [];
+  toDisplayGroup = {};
+  check: any;
   constructor(private blogService: ServiceblogService, private route : ActivatedRoute, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService) { }
 
   ngOnInit(): void {
@@ -62,6 +69,7 @@ export class ViewProfileComponent implements OnInit {
     }
     this.getFollowing();
     this.getCurrentUser();
+
   }
 
   getCurrentUser(){
@@ -116,7 +124,7 @@ export class ViewProfileComponent implements OnInit {
     let id = this.route.snapshot.params.id;
     this.userId = id;
     if(id === this.userId){
-      this.getTimeline();
+      this.getTimelinePage();
     }
   }
   
@@ -127,7 +135,7 @@ export class ViewProfileComponent implements OnInit {
     let id = this.route.snapshot.params.id;
     this.userId = id;
     if(id === this.userId){
-      this.getTimeline();
+      this.getTimelinePage();
     }
   }
 
@@ -141,6 +149,22 @@ export class ViewProfileComponent implements OnInit {
         error => {
           console.log(error);
         });
+  }
+  getTimelinePage(): void {
+    const params = this.getRequestParams(this.text, this.page, this.pageSize, this.userId);
+    this.blogService.getAllTimelines(params)
+    .subscribe(
+      response => {
+        const { timelines, totalItems, userId } = response;
+        this.timelines = timelines;
+        this.count = totalItems;
+        this.userId = userId;
+        this.timelines.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+        console.log(timelines, "timelines")
+      },
+      error => {
+        console.log(error);
+      });
   }
 
   getTimeline(): void {
@@ -156,16 +180,14 @@ export class ViewProfileComponent implements OnInit {
         this.timeline_Id = this.timelines.map(e => e.id);
         for (let index = 0; index < timelines.length; index++) {
           this.timelineId = timelines[index].id;
-          console.log(this.timelineId);
-          this.check = this.timeline_Id.includes(this.timelineId)
-          if(this.check){
-            this.retrieveLikesTimeline();
-          }
+          this.retrieveLikesTimeline();
         }
+        return this.timelineId;
       },
       error => {
         console.log(error);
       });
+
   }
 
   likeTimeline(id): void {
@@ -182,6 +204,12 @@ export class ViewProfileComponent implements OnInit {
     //  }
   }
 
+  setActiveLikes(like: Likes, index: number): void {
+    this.currentLike = like;
+    this.currentIndexLikes = index;
+  }
+
+
   retrieveLikesTimeline(): void {
     const params = this.getRequestParamsLikesTimeline(this.pageLikes, this.pageSizeLikes, this.timelineId);
       this.blogService.getLikesByTimelineId(params)
@@ -190,7 +218,11 @@ export class ViewProfileComponent implements OnInit {
           const { likes, totalItems } = response;
           this.likes = likes;
           this.countLikes = totalItems;
-          console.log(response, "LIKES");
+          this.likeArrayByTimeline.push(...likes)[0];
+          // this.getLikes = likes.forEach(element => {
+          //     this.getEachLike = element
+          //     this.likeArrayByTimeline.push(this.getEachLike);
+          //   });
         },
         error => {
           console.log(error);
