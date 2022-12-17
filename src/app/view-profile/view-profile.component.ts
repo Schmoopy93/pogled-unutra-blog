@@ -1,16 +1,13 @@
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-import { AfterContentChecked, AfterContentInit, Component, DoCheck, OnInit } from '@angular/core';
+
+import { Component, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { getTime } from 'date-fns';
-import { Followers } from '../models/followers';
 import { Likes } from '../models/likes';
 import { Timeline } from '../models/timeline';
-import { TimelineLikes } from '../models/timelineLikes';
-import { User } from '../models/user';
 import { AuthService } from '../services/auth.service';
 import { ServiceblogService } from '../services/blog-service';
 import { TokenStorageService } from '../services/token-storage.service';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-view-profile',
   templateUrl: './view-profile.component.html',
@@ -52,10 +49,9 @@ export class ViewProfileComponent implements OnInit{
   getEachLike:  any;
   timeline_Id: any;
   likeArrayByTimeline : any = [];
-  likeArrayByTimeline1 : any = [];
   toDisplayGroup = {};
   check: any;
-  constructor(private blogService: ServiceblogService, private route : ActivatedRoute, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService) { }
+  constructor(private blogService: ServiceblogService, private router: Router, private route : ActivatedRoute, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService) { }
 
   ngOnInit(): void {
     this.currentUser = this.token.getUser();
@@ -69,7 +65,6 @@ export class ViewProfileComponent implements OnInit{
     }
     this.getFollowing();
     this.getCurrentUser();
-
   }
 
   getCurrentUser(){
@@ -160,7 +155,6 @@ export class ViewProfileComponent implements OnInit{
         this.count = totalItems;
         this.userId = userId;
         this.timelines.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-        console.log(timelines, "timelines")
       },
       error => {
         console.log(error);
@@ -190,19 +184,27 @@ export class ViewProfileComponent implements OnInit{
 
   }
 
+  reloadCurrentRoute() {
+    const currentUrl = this.router.url;
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+        this.router.navigate([currentUrl]);
+    });
+  }
+
   likeTimeline(id): void {
     this.blogService.likeTimeline(this.currentUserLike, this.timeline.id).subscribe(
       data => {
-        console.log(data);
       },
       err => {
         this.errorMessage = err.error.message;
-      },
+        if(this.errorMessage){
+          Swal.fire(this.errorMessage);
+        }
+      }
     );
-    //  if(!this.errorMessage){
-    //   window.setTimeout(function(){location.reload()},800)
-    //  }
+    this.reloadCurrentRoute();
   }
+
 
   setActiveLikes(like: Likes, index: number): void {
     this.currentLike = like;

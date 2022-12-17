@@ -144,9 +144,9 @@
                                         <div class="d-flex flex-start">
                                             <img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="avatar" width="60" height="60" />
                                             <div>
-                                                <h6 class="fw-bold mb-1">{{ user?.firstname }} {{ user?.lastname }}</h6>
+                                                <h6 class="fw-bold mb-1"><strong>{{ user?.firstname }} {{ user?.lastname }}</strong></h6>
                                                 <div class="d-flex align-items-center mb-3">
-                                                    <p class="mb-0">
+                                                    <p class="mb-0" style="font-style: italic;">
                                                         {{ timeline?.createdAt | date: "MMM d, y h:mm a" }}
                                                     </p>
                                                 </div>
@@ -155,6 +155,7 @@
                                                         <button class="btn btn-outline-success dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                             <i class="far fa-thumbs-up "></i><strong>{{ timeline.likesTimeline.length }}</strong></button>
                                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                            <button (click)="likeTimeline(timeline?.id);" class="dropdown-item" style="margin-top:10px; margin-right:3px;"><i class="far fa-thumbs-up "></i>Like</button>
                                                             <button style="margin-top:10px;" (click)="toDisplayGroup = timeline" class="dropdown-item" data-toggle="modal" data-target="#exampleModalTimeline"><i class="far fa-user "></i>Who liked</button>
                                                         </div>
                                                     </div>
@@ -162,34 +163,33 @@
                                                 <p class="mb-0" style="padding-top: 20px;">
                                                     {{timeline?.text}}
                                                 </p>
+                                                <!-- <div class="alert alert-danger alert-dismissible " *ngIf="errorMessage && timeline?.id === timelineId" style="margin-top:10px; ">
+                                                    <a class="close " data-dismiss="alert " aria-label="close">&times;</a>
+                                                    <strong>{{ errorMessage }}</strong>
+                                                </div> -->
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
-                            <!-- <div class="alert alert-danger alert-dismissible " *ngIf="errorMessage " style="margin-top:10px; ">
-                                <a class="close " data-dismiss="alert " aria-label="close ">&times;</a>
-                                <strong>{{ errorMessage }}</strong>
-                            </div> -->
-                        </div>
-                    </div>
-                    <div>
-                        <div class="paginate " *ngIf="followRequest ">
-                            <pagination-controls previousLabel="Prev " nextLabel="Next " [responsive]="true " (pageChange)="handlePageChange($event) "></pagination-controls>
-                        </div>
-                        <div class="paginate " *ngIf="followRequest ">
-                            <h2 style="font-size: 1.1em; font-weight: bolder; ">Timelines per Page:
-                                <select class="browser-default custom-select " style="width: 24.5%; " (change)="handlePageSizeChange($event) ">
-                        <option *ngFor="let size of pageSizes " [ngValue]="size ">
-                        {{ size }}
-                        </option>
-                        </select>
-                            </h2>
                         </div>
                     </div>
                 </section>
             </div>
         </div>
+    </div>
+</div>
+<div>
+    <div class="paginate " *ngIf="followRequest ">
+        <pagination-controls previousLabel="Prev " nextLabel="Next " [responsive]="true " (pageChange)="handlePageChange($event) "></pagination-controls>
+    </div>
+    <div class="paginate " *ngIf="followRequest ">
+        <h2 style="font-size: 1.1em; font-weight: bolder; ">Timelines per Page:
+            <select class="browser-default custom-select " style="width: 24.5%; " (change)="handlePageSizeChange($event) ">
+    <option *ngFor="let size of pageSizes " [ngValue]="size ">
+    {{ size }}
+    </option>
+    </select>
+        </h2>
     </div>
 </div>

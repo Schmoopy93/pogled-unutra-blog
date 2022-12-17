@@ -7,6 +7,7 @@ import { ServiceblogService } from 'src/app/services/blog-service';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { Likes } from 'src/app/models/likes';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-blogdetail',
@@ -50,6 +51,7 @@ export class BlogdetailComponent implements OnInit  {
   pageSizesLikes = [5, 10, 15];
   currentIndexLikes = -1;
   currentLike = null;
+  check: any;
 
   constructor(private blogService: ServiceblogService, private router: Router, private authService: AuthService, public sanitizer: DomSanitizer, private route: ActivatedRoute, private token: TokenStorageService) {}
   
@@ -180,18 +182,26 @@ export class BlogdetailComponent implements OnInit  {
 
   }
 
+  reloadCurrentRoute() {
+    const currentUrl = this.router.url;
+    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+        this.router.navigate([currentUrl]);
+    });
+  }
+
+
   likePost(): void {
     this.blogService.likePost(this.currentUser, this.postId).subscribe(
       data => {
-        console.log(data);
       },
       err => {
         this.errorMessage = err.error.message;
-      },
+        if(this.errorMessage){
+          Swal.fire(this.errorMessage);
+        }
+      }
     );
-     if(!this.errorMessage){
-      window.setTimeout(function(){location.reload()},800)
-     }
+    this.reloadCurrentRoute();
   }
 
   retrieveLikes(): void {
