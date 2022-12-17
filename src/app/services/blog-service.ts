@@ -140,14 +140,17 @@ export class ServiceblogService {
       .get(`${AUTH_API}showTimelines/${id}`);
   }
 
-  updateTimeline(text, id) {
+  editTimeline(id) {
+    return this.http.get(`${AUTH_API}showTimelines/${id}`);
+  }
+  updateTimeline(timelineText, id) {
 
     const obj = {
-      text: text
+      text: timelineText
     };
     this
       .http
-      .put(`${AUTH_API}timelines/${id}`, obj)
+      .put(`${AUTH_API}editTimelines/${id}`, obj)
       .subscribe();
   }
 

@@ -172,13 +172,12 @@
                                                 <div>
                                                     <!-- <a href="#!" class="link-muted"><i class="fas fa-pencil-alt ms-2"></i></a> -->
                                                     <div>
-                                                        <!-- <a href="#!" style=""class="link-muted"><i class="fas fa-pencil-alt ms-2"></i></a> -->
                                                         <button class="btn btn-outline-success dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                             <i class="far fa-thumbs-up "></i><strong>{{ timeline.likesTimeline.length }}</strong></button>
                                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                             <button style="margin-top:10px;" (click)="toDisplayGroup = timeline" class="dropdown-item" data-toggle="modal" data-target="#exampleModalLabelTimelineLikes"><i class="far fa-user "></i>Who liked</button>
                                                         </div>
-                                                        <!-- <a style="margin-left: 10px;" href="#!" class="link-muted1"><i class="fas fa-heart ms-2"></i></a> -->
+                                                        <button type="button" title="Edit profile" style="margin-left: 10px;" class="btn btn-outline-secondary btn-sm" routerLink="/edit-timeline/{{ timeline.id }}"><i class="fas fa-edit"></i></button>
                                                         <a class="btn btn-outline-danger btn-sm " style="margin-left: 10px;" *ngIf="currentUser.id === user?.id" mwlConfirmationPopover placement="top-up" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteTimelineById(timeline.id)"
                                                             (cancel)="cancelClicked = true"><i class="fas fa-trash ms-2"></i></a>
                                                     </div>
