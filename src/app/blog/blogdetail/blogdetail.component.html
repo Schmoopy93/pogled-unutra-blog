@@ -112,14 +112,15 @@
                                         <form action="#" class="commenting-form">
                                             <div class="row">
                                                 <div class="form-group col-md-12" *ngFor="let like of likes | paginate : {itemsPerPage: pageSizeLikes,currentPage: pageLikes,totalItems: countLikes, id: 'like'}; let i = index" [class.active]="i == currentIndexLikes" (click)="setActiveLikes(like, i)">
-                                                    <a routerLink="" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong>                                                        </a>
+                                                    <a *ngIf="currentUser !== like?.userId" routerLink="/view-profile/{{like?.userId}}" (click)="hideModel();" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong></a>
+                                                    <a *ngIf="currentUser === like?.userId" routerLink="/my-profile" (click)="hideModel();" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong></a>
                                                     <hr>
                                                 </div>
                                             </div>
                                         </form>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                                        <button #closeModal type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
                                     </div>
                                     <div class="col-md-12 paginate">
                                         <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChangeLikes($event)" id="like"></pagination-controls>

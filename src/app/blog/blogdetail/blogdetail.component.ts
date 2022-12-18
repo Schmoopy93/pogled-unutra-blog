@@ -1,6 +1,6 @@
-import { AfterContentChecked, AfterContentInit, AfterViewChecked, AfterViewInit, Component, DoCheck, OnInit } from '@angular/core';
+import { AfterContentChecked, AfterContentInit, AfterViewChecked, AfterViewInit, Component, DoCheck, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Post } from 'src/app/models/post';
 import { Comment } from 'src/app/models/comment'
 import { ServiceblogService } from 'src/app/services/blog-service';
@@ -52,6 +52,7 @@ export class BlogdetailComponent implements OnInit  {
   currentIndexLikes = -1;
   currentLike = null;
   check: any;
+  userRoute: any = {};
 
   constructor(private blogService: ServiceblogService, private router: Router, private authService: AuthService, public sanitizer: DomSanitizer, private route: ActivatedRoute, private token: TokenStorageService) {}
   
@@ -65,14 +66,17 @@ export class BlogdetailComponent implements OnInit  {
     this.retrieveLikes();
     this.replyUser = this.token.getUser();
     this.getCurrentUser();
+    this.route.params.subscribe(params => {
+      this.authService.getUserById(params.id).subscribe(res => {
+        this.userRoute = res;
+      });
+    });
   }
 
-  // ngAfterContentChecked(): void {
-  //   if (!this.user) {
-  //     this.user = this.getUserById(this.currentPost?.userId);
-      
-  //   }
-  // }
+  @ViewChild('closeModal') private closeModal: ElementRef;
+  public hideModel() {
+    this.closeModal.nativeElement.click();      
+  }
 
   getCurrentUser(){
     this.currentUser = this.token.getUser().id
@@ -109,7 +113,6 @@ export class BlogdetailComponent implements OnInit  {
     this.pageLikes = 1;
     this.retrieveLikes();
   }
-
   retrieveComments(): void {
     const params = this.getRequestParams(this.page, this.pageSize, this.postId);
     this.blogService.getAllComments(params)
