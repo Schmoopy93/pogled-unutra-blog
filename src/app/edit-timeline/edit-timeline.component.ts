@@ -16,8 +16,6 @@ export class EditTimelineComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.blogService.editTimeline(params.id).subscribe(res => {
         this.timeline = res;
-        console.log(this.timeline, "this")
-        //this.adminId = this.route.snapshot.params.id;
       });
     });
   }
