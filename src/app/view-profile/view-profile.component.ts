@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Likes } from '../models/likes';
@@ -51,6 +51,7 @@ export class ViewProfileComponent implements OnInit{
   likeArrayByTimeline : any = [];
   toDisplayGroup = {};
   check: any;
+  userRoute: any = {};
   constructor(private blogService: ServiceblogService, private router: Router, private route : ActivatedRoute, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService) { }
 
   ngOnInit(): void {
@@ -65,6 +66,19 @@ export class ViewProfileComponent implements OnInit{
     }
     this.getFollowing();
     this.getCurrentUser();
+    this.route.params.subscribe(params => {
+      this.authService.getUserById(params.id).subscribe(res => {
+        this.userRoute = res;
+        this.router.routeReuseStrategy.shouldReuseRoute = function () {
+          return false;
+        };
+      });
+    });
+  }
+
+  @ViewChild('closeModal') private closeModal: ElementRef;
+  public hideModel() {
+    this.closeModal.nativeElement.click();
   }
 
   getCurrentUser(){
@@ -98,14 +112,6 @@ export class ViewProfileComponent implements OnInit{
   unfollow(id) {
     this.blogService.unfollow(this.resId).subscribe(res => {
       this.ngOnInit();
-    });
-  }
-
-
-  updateTimelineById(text) {
-    this.route.params.subscribe(params => {
-      this.blogService.updateTimeline(text, params.id);
-      //this.router.navigate(['/my-profile'])
     });
   }
 
