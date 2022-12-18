@@ -169,16 +169,16 @@
             </div>
         </aside>
     </div>
-    <div class="paginate">
-        <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
-    </div>
-    <div class="paginate">
-        <h2 style="font-size: 1.1em; font-weight: bolder;">Comments per Page:
-            <select class="browser-default custom-select" style="width: 24%;" (change)="handlePageSizeChange($event)">
-  <option *ngFor="let size of pageSizes" [ngValue]="size">
-    {{ size }}
-  </option>
+</div>
+<div class="paginate">
+    <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
+</div>
+<div class="paginate">
+    <h2 style="font-size: 1.1em; font-weight: bolder; text-align: center;">Load more:
+        <select style="margin-top:20px; width:50%" class="browser-default custom-select" (change)="handlePageSizeChange($event)">
+<option *ngFor="let size of pageSizes" [ngValue]="size">
+{{ size }}
+</option>
 </select>
-        </h2>
-    </div>
+    </h2>
 </div>

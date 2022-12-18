@@ -34,8 +34,8 @@ export class BlogdetailComponent implements OnInit  {
   page = 1;
   count = 0;
   countLikes = 0;
-  pageSize = 10;
-  pageSizes = [10, 20, 30];
+  pageSize = 6;
+  pageSizes = [6, 12, 18];
   currentIndex = -1;
   replyUser : any;
   postId: any;
