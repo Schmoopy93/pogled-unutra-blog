@@ -146,4 +146,8 @@ export class AuthService {
       email,
     }, httpOptions);
   }
+
+  getMyFollowers(params: any): Observable<any> {
+    return this.http.get<any>(`${AUTH_API}getFollowers`, { params });
+  }
 }
