@@ -158,6 +158,21 @@ export class ServiceblogService {
     return this.http.delete(`${this.commentURL}/${id}`, { responseType: 'text' });
   }
 
+  editComment(id) {
+    return this.http.get(`${AUTH_API}showComments/${id}`);
+  }
+
+  updateCommentById(content, id) {
+
+    const obj = {
+      content: content
+    };
+    this
+      .http
+      .put(`${AUTH_API}editComment/${id}`, obj)
+      .subscribe();
+  }
+
   addAppointment(event) {
     return this.http.post(AUTH_API + 'createAppointments', event);
   }

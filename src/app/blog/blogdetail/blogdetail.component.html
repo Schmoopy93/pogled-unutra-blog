@@ -67,10 +67,11 @@
                                     </div>
                                 </div>
                                 <div class="comment-body">
-                                    <a class="btn btn-outline-danger btn-sm " *ngIf="replyUser.roles== 'ROLE_ADMIN'" style="float: right; margin-right: 10px;">
+                                    <a title="Edit profile" *ngIf="currentUser === comment?.userId || replyUser.roles== 'ROLE_ADMIN' " style="margin-right: 10px;" class="btn btn-outline-secondary btn-sm" routerLink="/edit-comment/{{ comment.id }}"><i class="fas fa-edit"></i></a>
+                                    <a class="btn btn-outline-danger btn-sm " *ngIf="replyUser.roles== 'ROLE_ADMIN'">
                                         <span mwlConfirmationPopover placement="left" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteComment(comment.id)" (cancel)="cancelClicked = true"><i class="fa fa-trash" aria-hidden="true"></i></span>
                                     </a>
-                                    <p>{{comment?.content}}</p>
+                                    <p style="margin-top:20px;">{{comment?.content}}</p>
                                 </div>
                             </div>
                         </div>

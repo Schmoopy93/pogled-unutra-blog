@@ -39,6 +39,7 @@ import { NewPasswordComponent } from './new-password/new-password.component';
 import { SearchFriendComponent } from './search-friend/search-friend.component';
 import { FollowersListComponent } from './followers-list/followers-list.component';
 import { EditTimelineComponent } from './edit-timeline/edit-timeline.component';
+import { EditCommentsComponent } from './edit-comments/edit-comments.component';
 
 
 FullCalendarModule.registerPlugins([
@@ -71,6 +72,7 @@ FullCalendarModule.registerPlugins([
     SearchFriendComponent,
     FollowersListComponent,
     EditTimelineComponent,
+    EditCommentsComponent,
   ],
   imports: [
     BrowserModule,

@@ -7,6 +7,7 @@ import { BlogComponent } from './blog/blog.component';
 import { BlogdetailComponent } from './blog/blogdetail/blogdetail.component';
 import { EditblogComponent } from './blog/editblog/editblog.component';
 import { ViewblogComponent } from './blog/viewblog/viewblog.component';
+import { EditCommentsComponent } from './edit-comments/edit-comments.component';
 import { EditTimelineComponent } from './edit-timeline/edit-timeline.component';
 import { FollowersListComponent } from './followers-list/followers-list.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
@@ -74,6 +75,9 @@ const routes: Routes = [
       },
       {
         path: 'edit-timeline/:id', component: EditTimelineComponent
+      },
+      {
+        path: 'edit-comment/:id', component: EditCommentsComponent
       },
 
     ]
