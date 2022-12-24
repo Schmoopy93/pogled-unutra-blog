@@ -6,7 +6,7 @@ export class User
     firstname: string;
     lastname: string;
     roles: string;
-    createdAt: Date;
+    createdAt: any;
     confirmationCode: string;
     data: ArrayBuffer;
     mimetype: string;

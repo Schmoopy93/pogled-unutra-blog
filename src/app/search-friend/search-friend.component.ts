@@ -32,10 +32,12 @@ export class SearchFriendComponent implements OnInit {
   followerId: any;
   user_Id: any;
   follower_Id: any;
+  currentUsr: any;
   constructor(private authService: AuthService, private token: TokenStorageService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     this.currUser = JSON.parse(window.sessionStorage.getItem('auth-user')).id;
+    this.currentUsr = JSON.parse(window.sessionStorage.getItem('auth-user'));
     this.getUserById(this.currUser);
     this.retrieveUsers();
   }
@@ -65,6 +67,7 @@ export class SearchFriendComponent implements OnInit {
         const { users, totalItems } = response;
         this.users = users;
         this.count = totalItems;
+        this.users.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
         //console.log(users, 'users')
         // this.res = users;
         // const currentUserFollowers = users.filter(user => user.id === this.currUser)[0].followers.map(el => el.followerId);
@@ -109,11 +112,11 @@ export class SearchFriendComponent implements OnInit {
   }
 
   compareAlphabeticallyAsc() : void {
-    this.res.sort((a, b) => a.firstname.localeCompare(b.firstname))
+    this.users.sort((a, b) => a.createdAt.localeCompare(b.createdAt))
   }
 
   compareAlphabeticallyDesc(): void {
-    this.res.sort((a, b) => b.firstname.localeCompare(a.firstname))
+    this.users.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
   }
 
 }

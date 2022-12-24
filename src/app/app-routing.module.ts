@@ -53,9 +53,7 @@ const routes: Routes = [
         }
       },
       {
-        path: 'edit-user/:id', component: UpdateUserComponent,canActivate: [AuthGuard], data: {
-          roles: '[ROLE_ADMIN]'
-        }
+        path: 'edit-user/:id', component: UpdateUserComponent
       },
       {
         path: 'about', component: AboutMeComponent
