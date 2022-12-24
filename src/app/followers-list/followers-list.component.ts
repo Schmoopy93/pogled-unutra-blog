@@ -23,7 +23,7 @@ export class FollowersListComponent implements OnInit {
   text = '';
   followers: any;
   currentFollower:any;
-  check : any;
+  searchText: string;
 
   constructor(private authService: AuthService) { }
 
@@ -50,19 +50,13 @@ export class FollowersListComponent implements OnInit {
   }
 
   retrieveFollowers(): void {
-    const params = this.getRequestParams(this.text, this.page, this.pageSize, this.currUser);
+    const params = this.getRequestParams(this.firstname, this.page, this.pageSize, this.currUser);
     this.authService.getMyFollowers(params)
     .subscribe(
       response => {
         const { followers, totalItems } = response;
         this.followers = followers;
         this.count = totalItems;
-        //console.log(followers, "follow")
-        // for(let i =0; i < followers.length; i++){
-        //   this.check = this.followers[i].user;
-        //   console.log(this.check, "check")
-        // }
-        
       },
       error => {
         console.log(error);

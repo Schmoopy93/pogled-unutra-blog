@@ -40,6 +40,7 @@ import { SearchFriendComponent } from './search-friend/search-friend.component';
 import { FollowersListComponent } from './followers-list/followers-list.component';
 import { EditTimelineComponent } from './edit-timeline/edit-timeline.component';
 import { EditCommentsComponent } from './edit-comments/edit-comments.component';
+import { SearchPipe } from './services/search.pipe';
 
 
 FullCalendarModule.registerPlugins([
@@ -73,6 +74,7 @@ FullCalendarModule.registerPlugins([
     FollowersListComponent,
     EditTimelineComponent,
     EditCommentsComponent,
+    SearchPipe,
   ],
   imports: [
     BrowserModule,

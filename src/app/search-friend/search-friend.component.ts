@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../models/user';
 import { AuthService } from '../services/auth.service';
@@ -33,6 +33,7 @@ export class SearchFriendComponent implements OnInit {
   user_Id: any;
   follower_Id: any;
   currentUsr: any;
+  searchText: string;
   constructor(private authService: AuthService, private token: TokenStorageService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
@@ -40,6 +41,11 @@ export class SearchFriendComponent implements OnInit {
     this.currentUsr = JSON.parse(window.sessionStorage.getItem('auth-user'));
     this.getUserById(this.currUser);
     this.retrieveUsers();
+  }
+
+  @ViewChild('closeModal') private closeModal: ElementRef;
+  public hideModel() {
+    this.closeModal.nativeElement.click();
   }
 
   setActiveUser(user: User, index: number): void {
