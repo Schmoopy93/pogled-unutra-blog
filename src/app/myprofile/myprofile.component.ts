@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { TokenStorageService } from '../services/token-storage.service';
@@ -48,6 +48,7 @@ export class MyprofileComponent implements OnInit {
   toDisplayGroup = {};
   check: any;
   timelineId: any;
+  currentUserLike: any;
   
   constructor(private router: Router, private route: ActivatedRoute, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService, private blogService: ServiceblogService) { }
 
@@ -58,8 +59,17 @@ export class MyprofileComponent implements OnInit {
     if(this.currentUser.id === this.userId){
       this.getTimeline();
     }
-
     this.role_user = JSON.parse(window.sessionStorage.getItem('auth-user')).roles;
+    this.getCurrentUser();
+  }
+
+  @ViewChild('closeModal') private closeModal: ElementRef;
+  public hideModel() {
+    this.closeModal.nativeElement.click();
+  }
+
+  getCurrentUser(){
+    this.currentUserLike = this.token.getUser().id;
   }
   
   setActiveUser(user: User, index: number): void {
