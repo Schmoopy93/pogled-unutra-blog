@@ -50,10 +50,7 @@ export class SearchFriendComponent implements OnInit {
       .subscribe(
         data => {
           this.currentUserFollowers = data;
-          //this.currentUserFollowersList = this.currentUserFollowers.followers.map(e => e.followerId);
           this.currentUserFollowersList = this.currentUserFollowers.followers
-          console.log(this.currentUserFollowersList, "newOne prop")
-          // console.log(this.currentUserFollowers, "novi prop")
         },
         error => {
           console.log(error);
