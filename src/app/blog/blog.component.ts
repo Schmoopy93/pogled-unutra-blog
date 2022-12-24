@@ -23,11 +23,6 @@ export class BlogComponent implements OnInit {
   }
 
   ngOnInit() {
-    // const el = document.querySelector('.counter')
-    // counterUp(el, {
-    //   duration: 1000,
-    //   delay: 1,
-    // })
     this.confirmationCode = this.route.snapshot.params['confirmationCode'];
     if(!this.confirmationCode){
       return;
