@@ -14,6 +14,8 @@ export class SearchFriendComponent implements OnInit {
   users: User[] = [];
   currentUser:any;
   user: any = {};
+  currentUserFollowers : any = {};
+  currentUserFollowersList: any = {}
   currentIndex = -1;
   firstname = '';
   page = 1;
@@ -33,9 +35,9 @@ export class SearchFriendComponent implements OnInit {
   constructor(private authService: AuthService, private token: TokenStorageService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
-    this.retrieveUsers();
     this.currUser = JSON.parse(window.sessionStorage.getItem('auth-user')).id;
-
+    this.getUserById(this.currUser);
+    this.retrieveUsers();
   }
 
   setActiveUser(user: User, index: number): void {
@@ -43,17 +45,33 @@ export class SearchFriendComponent implements OnInit {
     this.currentIndex = index;
   }
 
+  getUserById(id) {
+    this.authService.getUserById(id)
+      .subscribe(
+        data => {
+          this.currentUserFollowers = data;
+          //this.currentUserFollowersList = this.currentUserFollowers.followers.map(e => e.followerId);
+          this.currentUserFollowersList = this.currentUserFollowers.followers
+          console.log(this.currentUserFollowersList, "newOne prop")
+          // console.log(this.currentUserFollowers, "novi prop")
+        },
+        error => {
+          console.log(error);
+        });
+  }
+
   retrieveUsers(): void {
-    const params = this.getRequestParams(this.firstname, this.page, this.pageSize);
+    const params = this.getRequestParams(this.firstname, this.page, this.pageSize, this.currUser);
     this.authService.getAllUsersForSearch(params)
     .subscribe(
       response => {
         const { users, totalItems } = response;
         this.users = users;
         this.count = totalItems;
-        this.res = users;
-        const currentUserFollowers = users.filter(user => user.id === this.currUser)[0].followers.map(el => el.followerId);
-        this.res = users.filter(user => (!currentUserFollowers.includes(user.id) && user.id !==this.currUser));
+        //console.log(users, 'users')
+        // this.res = users;
+        // const currentUserFollowers = users.filter(user => user.id === this.currUser)[0].followers.map(el => el.followerId);
+        // this.res = users.filter(user => (!currentUserFollowers.includes(user.id) && user.id !==this.currUser));
         },
         error => {
           console.log(error);
@@ -71,7 +89,7 @@ export class SearchFriendComponent implements OnInit {
     this.retrieveUsers();
   }
 
-  getRequestParams(searchTitle: string, page: number, pageSize: number): any {
+  getRequestParams(searchTitle: string, page: number, pageSize: number, userId: any): any {
     let params: any = {};
 
     if (searchTitle) {
@@ -84,6 +102,10 @@ export class SearchFriendComponent implements OnInit {
 
     if (pageSize) {
       params[`size`] = pageSize;
+    }
+
+    if (userId) {
+      params[`id`] = userId;
     }
 
     return params;

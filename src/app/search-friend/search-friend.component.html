@@ -37,7 +37,7 @@
             <div class="col-md-9 col-sm-7" style="padding-top: 10px;">
                 <h2 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif">Search friends</h2>
             </div>
-            <div class="col-xl-6 col-lg-7 col-md-12" *ngFor="let user of res | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveUser(user, i)">
+            <div class="col-xl-6 col-lg-7 col-md-12" *ngFor="let user of users | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveUser(user, i)">
                 <div class="card profile-header" style="border-radius: 15px; border: 1px solid rgb(199, 199, 199);">
                     <div class="body">
                         <div class="row">
@@ -46,6 +46,9 @@
                             </div>
                             <div class="col-lg-8 col-md-8 col-12">
                                 <h4 class="m-t-0 m-b-0"><strong>{{user?.firstname}} {{user?.lastname}}</strong> </h4>
+                                <div *ngFor="let cufs of currentUserFollowersList">
+                                    <h6 *ngIf="cufs.followerId === user?.id" style="color: red;">Already following</h6>
+                                </div>
                                 <span class="job_post">Member since: {{ user?.createdAt | date: "MMM, y" }}</span>
                                 <p>{{user?.town}}</p>
                                 <div>
