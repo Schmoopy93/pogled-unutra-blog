@@ -5,6 +5,7 @@ import { TokenStorageService } from '../services/token-storage.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ServiceblogService } from '../services/blog-service';
 import { User } from '../models/user';
+import {io} from 'socket.io-client';
 
 @Component({
   selector: 'app-myprofile',
@@ -46,14 +47,21 @@ export class MyprofileComponent implements OnInit {
   likeArrayByTimeline : any = [];
   likeArrayByTimeline1 : any = [];
   toDisplayGroup = {};
-  check: any;
+  checkStatus: any;
   timelineId: any;
   currentUserLike: any;
+  currentUserId: any;
+  notifications: any;
+  res: any = {};
+  resId: any;
+  countNotification = 0;
+
   
-  constructor(private router: Router, private route: ActivatedRoute, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService, private blogService: ServiceblogService) { }
+  constructor(private router: Router, private route: ActivatedRoute, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService, private blogService: ServiceblogService) {}
 
   ngOnInit(): void {
     this.currentUser = this.token.getUser();
+    this.currentUserId = this.token.getUser().id;
     this.getUserById(this.currentUser.id);
     this.userId = JSON.parse(window.sessionStorage.getItem('auth-user')).id;
     if(this.currentUser.id === this.userId){
@@ -61,6 +69,7 @@ export class MyprofileComponent implements OnInit {
     }
     this.role_user = JSON.parse(window.sessionStorage.getItem('auth-user')).roles;
     this.getCurrentUser();
+    this.getNotifications();
   }
 
   @ViewChild('closeModal') private closeModal: ElementRef;
@@ -205,6 +214,24 @@ export class MyprofileComponent implements OnInit {
     return params;
   }
 
+  getRequestParamsForNotifications(page: number, pageSize: number, currentUserId: number): any {
+    let params: any = {};
+
+    if (page) {
+      params[`page`] = page - 1;
+    }
+
+    if (pageSize) {
+      params[`size`] = pageSize;
+    }
+    
+    if (currentUserId) {
+      params[`followerId`] = currentUserId;
+    }
+
+    return params;
+  }
+
   onSubmit(): void {
     const { text } = this.form;
     this.blogService.addTimeline(text, this.currentUser.id).subscribe(
@@ -230,4 +257,37 @@ export class MyprofileComponent implements OnInit {
   compareAlphabeticallyDesc(): void {
     this.timelines.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
   }
+
+  getNotifications(): void {
+    const params = this.getRequestParamsForNotifications(this.pageLikes, this.pageSizeLikes,this.currentUserId);
+    this.blogService.getNotifications(params)
+    .subscribe(
+      response => {
+        const { followers, totalItems, currentUserId } = response;
+        this.currentUserId = currentUserId;
+        this.notifications = followers;
+        this.checkStatus = this.notifications.filter(e => e.status === 'Requested');
+        this.countNotification = totalItems;
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
+  unfollow(id) {
+    this.blogService.unfollow(id).subscribe(res => {
+      this.ngOnInit();
+    });
+  }
+
+  acceptFriendShip(id): void {
+    this.authService.acceptFriendship(id)
+      .pipe()
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/my-profile'], { relativeTo: this.route });
+        }
+      });
+  }
+
 }

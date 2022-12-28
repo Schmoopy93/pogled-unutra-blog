@@ -20,6 +20,7 @@ export class ViewProfileComponent implements OnInit{
   userId: any;
   followerId: any;
   followRequest = false;
+  requestedFollowing: any;
   timelines: any;
   currentTimeline = null;
   currentIndex = -1;
@@ -52,6 +53,8 @@ export class ViewProfileComponent implements OnInit{
   toDisplayGroup = {};
   check: any;
   userRoute: any = {};
+  message = '';
+  currentUserName: any;
   constructor(private blogService: ServiceblogService, private router: Router, private route : ActivatedRoute, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService) { }
 
   ngOnInit(): void {
@@ -94,14 +97,16 @@ export class ViewProfileComponent implements OnInit{
         this.followerId = followerId;
         this.currentUserId = currentUserId;
         this.res = response;
+        this.requestedFollowing = this.res.map(e => e.indicator);
         if(this.res){
           this.res = this.res.find(i => i.id);
           this.resId = this.res?.id;
         }
-        if(typeof response !== 'undefined' && response.length > 0){
+        if(typeof response !== 'undefined' && response.length && this.res.status !== 'Requested'){
           this.followRequest = true;
         }else{
           this.followRequest = false;
+          
         }
       },
       error => {
@@ -311,8 +316,11 @@ export class ViewProfileComponent implements OnInit{
   onSubmit(): void {
     this.userId = this.currentUser.id;
     this.followerId = this.route.snapshot.params.id;
-    this.blogService.follow(this.userId, this.followerId).subscribe(
-      data => {},
+    this.currentUserName = this.token.getUser().firstname + ' ' + this.token.getUser().lastname;
+    this.message = this.currentUserName + " sent you a friend request !"
+    this.blogService.follow(this.userId, this.followerId, this.message).subscribe(
+      data => {
+      },
       err => {
         this.errorMessage = err.error.message;
       }

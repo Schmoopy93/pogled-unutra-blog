@@ -120,6 +120,35 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="exampleModalTimelineNotifications" tabindex="-1" role="dialog" aria-labelledby="exampleModalTimelineNotifications" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalTimelineNotifications">Notifications</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body">
+                <ng-container>
+                    <form action="#" class="commenting-form" *ngFor="let notification of notifications">
+                        <div class="row" *ngIf="notification.message && notification.status != 'Following'">
+                            <div class="form-group col-md-12">
+                                <strong>{{notification.message}}</strong>
+                            </div>
+                            <div>
+                                <button type="submit" data-dismiss="modal" style="margin-right:10px; margin-left:10px;" class="btn btn-outline-success btn-sm" (click)="acceptFriendShip(notification?.id);">Accept</button>
+                                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal" (click)="unfollow(notification?.id)">Decline</button>
+                            </div>
+                            <br>
+                            <br>
+                        </div>
+                    </form>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container" style="padding-bottom: 150px;">
     <div class="row">
         <div class="col-md-12">
@@ -142,13 +171,15 @@
                                 <button class="btn btn-outline-success btn-sm" style="margin-right:3px;" routerLink="/followers">My Friends</button>
                                 <button class="btn btn-outline-success btn-sm" style="margin-right:3px;" data-toggle="modal" data-target="#exampleModal">My Info</button>
                                 <button class="btn btn-outline-success btn-sm" style="margin-right:3px;" routerLink="/edit-user/{{ currentUser?.id }}">Edit My Info</button>
-                                <button class="btn btn-outline-success btn-sm dropdown-toggle" style="margin-right: 10px;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <button class="btn btn-outline-success btn-sm dropdown-toggle" style="margin-right:3px;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     Sort Timelines By Date
                                   </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <a class="dropdown-item" (click)="compareAlphabeticallyAsc()">Asc <i class="fas fa-arrow-up"></i></a>
                                     <a class="dropdown-item" (click)="compareAlphabeticallyDesc()">Desc <i class="fas fa-arrow-down"></i></a>
                                 </div>
+                                <button type="button" class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#exampleModalTimelineNotifications"><i class="fa fa-bell" aria-hidden="true"></i> {{checkStatus?.length}} </button>
+
                             </div>
                         </div>
                         <ul class="profile-header-tab nav nav-tabs" style="margin-top: 35px;">

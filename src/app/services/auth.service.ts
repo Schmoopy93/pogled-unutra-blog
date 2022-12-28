@@ -121,6 +121,10 @@ export class AuthService {
     return this.http.get(`${AUTH_API}confirm/` + confirmationCode);
   }
 
+  acceptFriendship(id: string) {
+    return this.http.get(`${AUTH_API}acceptFriendship/` + id);
+  }
+
   setNewPassword(password: any, token: string): Observable<any> {
     return this.http.post(USER_API + '/new-password', {
       password,

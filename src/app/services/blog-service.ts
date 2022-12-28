@@ -181,15 +181,20 @@ export class ServiceblogService {
     return this.http.delete(`${AUTH_API + 'findAllAppointments'}/${id}`, { responseType: 'text' });
   }
 
-  follow(userId: number, followerId:number): Observable<any> {
+  follow(userId: number, followerId:number, message: string): Observable<any> {
     return this.http.post(AUTH_API + 'following', {
       userId,
-      followerId
+      followerId,
+      message
     }, httpOptions);
   }
 
   getFollows(params: any): Observable<any> {
     return this.http.get<any>(AUTH_API + 'followRequest', { params });
+  }
+
+  getNotifications(params: any): Observable<any> {
+    return this.http.get<any>(AUTH_API + 'notifications', { params });
   }
 
   unfollow(id: number): Observable<any> {

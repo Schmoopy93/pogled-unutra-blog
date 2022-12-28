@@ -116,12 +116,14 @@
                                 <h4 class="m-t-10 m-b-5">{{ user?.firstname }} {{ user?.lastname }}</h4>
                                 <p class="m-b-10">Joined At: {{ user?.createdAt | date: "MMM d, y" }}</p>
                                 <!-- <p class="m-b-10">Total timelines: {{count}}</p> -->
-                                <button *ngIf="!followRequest" class="btn btn-outline-success btn-sm" style="margin-right:3px;" (click)="onSubmit()">Follow {{user?.firstname}} {{user?.lastname}}</button>
-                                <button *ngIf="followRequest" class="btn btn-outline-success btn-sm" style="margin-right:3px;" (click)="unfollow(resId)">Unfollow {{user?.firstname}} {{user?.lastname}}</button>
-                                <button *ngIf="followRequest" class="btn btn-outline-success btn-sm" style="margin-right:3px;" data-toggle="modal" data-target="#exampleModal">About {{ user?.firstname }} {{ user?.lastname }}</button>
-                                <button *ngIf="followRequest" class="btn btn-outline-success btn-sm dropdown-toggle" style="margin-right: 10px;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Sort Timelines By Date
-                                  </button>
+                                <div>
+                                    <button *ngIf="!followRequest && requestedFollowing == 0" class="btn btn-outline-success btn-sm" style="margin-right:3px;" (click)="onSubmit()">Follow {{user?.firstname}} {{user?.lastname}}</button>
+                                    <button *ngIf="!followRequest && requestedFollowing == 1" class="btn btn-outline-success btn-sm" style="margin-right:3px;">Requested</button>
+                                    <button *ngIf="followRequest" class="btn btn-outline-success btn-sm" style="margin-right:3px;" (click)="unfollow(resId)">Unfollow {{user?.firstname}} {{user?.lastname}}</button>
+                                    <button *ngIf="followRequest" class="btn btn-outline-success btn-sm" style="margin-right:3px;" data-toggle="modal" data-target="#exampleModal">About {{ user?.firstname }} {{ user?.lastname }}</button>
+                                    <button *ngIf="followRequest" class="btn btn-outline-success btn-sm dropdown-toggle" style="margin-right: 10px;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">          Sort Timelines By Date
+                                </button>
+                                </div>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <a class="dropdown-item" (click)="compareAlphabeticallyAsc()">Asc <i class="fas fa-arrow-up"></i></a>
                                     <a class="dropdown-item" (click)="compareAlphabeticallyDesc()">Desc <i class="fas fa-arrow-down"></i></a>
