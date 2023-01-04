@@ -7,9 +7,6 @@
                         <div class="card-body p-5">
                             <h2 class="text-uppercase text-center mb-5">Create an account</h2>
                             <form form *ngIf="!isSuccessful" name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate id="signup-form" class="signup-form">
-                                <div class="form-outline mb-4">
-                                    <input type="text" id="form3Example1cg" class="form-control form-control-lg" name="username" [(ngModel)]="form.username" required minlength="3" maxlength="20" #username="ngModel" placeholder="Username" />
-                                </div>
                                 <div class="alert-danger" *ngIf="username.errors && f.submitted">
                                     <div *ngIf="username.errors.required">Username is required</div>
                                     <div *ngIf="username.errors.minlength">
@@ -20,7 +17,7 @@
                                     </div>
                                 </div>
                                 <div class="form-outline mb-4">
-                                    <input type="email" id="form3Example3cg" class="form-control form-control-lg" name="email" [(ngModel)]="form.email" required email #email="ngModel" placeholder="Email" />
+                                    <input type="text" id="form3Example1cg" class="form-control form-control-lg" name="username" [(ngModel)]="form.username" required minlength="3" maxlength="20" #username="ngModel" placeholder="Username" />
                                 </div>
                                 <div class="alert-danger" *ngIf="email.errors && f.submitted">
                                     <div *ngIf="email.errors.required">Email is required</div>
@@ -29,7 +26,7 @@
                                     </div>
                                 </div>
                                 <div class="form-outline mb-4">
-                                    <input type="text" id="form3Example4cg" class="form-control form-control-lg" name="firstname" [(ngModel)]="form.firstname" required firstname #firstname="ngModel" placeholder="Firstname" />
+                                    <input type="email" id="form3Example3cg" class="form-control form-control-lg" name="email" [(ngModel)]="form.email" required email #email="ngModel" placeholder="Email" />
                                 </div>
                                 <div class="alert-danger" *ngIf="firstname.errors && f.submitted">
                                     <div *ngIf="firstname.errors.required">Firstname is required</div>
@@ -38,7 +35,7 @@
                                     </div>
                                 </div>
                                 <div class="form-outline mb-4">
-                                    <input type="text" id="form3Example4cg" class="form-control form-control-lg" name="lastname" [(ngModel)]="form.lastname" required lastname #lastname="ngModel" placeholder="Lastname" />
+                                    <input type="text" id="form3Example4cg" class="form-control form-control-lg" name="firstname" [(ngModel)]="form.firstname" required firstname #firstname="ngModel" placeholder="Firstname" />
                                 </div>
                                 <div class="alert-danger" *ngIf="lastname.errors && f.submitted">
                                     <div *ngIf="lastname.errors.required">Lastname is required</div>
@@ -47,13 +44,20 @@
                                     </div>
                                 </div>
                                 <div class="form-outline mb-4">
-                                    <input type="password" id="form3Example4cg" class="form-control form-control-lg" name="password" [(ngModel)]="form.password" required minlength="6" #password="ngModel" placeholder="Password" />
+                                    <input type="text" id="form3Example4cg" class="form-control form-control-lg" name="lastname" [(ngModel)]="form.lastname" required lastname #lastname="ngModel" placeholder="Lastname" />
                                 </div>
                                 <div class="alert-danger" *ngIf="password.errors && f.submitted">
                                     <div *ngIf="password.errors.required">Password is required</div>
                                     <div *ngIf="password.errors.minlength">
                                         Password must be at least 6 characters
                                     </div>
+                                </div>
+                                <div class="form-outline mb-4">
+                                    <input type="password" id="form3Example4cg" class="form-control form-control-lg" name="password" [(ngModel)]="form.password" required minlength="6" #password="ngModel" placeholder="Password" />
+                                </div>
+
+                                <div class="alert-danger" *ngIf="!croppedImage && f.submitted">
+                                    <div>Photo is required</div>
                                 </div>
                                 <div class="form-outline mb-4t">
                                     <input type="file" class="form-control" id="customFile" (change)="fileChangeEvent($event)" style="height: auto;" />

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import Swal from 'sweetalert2';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -24,12 +25,19 @@ export class NewPasswordComponent implements OnInit {
     return;
     }
     const { password } = this.form;
-    this.authService.setNewPassword(password, this.token)
-    .pipe()
-    .subscribe({
-      next: () => {}
-    });
-  //Namestiti rutiranje i prikazivanje diva
-  this.router.navigateByUrl('/login', { skipLocationChange: false })
+    this.authService.setNewPassword(password, this.token).subscribe(
+      data => {
+        console.log(data);
+      },
+      err => {
+        this.errorMessage = err.error.error;
+        if(this.errorMessage){
+          this.errorMessage = err.error.error;
+        }
+        else{
+          this.router.navigateByUrl('/login')
+        }
+      }
+    );
   }
 }

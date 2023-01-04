@@ -47,6 +47,7 @@
                                 <h4 class="m-t-0 m-b-0"><strong>{{user?.firstname}} {{user?.lastname}}</strong> </h4>
                                 <div *ngFor="let cufs of currentUserFollowersList">
                                     <h6 *ngIf="cufs.followerId === user?.id && cufs.status ==='Following'" style="color: red;">Already following</h6>
+                                    <h6 *ngIf="cufs.followerId === user?.id && cufs.status ==='Requested'" style="color: blue;">Pending request</h6>
                                 </div>
                                 <span class="job_post">Member since: {{ user?.createdAt | date: "MMM, y" }}</span>
                                 <p>{{user?.town}}</p>

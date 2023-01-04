@@ -144,6 +144,7 @@
                             <br>
                         </div>
                     </form>
+                    <p *ngIf="!checkStatus?.length">No new notifications</p>
                 </ng-container>
             </div>
         </div>
@@ -226,24 +227,20 @@
                             </div>
                         </div>
                     </div>
-                </section>
-                <div>
-                    <div style="padding-top:150px;">
-                        <div class="paginate">
-                            <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
-                        </div>
-                        <div class="paginate">
-                            <h2 style="font-size: 1.1em; font-weight: bolder;">Timelines per Page:
-                                <select class="browser-default custom-select" style="width: 24.5%;" (change)="handlePageSizeChange($event)">
-                        <option *ngFor="let size of pageSizes" [ngValue]="size">
-                        {{ size }}
-                        </option>
-                        </select>
-                            </h2>
-                        </div>
-
+                    <div class="paginate">
+                        <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
                     </div>
-                </div>
+                    <div class="paginate">
+                        <h2 style="font-size: 1.1em; font-weight: bolder;">Timelines per Page:
+                            <select class="browser-default custom-select" style="width: 24.5%;" (change)="handlePageSizeChange($event)">
+                            <option *ngFor="let size of pageSizes" [ngValue]="size">
+                            {{ size }}
+                            </option>
+                            </select>
+                        </h2>
+                    </div>
+                </section>
+
             </div>
         </div>
     </div>
