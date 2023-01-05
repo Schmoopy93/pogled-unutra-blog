@@ -8,7 +8,6 @@ export class SearchPipe implements PipeTransform {
     if (!args) return value;
 
     args = args.toLowerCase();
-    debugger;
     return value.filter(function(item) {
       return JSON.stringify(item)
         .toLowerCase()

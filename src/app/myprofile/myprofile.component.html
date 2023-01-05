@@ -150,6 +150,45 @@
         </div>
     </div>
 </div>
+
+<!---->
+
+<div>
+    <div>
+        <div class="modal fade" id="exampleModalLabelTimelinePhotos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelTimelinePhotos" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabelTimelinePhotos">Upload a photo to your gallery</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="modal-body">
+                            <form>
+                                <div class="form-group">
+                                    <label for="inputEmail1" class="label col-sm-3 col-form-label">Content</label>
+                                    <div>
+                                        <input class="form-control" type="text" nbInput fullWidth id="title" placeholder="Title" [(ngModel)]="formGallery.title" [ngModelOptions]="{standalone: true}" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="file" class="form-control" id="customFile" (change)="selectFile($event)" style="height: auto;" />
+                                    <label class="form-label" for="form3Example3cg">Gallery photo</label>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button #closeModal type="submit" class="btn btn-outline-success btn-sm " data-dismiss="modal" (click)="addGallery()">Upload</button>
+                            <button #closeModal type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!---->
 <div class="container" style="padding-bottom: 150px;">
     <div class="row">
         <div class="col-md-12">
@@ -183,65 +222,118 @@
 
                             </div>
                         </div>
-                        <ul class="profile-header-tab nav nav-tabs" style="margin-top: 35px;">
-                            <li class="nav-item"><a class="nav-link active show" data-toggle="tab">TIMELINE</a></li>
+                        <ul class="profile-header-tab nav nav-tabs">
+                            <li class="tab-slider--trigger" [class.active]="viewMode == 'tab1'" rel="tab1" (click)="viewMode ='tab1'"><a data-toggle="tab" href="#timeline">TIMELINE</a></li>
+                            <li class="tab-slider--trigger" [class.active]="viewMode == 'tab2'" rel="tab2" (click)="viewMode ='tab2'"><a data-toggle="tab" href="#photos">PHOTOS</a></li>
                         </ul>
                     </div>
                 </div>
-                <section>
-                    <div class="container my-5 py-5">
-                        <div class="row d-flex justify-content-center">
-                            <div class="col-md-12 col-lg-10" *ngFor="let timeline of timelines | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveUser(user, i)" style="margin-top: 10px;">
-                                <div class="card text-dark">
-                                    <div class="card-body p-4">
-                                        <div class="d-flex flex-start">
-                                            <img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="avatar" width="60" height="60" />
-                                            <div>
-                                                <h6 class="fw-bold mb-1"><strong>{{ user?.firstname }} {{ user?.lastname }}</strong></h6>
-                                                <div class="d-flex align-items-center mb-3">
-                                                    <p class="mb-0" style="font-style: italic;">
-                                                        {{ timeline?.createdAt | date: "MMM d, y h:mm a" }}
-                                                    </p>
-                                                </div>
-                                                <div>
-                                                    <!-- <a href="#!" class="link-muted"><i class="fas fa-pencil-alt ms-2"></i></a> -->
-                                                    <div>
-                                                        <button class="btn btn-outline-success dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="container">
+                    <div class="tab-slider--container" [ngSwitch]="viewMode">
+                        <div id="tab1" class="tab-slider--body" *ngSwitchCase="'tab1'">
+                            <section>
+                                <div class="container my-5 py-5">
+                                    <div class="row d-flex justify-content-center">
+                                        <div class="col-md-12 col-lg-10" *ngFor="let timeline of timelines | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveUser(user, i)" style="margin-top: 10px;">
+                                            <div class="card text-dark">
+                                                <div class="card-body p-4">
+                                                    <div class="d-flex flex-start">
+                                                        <img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="avatar" width="60" height="60" />
+                                                        <div>
+                                                            <h6 class="fw-bold mb-1"><strong>{{ user?.firstname }} {{ user?.lastname }}</strong></h6>
+                                                            <div class="d-flex align-items-center mb-3">
+                                                                <p class="mb-0" style="font-style: italic;">
+                                                                    {{ timeline?.createdAt | date: "MMM d, y h:mm a" }}
+                                                                </p>
+                                                            </div>
+                                                            <div>
+                                                                <div>
+                                                                    <button class="btn btn-outline-success dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                             <i class="far fa-thumbs-up "></i><strong>{{ timeline.likesTimeline.length }}</strong></button>
-                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                            <button style="margin-top:10px;" (click)="toDisplayGroup = timeline" class="dropdown-item" data-toggle="modal" data-target="#exampleModalLabelTimelineLikes"><i class="far fa-user "></i>Who liked</button>
-                                                        </div>
-                                                        <button type="button" title="Edit profile" style="margin-left: 10px;" class="btn btn-outline-secondary btn-sm" routerLink="/edit-timeline/{{ timeline.id }}"><i class="fas fa-edit"></i></button>
-                                                        <a class="btn btn-outline-danger btn-sm " style="margin-left: 10px;" *ngIf="currentUser.id === user?.id" mwlConfirmationPopover placement="top-up" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteTimelineById(timeline.id)"
-                                                            (cancel)="cancelClicked = true"><i class="fas fa-trash ms-2"></i></a>
-                                                    </div>
+                                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                        <button style="margin-top:10px;" (click)="toDisplayGroup = timeline" class="dropdown-item" data-toggle="modal" data-target="#exampleModalLabelTimelineLikes"><i class="far fa-user "></i>Who liked</button>
+                                                                    </div>
+                                                                    <button type="button" title="Edit profile" style="margin-left: 10px;" class="btn btn-outline-secondary btn-sm" routerLink="/edit-timeline/{{ timeline.id }}"><i class="fas fa-edit"></i></button>
+                                                                    <a class="btn btn-outline-danger btn-sm " style="margin-left: 10px;" *ngIf="currentUser.id === user?.id" mwlConfirmationPopover placement="top-up" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteTimelineById(timeline.id)"
+                                                                        (cancel)="cancelClicked = true"><i class="fas fa-trash ms-2"></i></a>
+                                                                </div>
 
+                                                            </div>
+                                                            <p class="mb-0" style="padding-top: 20px;">
+                                                                {{timeline?.text}}
+                                                            </p>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <p class="mb-0" style="padding-top: 20px;">
-                                                    {{timeline?.text}}
-                                                </p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <div style="position:relative; top:150px;">
+                                    <div class="paginate">
+                                        <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event, 'timelines')"></pagination-controls>
+                                    </div>
+                                    <div class="paginate">
+                                        <h2 style="font-size: 1.1em; font-weight: bolder;">Timelines per Page:
+                                            <select class="browser-default custom-select" style="width: 24.5%;" (change)="handlePageSizeChange($event, 'timelines')">
+                                        <option *ngFor="let size of pageSizes" [ngValue]="size">
+                                        {{ size }}
+                                        </option>
+                                        </select>
+                                        </h2>
+                                    </div>
+                                </div>
+
+
+                            </section>
+                        </div>
+                        <div id="tab2" class="tab-slider--body" *ngSwitchCase="'tab2'">
+                            <div>
+                                <section id="gallery" style="width: 100%;">
+                                    <div class="container" style="padding-top:50px;">
+                                        <button class="btn btn-outline-success btn-sm" style="margin-right:3px;" data-toggle="modal" data-target="#exampleModalLabelTimelinePhotos">Upload a photo</button>
+                                        <p class="paginate" style="margin-top: 10px;"><strong>Total photos: {{countGallery}}</strong></p>
+                                        <h4 style="text-align: center; padding-bottom: 30px;"></h4>
+                                        <div class="row">
+                                            <div class="col-md-4 lg-4 animation" *ngFor="let p of photoGallery | paginate : {itemsPerPage: pageSizeGallery,currentPage: pageGallery,totalItems: countGallery}; let i = index" [class.active]="i == currentIndex" style="margin-top: 10px;">
+                                                <div class="card">
+                                                    <img src="http://localhost:4000/uploads/{{p?.name}}" alt=" " class="card-img-top ">
+                                                    <div class="card-body ">
+                                                        <h5 class="card-title "></h5>
+                                                        <h4 class="card-text" style=" white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><strong>{{p.title}}</strong></h4>
+                                                        <p class="card-text">Publish date: {{p.createdAt | date: "MMM d, y" }}</p>
+                                                        <a class="btn btn-outline-danger btn-sm " style="float: right;">
+                                                            <span mwlConfirmationPopover [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessageGallery" (confirm)="deletePhoto(p.id)" (cancel)="cancelClicked = true"><i class="fa fa-trash" aria-hidden="true"></i></span></a>
+                                                        <!-- <br>
+                                                        <a routerLink="/blogDetail/{{ post.id }}" class="btn btn-outline-success btn-sm "> Read More </a>
+                                                        <a *ngIf="currentUser.roles== 'ROLE_ADMIN' || currentUser.roles == 'ROLE_MODERATOR'" routerLink="/edit-post/{{ post.id }}" class="btn btn-outline-success btn-sm" style="float: right; margin-left: 10px;"> Edit </a>
+                                                        <a class="btn btn-outline-danger btn-sm " *ngIf="currentUser.roles== 'ROLE_ADMIN'" style="float: right;">
+                                                            <span mwlConfirmationPopover [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deletePost(post.id)" (cancel)="cancelClicked = true"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                                                        </a> -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                            <div style="position:relative; top:150px;">
+                                <div class="paginate">
+                                    <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event, 'photos')"></pagination-controls>
+                                </div>
+                                <div class="paginate">
+                                    <h2 style="font-size: 1.1em; font-weight: bolder;">Photos per Page:
+                                        <select class="browser-default custom-select" style="width: 27%;" (change)="handlePageSizeChange($event, 'photos')">
+                                <option *ngFor="let size of pageSizesGallery" [ngValue]="size">
+                                {{ size }}
+                                </option>
+                                </select>
+                                    </h2>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="paginate">
-                        <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
-                    </div>
-                    <div class="paginate">
-                        <h2 style="font-size: 1.1em; font-weight: bolder;">Timelines per Page:
-                            <select class="browser-default custom-select" style="width: 24.5%;" (change)="handlePageSizeChange($event)">
-                            <option *ngFor="let size of pageSizes" [ngValue]="size">
-                            {{ size }}
-                            </option>
-                            </select>
-                        </h2>
-                    </div>
-                </section>
-
+                </div>
             </div>
         </div>
     </div>
-</div>

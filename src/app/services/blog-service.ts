@@ -200,4 +200,34 @@ export class ServiceblogService {
   unfollow(id: number): Observable<any> {
     return this.http.delete(`${AUTH_API + 'unfollow'}/${id}`, { responseType: 'text' });
   }
+
+  addGallery(file: File, title: string, userId: string): Observable<HttpEvent<{}>> {
+    const formdata: FormData = new FormData();
+
+    formdata.append('file', file);
+    formdata.append('title', title);
+    formdata.append('userId', userId);
+
+    const req = new HttpRequest('POST', 'http://localhost:4000/api/auth/photogallery/upload', formdata, {
+      reportProgress: true,
+      responseType: 'text',
+    });
+
+    return this.http.request(req);
+  }
+
+  getAllGallery(params: any): Observable<any> {
+    console.log(params, '----')
+    return this.http.get<any>(this.commURL + 'gallery', { params });
+  }
+
+  getPhotoById(id) {
+    return this
+      .http
+      .get(`${this.commURL}gallery/${id}`);
+  }
+
+  deletePhoto(id: number): Observable<any> {
+    return this.http.delete(`${this.commURL}gallery/${id}`, { responseType: 'text' });
+  }
 }
