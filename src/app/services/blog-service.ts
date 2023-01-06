@@ -217,7 +217,6 @@ export class ServiceblogService {
   }
 
   getAllGallery(params: any): Observable<any> {
-    console.log(params, '----')
     return this.http.get<any>(this.commURL + 'gallery', { params });
   }
 

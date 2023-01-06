@@ -8,6 +8,7 @@ import { AuthService } from '../services/auth.service';
 import { ServiceblogService } from '../services/blog-service';
 import { TokenStorageService } from '../services/token-storage.service';
 import Swal from 'sweetalert2';
+import { PhotoGallery } from '../models/photogallery';
 @Component({
   selector: 'app-view-profile',
   templateUrl: './view-profile.component.html',
@@ -55,6 +56,14 @@ export class ViewProfileComponent implements OnInit{
   userRoute: any = {};
   message = '';
   currentUserName: any;
+  photoGallery: PhotoGallery[] = [];
+  viewMode = 'tab1';
+  pageGallery = 1;
+  countGallery = 0;
+  pageSizeGallery = 6;
+  pageSizesGallery = [6, 12, 18];
+  photo: any = {};
+  
   constructor(private blogService: ServiceblogService, private router: Router, private route : ActivatedRoute, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService) { }
 
   ngOnInit(): void {
@@ -66,6 +75,9 @@ export class ViewProfileComponent implements OnInit{
     this.userId = id;
     if(id === this.userId){
       this.getTimeline();
+    }
+    if(id === this.userId){
+      this.retrievePhotoGallery();
     }
     this.getFollowing();
     this.getCurrentUser();
@@ -124,27 +136,45 @@ export class ViewProfileComponent implements OnInit{
     this.timeline = timeline;
     this.currentIndex = index;
   }
-
-  handlePageChange(event: number): void {
-    this.page = event;
-    let id = this.route.snapshot.params.id;
-    this.userId = id;
-    if(id === this.userId){
-      this.getTimelinePage();
+  handlePageChange(event: number, tab: string): void {
+    if(tab === 'timelines'){
+      let id = this.route.snapshot.params.id;
+      this.page = event;
+      this.userId = id;
+      if(id === this.userId){
+        this.getTimelinePage();
+      }
+    }
+    if(tab === 'photos'){
+      let id = this.route.snapshot.params.id;
+      this.pageGallery = event;
+      this.userId = id;
+      if(id === this.userId){
+        this.retrievePhotoGallery();
+      }
     }
   }
-  
 
-  handlePageSizeChange(event: any): void {
-    this.pageSize = event.target.value;
-    this.page = 1;
-    let id = this.route.snapshot.params.id;
-    this.userId = id;
-    if(id === this.userId){
-      this.getTimelinePage();
+  handlePageSizeChange(event: any, tab: string): void {
+    if(tab === 'timelines'){
+      let id = this.route.snapshot.params.id;
+      this.pageSize = event.target.value;
+      this.page = 1;
+      this.userId = id;
+      if(id=== this.userId){
+        this.getTimelinePage();
+      }
+    }
+    if(tab === 'photos'){
+      let id = this.route.snapshot.params.id;
+      this.pageSizeGallery = event.target.value;
+      this.pageGallery = 1;
+      this.userId = id;
+      if(id === this.userId){
+        this.retrievePhotoGallery();
+      }
     }
   }
-
 
   getUserById(id) {
     this.authService.getUserById(id)
@@ -326,5 +356,38 @@ export class ViewProfileComponent implements OnInit{
       }
     );
     window.location.reload();
+  }
+
+  getRequestParamsForGallery(pageGallery: number, pageSizeGallery: number, userId: any): any {
+    let params: any = {};
+
+    if (pageGallery) {
+      params[`page`] = pageGallery - 1;
+    }
+
+    if (pageSizeGallery) {
+      params[`size`] = pageSizeGallery;
+    }
+
+    if (userId) {
+      params[`userId`] = userId;
+    }
+
+    return params;
+  }
+
+  retrievePhotoGallery(): void {
+    const params = this.getRequestParamsForGallery(this.pageGallery, this.pageSizeGallery, this.userId);
+    this.blogService.getAllGallery(params)
+    .subscribe(
+      response => {
+        const { photoGallery, totalItems, userId } = response;
+        this.photoGallery = photoGallery;
+        this.countGallery = totalItems;
+        this.userId = userId;
+      },
+      error => {
+        console.log(error);
+      });
   }
 }
