@@ -6,16 +6,6 @@
                     <div class="card" style="border-radius: 15px; border: 1px solid rgb(199, 199, 199);">
                         <div class="card-body p-5">
                             <h2 class="text-uppercase text-center mb-5">Change your profile data</h2>
-                            <div class="btn-group" *ngIf="currentUser != adminId">
-                                <button type="button" class="btn btn-secondary btn-lg dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  Permissions
-                                </button>
-                                <div class="dropdown-menu">
-                                    <button class="dropdown-item" *ngIf="roleModerator || roleAdmin" (click)="demoteToUser(user.userId, user.roleId)">Demote to User</button>
-                                    <button class="dropdown-item" *ngIf="!roleModerator && !roleAdmin" (click)="promoteToModerator(user.userId, user.roleId)">Promote to Moderator</button>
-                                    <!-- <button class="dropdown-item" *ngIf="!roleAdmin" (click)="promoteToAdmin(user.userId, user.roleId)">Promote to Admin</button> -->
-                                </div>
-                            </div>
                             <form name="form" style="padding-top:20px;">
                                 <div class="form-outline mb-4">
                                     <input type="text" id="form3Example1cg" class="form-control form-control-lg" name="username" placeholder="Enter your username" [(ngModel)]="user.username" required #username="ngModel" disabled/>
@@ -29,8 +19,18 @@
                                 <div class="form-outline mb-4">
                                     <input type="text" id="form3Example4cg" class="form-control form-control-lg" name="town" placeholder="Enter your town" [(ngModel)]="user.town" required #town="ngModel" />
                                 </div>
+                                <div class="form-outline mb-4" *ngIf="currentUser != adminId">
+                                    <button type="button" style="margin: auto; width: 50%;" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      Permissions
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <button class="dropdown-item" *ngIf="roleModerator || roleAdmin" (click)="demoteToUser(user.userId, user.roleId)">Demote to User</button>
+                                        <button class="dropdown-item" *ngIf="!roleModerator && !roleAdmin" (click)="promoteToModerator(user.userId, user.roleId)">Promote to Moderator</button>
+                                        <!-- <button class="dropdown-item" *ngIf="!roleAdmin" (click)="promoteToAdmin(user.userId, user.roleId)">Promote to Admin</button> -->
+                                    </div>
+                                </div>
                                 <div class="d-flex justify-content-center">
-                                    <button type="submit" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" (click)="updateUser(username.value,phone.value, address.value, town.value)">Edit</button>
+                                    <button type="submit" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" (click)="updateUser(username.value,phone.value, address.value, town.value)">Confirm</button>
                                 </div>
                             </form>
                         </div>

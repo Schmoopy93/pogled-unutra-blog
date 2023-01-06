@@ -323,14 +323,20 @@ export class MyprofileComponent implements OnInit {
     });
   }
 
-  acceptFriendShip(id): void {
-    this.authService.acceptFriendship(id)
-      .pipe()
-      .subscribe({
-        next: () => {
-          this.router.navigate(['/my-profile'], { relativeTo: this.route });
-        }
-      });
+  // acceptFriendShip(id): void {
+  //   this.authService.acceptFriendship(id)
+  //     .pipe()
+  //     .subscribe({
+  //       next: () => {
+  //         this.router.navigate(['/my-profile'], { relativeTo: this.route }).then(() => this.ngOnInit());
+  //       }
+  //     });
+  // }
+
+  acceptFriendShip(id) {
+    this.authService.acceptFriendship(id).subscribe(res => {
+      this.ngOnInit();
+    });
   }
   getRequestParamsForGallery(pageGallery: number, pageSizeGallery: number, userId: any): any {
     let params: any = {};
@@ -359,7 +365,6 @@ export class MyprofileComponent implements OnInit {
         this.photoGallery = photoGallery;
         this.countGallery = totalItems;
         this.userId = userId;
-        console.log(response, 'res');
       },
       error => {
         console.log(error);
