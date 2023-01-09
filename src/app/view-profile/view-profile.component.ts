@@ -76,6 +76,7 @@ export class ViewProfileComponent implements OnInit{
     if(id === this.userId){
       this.getTimeline();
     }
+    this.retrieveLikesTimeline();
     if(id === this.userId){
       this.retrievePhotoGallery();
     }
@@ -144,6 +145,7 @@ export class ViewProfileComponent implements OnInit{
       if(id === this.userId){
         this.getTimelinePage();
       }
+      this.retrieveLikesTimeline();
     }
     if(tab === 'photos'){
       let id = this.route.snapshot.params.id;
@@ -164,6 +166,7 @@ export class ViewProfileComponent implements OnInit{
       if(id=== this.userId){
         this.getTimelinePage();
       }
+      this.retrieveLikesTimeline();
     }
     if(tab === 'photos'){
       let id = this.route.snapshot.params.id;
@@ -213,11 +216,11 @@ export class ViewProfileComponent implements OnInit{
         this.userId = userId;
         this.timelines.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
         this.timeline_Id = this.timelines.map(e => e.id);
-        for (let index = 0; index < timelines.length; index++) {
-          this.timelineId = timelines[index].id;
-          this.retrieveLikesTimeline();
-        }
-        return this.timelineId;
+        // for (let index = 0; index < timelines.length; index++) {
+        //   this.timelineId = timelines[index].id;
+        //   // this.retrieveLikesTimeline();
+        // }
+        // return this.timelineId;
       },
       error => {
         console.log(error);
@@ -233,8 +236,9 @@ export class ViewProfileComponent implements OnInit{
   }
 
   likeTimeline(id): void {
-    this.blogService.likeTimeline(this.currentUserLike, this.timeline.id).subscribe(
+    this.blogService.likeTimeline(this.currentUserLike, id).subscribe(
       data => {
+        console.log(data);
       },
       err => {
         this.errorMessage = err.error.message;
@@ -252,44 +256,55 @@ export class ViewProfileComponent implements OnInit{
     this.currentIndexLikes = index;
   }
 
-
   retrieveLikesTimeline(): void {
-    const params = this.getRequestParamsLikesTimeline(this.pageLikes, this.pageSizeLikes, this.timelineId);
-      this.blogService.getLikesByTimelineId(params)
-      .subscribe(
-        response => {
-          const { likes, totalItems } = response;
-          this.likes = likes;
-          this.countLikes = totalItems;
-          this.likeArrayByTimeline.push(...likes)[0];
-          // this.getLikes = likes.forEach(element => {
-          //     this.getEachLike = element
-          //     this.likeArrayByTimeline.push(this.getEachLike);
-          //   });
+    this.blogService.getLikesByTimelineId()
+      .subscribe({
+        next: (data) => {
+          this.likes = data;
+          console.log(data);
         },
-        error => {
-          console.log(error);
-        });
-    }
-
-
-  getRequestParamsLikesTimeline(pageLikes: number, pageSizeLikes: number, timelineId: number): any {
-    let params: any = {};
-
-    if (pageLikes) {
-      params[`pageLikes`] = pageLikes - 1;
-    }
-
-    if (pageSizeLikes) {
-      params[`pageSizeLikes`] = pageSizeLikes;
-    }
-
-    if (timelineId) {
-      params[`timelineId`] = timelineId;
-    }
-    return params;
-    
+        error: (e) => console.error(e)
+      });
   }
+
+
+  // retrieveLikesTimeline(): void {
+  //   const params = this.getRequestParamsLikesTimeline(this.pageLikes, this.pageSizeLikes, this.timelineId);
+  //     this.blogService.getLikesByTimelineId(params)
+  //     .subscribe(
+  //       response => {
+  //         const { likes, totalItems } = response;
+  //         this.likes = likes;
+  //         this.countLikes = totalItems;
+  //         this.likeArrayByTimeline.push(...likes)[0];
+  //         // this.getLikes = likes.forEach(element => {
+  //         //     this.getEachLike = element
+  //         //     this.likeArrayByTimeline.push(this.getEachLike);
+  //         //   });
+  //       },
+  //       error => {
+  //         console.log(error);
+  //       });
+  //   }
+
+
+  // getRequestParamsLikesTimeline(pageLikes: number, pageSizeLikes: number, timelineId: number): any {
+  //   let params: any = {};
+
+  //   if (pageLikes) {
+  //     params[`pageLikes`] = pageLikes - 1;
+  //   }
+
+  //   if (pageSizeLikes) {
+  //     params[`pageSizeLikes`] = pageSizeLikes;
+  //   }
+
+  //   if (timelineId) {
+  //     params[`timelineId`] = timelineId;
+  //   }
+  //   return params;
+    
+  // }
 
   getRequestParams(searchTitle: string, page: number, pageSize: number, userId: number): any {
     let params: any = {};

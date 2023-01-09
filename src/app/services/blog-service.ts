@@ -110,8 +110,8 @@ export class ServiceblogService {
     return this.http.get<any>(`${AUTH_API}showLikesByPost`, { params });
   }
 
-  getLikesByTimelineId(params: any): Observable<any> {
-    return this.http.get<any>(`${AUTH_API}showLikesByTimeline`, { params });
+  getLikesByTimelineId(): Observable<any> {
+    return this.http.get<any>(`${AUTH_API}showLikesByTimeline`);
     
   }
 

@@ -83,6 +83,7 @@ export class MyprofileComponent implements OnInit {
     if(this.currentUser.id === this.userId){
       this.getTimeline();
     }
+    this.retrieveLikesTimeline();
     if(this.currentUser.id === this.userId){
       this.retrievePhotoGallery();
     }
@@ -115,8 +116,9 @@ export class MyprofileComponent implements OnInit {
       this.page = event;
       this.userId = this.currentUser.id;
       if(this.currentUser.id === this.userId){
-        this.getTimelinePage();
+        this.getTimeline();
       }
+      this.retrieveLikesTimeline();
     }
     if(tab === 'photos'){
       this.pageGallery = event;
@@ -133,8 +135,9 @@ export class MyprofileComponent implements OnInit {
       this.page = 1;
       this.userId = this.currentUser.id;
       if(this.currentUser.id === this.userId){
-        this.getTimelinePage();
+        this.getTimeline();
       }
+      this.retrieveLikesTimeline();
     }
     if(tab === 'photos'){
       this.pageSizeGallery = event.target.value;
@@ -157,22 +160,22 @@ export class MyprofileComponent implements OnInit {
         });
   }
 
-  getTimelinePage(): void {
-    const params = this.getRequestParams(this.text, this.page, this.pageSize, this.userId);
-    this.blogService.getAllTimelines(params)
-    .subscribe(
-      response => {
-        const { timelines, totalItems, userId } = response;
-        this.timelines = timelines;
-        this.count = totalItems;
-        this.userId = userId;
-        this.timelines.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-        
-      },
-      error => {
-        console.log(error);
-      });
-  }
+  // getTimelinePage(): void {
+  //   const params = this.getRequestParams(this.text, this.page, this.pageSize, this.userId);
+  //   this.blogService.getAllTimelines(params)
+  //   .subscribe(
+  //     response => {
+  //       const { timelines, totalItems, userId } = response;
+  //       this.timelines = timelines;
+  //       this.count = totalItems;
+  //       this.userId = userId;
+  //       this.timelines.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+      
+  //     },
+  //     error => {
+  //       console.log(error);
+  //     });
+  // }
 
   getTimeline(): void {
     const params = this.getRequestParams(this.text, this.page, this.pageSize, this.userId);
@@ -185,39 +188,51 @@ export class MyprofileComponent implements OnInit {
         this.userId = userId;
         this.timelines.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
         this.timeline_Id = this.timelines.map(e => e.id);
-        for (let index = 0; index < timelines.length; index++) {
-          this.timelineId = timelines[index].id;
-          this.retrieveLikesTimeline();
-        }
+        // for (let index = 0; index < timelines.length; index++) {
+        //   this.timelineId = timelines[index].id;
+        //   this.retrieveLikesTimeline();
+        //   //console.log(timelines, 'timelines u foru')
+        // }
+        
       },
       error => {
         console.log(error);
       });
   }
 
-  
   retrieveLikesTimeline(): void {
-    const params = this.getRequestParamsLikesTimeline(this.pageLikes, this.pageSizeLikes, this.timelineId);
-      this.blogService.getLikesByTimelineId(params)
-      .subscribe(
-        response => {
-          const { likes, totalItems } = response;
-          this.likes = likes;
-          this.countLikes = totalItems;
-          this.likeArrayByTimeline.push(...likes)[0];
-          //console.log(likes, "likes")
-          // this.getLikes = likes.forEach(element => {
-          //     this.getEachLike = element
-          //     console.log(element);
-          //     //this.likeArrayByTimeline.push(this.getEachLike);
-          //   });
+    this.blogService.getLikesByTimelineId()
+      .subscribe({
+        next: (data) => {
+          this.likes = data;
+          console.log(data);
         },
-        error => {
-          console.log(error);
-        });
-    }
+        error: (e) => console.error(e)
+      });
+  }
+  
+  // retrieveLikesTimeline(): void {
+  //     this.blogService.getLikesByTimelineId()
+  //     .subscribe(
+  //       response => {
+  //         const { likes } = response;
+  //         this.likes = likes;
+  //         console.log(likes);
+  //         // this.likeArrayByTimeline.push(...likes);
+  //         // console.log(this.likeArrayByTimeline, 'arr')
+  //         //console.log(likes, "likes")
+  //         // this.getLikes = likes.forEach(element => {
+  //         //     this.getEachLike = element
+  //         //     console.log(element);
+  //         //     //this.likeArrayByTimeline.push(this.getEachLike);
+  //         //   });
+  //       },
+  //       error => {
+  //         console.log(error);
+  //       });
+  //   }
 
-    getRequestParamsLikesTimeline(pageLikes: number, pageSizeLikes: number, timelineId: number): any {
+    getRequestParamsLikesTimeline(pageLikes: number, pageSizeLikes: number): any {
       let params: any = {};
   
       if (pageLikes) {
@@ -226,10 +241,6 @@ export class MyprofileComponent implements OnInit {
   
       if (pageSizeLikes) {
         params[`pageSizeLikes`] = pageSizeLikes;
-      }
-  
-      if (timelineId) {
-        params[`timelineId`] = timelineId;
       }
       return params;
       
