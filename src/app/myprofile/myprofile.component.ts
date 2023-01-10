@@ -205,7 +205,6 @@ export class MyprofileComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.likes = data;
-          console.log(data);
         },
         error: (e) => console.error(e)
       });
