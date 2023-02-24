@@ -5,8 +5,10 @@ import { TokenStorageService } from '../services/token-storage.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ServiceblogService } from '../services/blog-service';
 import { User } from '../models/user';
-import { HttpEventType, HttpResponse } from '@angular/common/http';
+import { base64ToFile, ImageCroppedEvent } from 'ngx-image-cropper';
 import { PhotoGallery } from '../models/photogallery';
+import { HttpEventType, HttpResponse } from '@angular/common/http';
+import { Followers } from '../models/followers';
 
 @Component({
   selector: 'app-myprofile',
@@ -71,7 +73,18 @@ export class MyprofileComponent implements OnInit {
   pageSizeGallery = 6;
   pageSizesGallery = [6, 12, 18];
   photo: any = {};
-
+  imageChangedEvent: any = '';
+  croppedImage: any = '';
+  fileToReturn: any;
+  errMsg = '';
+  firstname = '';
+  followers: any;
+  currentFollower:any;
+  searchText: string;
+  pageFriends = 1;
+  countFriends = 0;
+  pageSizeFriends = 6;
+  pageSizesFriends = [6, 12, 18];
   
   constructor(private router: Router, private route: ActivatedRoute, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService, private blogService: ServiceblogService) {}
 
@@ -82,11 +95,11 @@ export class MyprofileComponent implements OnInit {
     this.userId = JSON.parse(window.sessionStorage.getItem('auth-user')).id;
     if(this.currentUser.id === this.userId){
       this.getTimeline();
-    }
-    this.retrieveLikesTimeline();
-    if(this.currentUser.id === this.userId){
+      this.getTimelinePage();
       this.retrievePhotoGallery();
     }
+    this.retrieveLikesTimeline();
+    this.retrieveFollowers();
     this.route.params.subscribe(params => {
       this.blogService.getPhotoById(params.id).subscribe(res => {
         this.photo = res;
@@ -116,7 +129,7 @@ export class MyprofileComponent implements OnInit {
       this.page = event;
       this.userId = this.currentUser.id;
       if(this.currentUser.id === this.userId){
-        this.getTimeline();
+        this.getTimelinePage();
       }
       this.retrieveLikesTimeline();
     }
@@ -127,6 +140,13 @@ export class MyprofileComponent implements OnInit {
         this.retrievePhotoGallery();
       }
     }
+    if(tab === 'friends'){
+      this.pageFriends = event;
+      this.userId = this.currentUser.id;
+      if(this.currentUser.id === this.userId){
+        this.retrieveFollowers();
+      }
+    }
   }
 
   handlePageSizeChange(event: any, tab: string): void {
@@ -135,7 +155,7 @@ export class MyprofileComponent implements OnInit {
       this.page = 1;
       this.userId = this.currentUser.id;
       if(this.currentUser.id === this.userId){
-        this.getTimeline();
+        this.getTimelinePage();
       }
       this.retrieveLikesTimeline();
     }
@@ -145,6 +165,14 @@ export class MyprofileComponent implements OnInit {
       this.userId = this.currentUser.id;
       if(this.currentUser.id === this.userId){
         this.retrievePhotoGallery();
+      }
+    }
+    if(tab === 'friends'){
+      this.pageSizeFriends = event.target.value;
+      this.pageFriends = 1;
+      this.userId = this.currentUser.id;
+      if(this.currentUser.id === this.userId){
+        this.retrieveFollowers();
       }
     }
   }
@@ -160,23 +188,6 @@ export class MyprofileComponent implements OnInit {
         });
   }
 
-  // getTimelinePage(): void {
-  //   const params = this.getRequestParams(this.text, this.page, this.pageSize, this.userId);
-  //   this.blogService.getAllTimelines(params)
-  //   .subscribe(
-  //     response => {
-  //       const { timelines, totalItems, userId } = response;
-  //       this.timelines = timelines;
-  //       this.count = totalItems;
-  //       this.userId = userId;
-  //       this.timelines.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-      
-  //     },
-  //     error => {
-  //       console.log(error);
-  //     });
-  // }
-
   getTimeline(): void {
     const params = this.getRequestParams(this.text, this.page, this.pageSize, this.userId);
     this.blogService.getAllTimelines(params)
@@ -186,14 +197,31 @@ export class MyprofileComponent implements OnInit {
         this.timelines = timelines;
         this.count = totalItems;
         this.userId = userId;
-        this.timelines.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-        this.timeline_Id = this.timelines.map(e => e.id);
+        // this.timelines.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+        //this.timeline_Id = this.timelines.map(e => e.id);
+        //console.log(response, 'res')
         // for (let index = 0; index < timelines.length; index++) {
         //   this.timelineId = timelines[index].id;
         //   this.retrieveLikesTimeline();
         //   //console.log(timelines, 'timelines u foru')
         // }
         
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
+  getTimelinePage(): void {
+    const params = this.getRequestParams(this.text, this.page, this.pageSize, this.userId);
+    this.blogService.getAllTimelines(params)
+    .subscribe(
+      response => {
+        const { timelines, totalItems, userId } = response;
+        this.timelines = timelines;
+        this.count = totalItems;
+        this.userId = userId;
+        this.timelines.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
       },
       error => {
         console.log(error);
@@ -333,21 +361,12 @@ export class MyprofileComponent implements OnInit {
     });
   }
 
-  // acceptFriendShip(id): void {
-  //   this.authService.acceptFriendship(id)
-  //     .pipe()
-  //     .subscribe({
-  //       next: () => {
-  //         this.router.navigate(['/my-profile'], { relativeTo: this.route }).then(() => this.ngOnInit());
-  //       }
-  //     });
-  // }
 
   acceptFriendShip(id) {
-    this.authService.acceptFriendship(id).subscribe(res => {
-      this.ngOnInit();
-    });
+    this.authService.acceptFriendship(id).subscribe();
+    window.location.reload();
   }
+  
   getRequestParamsForGallery(pageGallery: number, pageSizeGallery: number, userId: any): any {
     let params: any = {};
 
@@ -381,31 +400,137 @@ export class MyprofileComponent implements OnInit {
       });
   }
 
-  selectFile(event) {
-    this.selectedFiles = event.target.files;
+  fileChangeEvent(event: any): void {
+    this.imageChangedEvent = event;
   }
 
-  addGallery() {
+  imageCropped(event: ImageCroppedEvent) {
+    this.croppedImage = event.base64;
+    let File = base64ToFile(this.croppedImage);
+    this.fileToReturn = this.convertBase64ToFile(event.base64, this.imageChangedEvent.target.files[0].name)
+    
+    var reader = new FileReader();
+    reader.onload = (event: any) => {
+      this.croppedImage = this.fileToReturn;
+    };
+
+    reader.onerror = (event: any) => {
+      console.log("File could not be read: " + event.target.error.code);
+    };
+
+    reader.readAsDataURL(this.fileToReturn);
+
+    return this.fileToReturn;
+  }
+
+  imageLoaded() {
+  }
+
+  cropperReady() {
+  }
+
+  loadImageFailed() {
+  }
+
+  convertBase64ToFile(data, filename) {
+    const arr = data.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    let u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new File([u8arr], filename, { type: mime });
+  }
+
+    
+  addGallery(): void {
     this.progress.percentage = 0;
     const { title } = this.formGallery;
     const userId = JSON.parse(sessionStorage.getItem('auth-user')).id;
-    this.currentFileUpload = this.selectedFiles.item(0);
-    this.blogService.addGallery(this.currentFileUpload, title, userId).subscribe(event => {
-      if (event.type === HttpEventType.UploadProgress) {
-        this.progress.percentage = Math.round(100 * event.loaded / event.total);
-      } else if (event instanceof HttpResponse) {
-        this.router.navigate(['/my-profile'], { relativeTo: this.route }).then(()=> this.ngOnInit());
-        
-      }
-    });
-    this.selectedFiles = undefined;
-    
+      if (this.imageChangedEvent) {
+        this.blogService.addGallery(this.croppedImage, title, userId).subscribe(
+          (event: any) => {
+            if (event.type === HttpEventType.UploadProgress) {
+              this.progress.percentage = Math.round(100 * event.loaded / event.total);
+            } else if (event instanceof HttpResponse) {
+              this.errMsg = event.body.message;
+              this.router.navigate(['/my-profile'], { relativeTo: this.route }).then(()=> this.ngOnInit());
+            }
+          },
+          (err: any) => {
+            this.errMsg = err.error.message;
+            this.croppedImage = undefined;
+          });
+      this.imageChangedEvent = undefined;
+    }
   }
+
+  // selectFile(event) {
+  //   this.selectedFiles = event.target.files;
+  // }
+
+  // addGallery() {
+  //   this.progress.percentage = 0;
+  //   const { title } = this.formGallery;
+  //   const userId = JSON.parse(sessionStorage.getItem('auth-user')).id;
+  //   this.currentFileUpload = this.selectedFiles.item(0);
+  //   this.blogService.addGallery(this.currentFileUpload, title, userId).subscribe(event => {
+  //     if (event.type === HttpEventType.UploadProgress) {
+  //       this.progress.percentage = Math.round(100 * event.loaded / event.total);
+  //     } else if (event instanceof HttpResponse) {
+  //       this.router.navigate(['/my-profile'], { relativeTo: this.route }).then(()=> this.ngOnInit());
+        
+  //     }
+  //   });
+  //   this.selectedFiles = undefined;
+    
+  // }
 
   deletePhoto(id) {
     this.blogService.deletePhoto(id).subscribe(res => {
       this.router.navigate(['/my-profile']);
       this.ngOnInit();
     });
+  }
+
+  getRequestParamsForFriends(searchTitle: string, pageFriends: number, pageSizeFriends: number, userId: any): any {
+    let params: any = {};
+
+    if (searchTitle) {
+      params[`firstname`] = searchTitle;
+    }
+
+    if (pageFriends) {
+      params[`pageFriends`] = pageFriends - 1;
+    }
+
+    if (pageSizeFriends) {
+      params[`pageSizeFriends`] = pageSizeFriends;
+    }
+    
+    if (userId) {
+      params[`userId`] = userId;
+    }
+
+    return params;
+  }
+
+  retrieveFollowers(): void {
+    const params = this.getRequestParamsForFriends(this.firstname, this.pageFriends, this.pageSizeFriends, this.userId);
+    this.authService.getMyFollowers(params)
+    .subscribe(
+      response => {
+        const { followers, totalItems } = response;
+        this.followers = followers;
+        this.count = totalItems;
+      },
+      error => {
+        console.log(error);
+      });
+
   }
 }

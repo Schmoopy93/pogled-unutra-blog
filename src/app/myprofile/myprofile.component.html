@@ -56,6 +56,18 @@
                         <input type="text" class="form-control" value="{{ user?.town }}" disabled>
                     </div>
                 </div>
+
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <h6 class="mb-0">Last time updated</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        <input type="text" class="form-control" value="{{ user?.updatedAt | date: 'MMM d, y h:mm:ss a'}}" disabled>
+                    </div>
+                </div>
+
+
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
@@ -149,8 +161,6 @@
     </div>
 </div>
 
-<!---->
-
 <div>
     <div>
         <div class="modal fade" id="exampleModalLabelTimelinePhotos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelTimelinePhotos" aria-hidden="true">
@@ -170,13 +180,17 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="file" class="form-control" id="customFile" (change)="selectFile($event)" style="height: auto;" />
+                                    <input type="file" class="form-control" id="customFile" (change)="fileChangeEvent($event)" style="height: auto;" />
                                     <label class="form-label" for="form3Example3cg">Gallery photo</label>
+                                </div>
+                                <div class="col-md-8" style="margin: auto;">
+                                    <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="4 / 4" [resizeToWidth]="256" format="png" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()" (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()">
+                                    </image-cropper>
                                 </div>
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button #closeModal type="submit" class="btn btn-outline-success btn-sm " data-dismiss="modal" (click)="addGallery()">Upload</button>
+                            <button #closeModal type="submit" class="btn btn-outline-success btn-sm " data-dismiss="modal" (click)="addGallery();">Upload</button>
                             <button #closeModal type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
 
                         </div>
@@ -186,7 +200,28 @@
         </div>
     </div>
 </div>
-<!---->
+<div class="modal fade" id="exampleModalSearchFriends" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Search your friends</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="text" placeholder="Search..." [(ngModel)]="searchText" name="firstname" style="width: 100%;" (keyup.enter)="retrieveFollowers()">
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button #closeModal type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
 <div class="container" style="padding-bottom: 150px;">
     <div class="row">
         <div class="col-md-12">
@@ -201,21 +236,13 @@
                             <div class="profile-header-info">
                                 <h4 class="m-t-10 m-b-5">{{ user?.firstname }} {{ user?.lastname }}</h4>
                                 <p class="m-b-10">Joined At: {{ user?.createdAt | date: "MMM d, y" }}</p>
-                                <p class="m-b-10">Last time updated: {{ user?.updatedAt | date: "MMM d, y h:mm:ss a" }}</p>
+                                <!-- <p class="m-b-10">Last time updated: {{ user?.updatedAt | date: "MMM d, y h:mm:ss a" }}</p> -->
                                 <!-- <p class="m-b-10">Total timelines: {{timeline?.length}}</p> -->
-                                <button *ngIf="role_user == 'ROLE_ADMIN' || role_user == 'ROLE_MODERATOR'" class="btn btn-outline-success btn-sm" style="margin-right:3px;" routerLink="/add-blog"> Create a post</button>
-                                <button type="button" style="margin-right:3px;" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#exampleModalTimeline">Add to timeline </button>
-                                <button *ngIf="role_user == 'ROLE_ADMIN'" class="btn btn-outline-success btn-sm" style="margin-right:3px;" routerLink="/all-users">List of Users</button>
-                                <button class="btn btn-outline-success btn-sm" style="margin-right:3px;" routerLink="/followers">My Friends</button>
+                                <button *ngIf="role_user == 'ROLE_ADMIN' || role_user == 'ROLE_MODERATOR'" class="btn btn-outline-success btn-sm" style="margin-right:3px;" routerLink="/add-blog"> Create a blog</button>
                                 <button class="btn btn-outline-success btn-sm" style="margin-right:3px;" data-toggle="modal" data-target="#exampleModal">My Info</button>
                                 <button class="btn btn-outline-success btn-sm" style="margin-right:3px;" routerLink="/edit-user/{{ currentUser?.id }}">Edit My Info</button>
-                                <button class="btn btn-outline-success btn-sm dropdown-toggle" style="margin-right:3px;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Sort Timelines By Date
-                                  </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" (click)="compareAlphabeticallyAsc()">Asc <i class="fas fa-arrow-up"></i></a>
-                                    <a class="dropdown-item" (click)="compareAlphabeticallyDesc()">Desc <i class="fas fa-arrow-down"></i></a>
-                                </div>
+                                <!-- <button *ngIf="role_user == 'ROLE_ADMIN'" class="btn btn-outline-success btn-sm" style="margin-right:3px;" routerLink="/all-users">List of Users</button> -->
+                                <!-- <button class="btn btn-outline-success btn-sm" style="margin-right:3px;" routerLink="/followers">My Friends</button> -->
                                 <button type="button" class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#exampleModalTimelineNotifications"><i class="fa fa-bell" aria-hidden="true"></i> {{checkStatus?.length}} </button>
 
                             </div>
@@ -223,6 +250,7 @@
                         <ul class="profile-header-tab nav nav-tabs">
                             <li class="tab-slider--trigger" [class.active]="viewMode == 'tab1'" rel="tab1" (click)="viewMode ='tab1'"><a data-toggle="tab" href="#timeline">TIMELINE</a></li>
                             <li class="tab-slider--trigger" [class.active]="viewMode == 'tab2'" rel="tab2" (click)="viewMode ='tab2'"><a data-toggle="tab" href="#photos">PHOTOS</a></li>
+                            <li class="tab-slider--trigger" [class.active]="viewMode == 'tab3'" rel="tab3" (click)="viewMode ='tab3'"><a data-toggle="tab" href="#friends">FRIENDS</a></li>
                         </ul>
                     </div>
                 </div>
@@ -231,8 +259,20 @@
                         <div id="tab1" class="tab-slider--body" *ngSwitchCase="'tab1'">
                             <section>
                                 <div class="container my-5 py-5">
+                                    <div class="center">
+                                        <button type="button" style="margin-right:3px;" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#exampleModalTimeline">Add to timeline </button>
+                                        <button class="btn btn-outline-success btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Sort Timelines By Date
+                                          </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" (click)="compareAlphabeticallyAsc()">Asc <i class="fas fa-arrow-up"></i></a>
+                                            <a class="dropdown-item" (click)="compareAlphabeticallyDesc()">Desc <i class="fas fa-arrow-down"></i></a>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <h3 style="text-align: center; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif">MY TIMELINE</h3>
                                     <div class="row d-flex justify-content-center">
-                                        <div class="col-md-12 col-lg-10" *ngFor="let timeline of timelines | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveUser(user, i)" style="margin-top: 10px;">
+                                        <div class="col-md-12 col-lg-10" *ngFor="let timeline of timelines | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" style="margin-top: 10px;">
                                             <div class="card text-dark">
                                                 <div class="card-body p-4">
                                                     <div class="d-flex flex-start">
@@ -251,8 +291,8 @@
                                                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                                         <button style="margin-top:10px;" (click)="toDisplayGroup = timeline" class="dropdown-item" data-toggle="modal" data-target="#exampleModalLabelTimelineLikes"><i class="far fa-user "></i>Who liked</button>
                                                                     </div>
-                                                                    <button type="button" title="Edit profile" style="margin-left: 10px;" class="btn btn-outline-secondary btn-sm" routerLink="/edit-timeline/{{ timeline.id }}"><i class="fas fa-edit"></i></button>
-                                                                    <a class="btn btn-outline-danger btn-sm " style="margin-left: 10px;" *ngIf="currentUser.id === user?.id" mwlConfirmationPopover placement="top-up" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteTimelineById(timeline.id)"
+                                                                    <button type="button" title="Edit timeline" style="margin-left: 10px;" class="btn btn-outline-secondary btn-sm" routerLink="/edit-timeline/{{ timeline.id }}"><i class="fas fa-edit"></i></button>
+                                                                    <a class="btn btn-outline-danger btn-sm " title="Delete timeline" style="margin-left: 10px;" *ngIf="currentUser.id === user?.id" mwlConfirmationPopover placement="top-up" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteTimelineById(timeline.id)"
                                                                         (cancel)="cancelClicked = true"><i class="fas fa-trash ms-2"></i></a>
                                                                 </div>
 
@@ -289,11 +329,13 @@
                             <div>
                                 <section id="gallery" style="width: 100%;">
                                     <div class="container" style="padding-top:50px;">
-                                        <p class="paginate" style="margin-top: 10px;"><strong>Total photos: {{countGallery}}</strong></p>
                                         <div class="paginate">
                                             <button class="btn btn-outline-success btn-sm a" style="margin-right:3px;" data-toggle="modal" data-target="#exampleModalLabelTimelinePhotos">Upload a photo</button>
                                         </div>
-                                        <h4 style="text-align: center; padding-bottom: 30px;"></h4>
+                                        <p style="margin-top: 10px;"><strong>Total photos: {{countGallery}}</strong></p>
+                                        <hr>
+                                        <h3 style="text-align: center; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif">MY PHOTOS</h3>
+                                        <!-- <h4 style="text-align: center; padding-bottom: 30px;"></h4> -->
                                         <div class="row">
                                             <div class="col-md-4 lg-4 animation" *ngFor="let p of photoGallery | paginate : {itemsPerPage: pageSizeGallery,currentPage: pageGallery,totalItems: countGallery}; let i = index" [class.active]="i == currentIndex" style="margin-top: 10px;">
                                                 <div class="card" style="border: 1px solid rgb(199, 199, 199); box-shadow: 5px 10px #888888;">
@@ -303,7 +345,7 @@
                                                         <h4 class="card-text" style=" white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><strong>{{p.title}}</strong></h4>
                                                         <p class="card-text">Publish date: {{p.createdAt | date: "MMM d, y" }}</p>
                                                         <a class="btn btn-outline-danger btn-sm " style="float: right;">
-                                                            <span mwlConfirmationPopover [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessageGallery" (confirm)="deletePhoto(p.id)" (cancel)="cancelClicked = true"><i class="fa fa-trash" aria-hidden="true"></i></span></a>
+                                                            <span mwlConfirmationPopover placement="left" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessageGallery" (confirm)="deletePhoto(p.id)" (cancel)="cancelClicked = true"><i class="fa fa-trash" aria-hidden="true"></i></span></a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -319,6 +361,53 @@
                                     <h2 style="font-size: 1.1em; font-weight: bolder;">Photos per Page:
                                         <select class="browser-default custom-select" style="width: 27%;" (change)="handlePageSizeChange($event, 'photos')">
                                 <option *ngFor="let size of pageSizesGallery" [ngValue]="size">
+                                {{ size }}
+                                </option>
+                                </select>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tab3" class="tab-slider--body" *ngSwitchCase="'tab3'">
+                            <div class="container profile-page" style="padding-top:30px; padding-bottom: 90px;">
+                                <div class="dropdown paginate">
+                                    <button type="button" title="Search" class="btn btn-outline-success btn-sm dropdown-toggle" data-toggle="modal" data-target="#exampleModalSearchFriends"><i class="fas fa-search"></i> Search </button>
+                                </div>
+                                <hr>
+                                <h3 style="text-align: center; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; padding-bottom: 20px;">MY FRIENDS</h3>
+                                <div class="row">
+                                    <ng-container *ngFor="let follower of followers | search:searchText | paginate : {itemsPerPage: pageSizeFriends,currentPage: pageFriends,totalItems: countFriends}; let i = index" [class.active]="i == currentIndex">
+                                        <div class="col-xl-6 col-lg-7 col-md-12" *ngIf="follower.status === 'Following'">
+                                            <div class="card profile-header1" style="border-radius: 15px; border: 1px solid rgb(199, 199, 199);">
+                                                <div class="body1">
+                                                    <div class="row">
+                                                        <div class="col-lg-4 col-md-4 col-12">
+                                                            <div class="profile-image1 float-md-right"> <img src="http://localhost:4000/uploads/userphoto/{{follower?.user.photoName}}" alt=""> </div>
+                                                        </div>
+                                                        <div class="col-lg-8 col-md-8 col-12">
+                                                            <h4 class="m-t-0 m-b-0"><strong>{{follower?.user.firstname}} {{follower?.user.lastname}}</strong></h4>
+                                                            <span class="job_post">Friends since: {{ follower?.createdAt | date: "MMM, y" }}</span>
+                                                            <br>
+                                                            <br>
+                                                            <div>
+                                                                <button class="btn btn-outline-success btn-sm" style="margin-right:10px;" routerLink="/view-profile/{{ follower?.user.id }}">View Profile</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </div>
+                            <div style="position:relative; top:150px;">
+                                <div class="paginate">
+                                    <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event, 'friends')"></pagination-controls>
+                                </div>
+                                <div class="paginate">
+                                    <h2 style="font-size: 1.1em; font-weight: bolder;">Friends per Page:
+                                        <select class="browser-default custom-select" style="width: 25%;" (change)="handlePageSizeChange($event, 'friends')">
+                                <option *ngFor="let size of pageSizesFriends" [ngValue]="size">
                                 {{ size }}
                                 </option>
                                 </select>

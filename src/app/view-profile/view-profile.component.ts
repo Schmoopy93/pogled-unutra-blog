@@ -63,6 +63,14 @@ export class ViewProfileComponent implements OnInit{
   pageSizeGallery = 6;
   pageSizesGallery = [6, 12, 18];
   photo: any = {};
+  searchText: string;
+  pageFriends = 1;
+  countFriends = 0;
+  pageSizeFriends = 6;
+  pageSizesFriends = [6, 12, 18];
+  firstname = '';
+  followers: any;
+  currentFollower:any;
   
   constructor(private blogService: ServiceblogService, private router: Router, private route : ActivatedRoute, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService) { }
 
@@ -75,12 +83,12 @@ export class ViewProfileComponent implements OnInit{
     this.userId = id;
     if(id === this.userId){
       this.getTimeline();
-    }
-    this.retrieveLikesTimeline();
-    if(id === this.userId){
+      this.getTimelinePage();
       this.retrievePhotoGallery();
     }
+    this.retrieveLikesTimeline();
     this.getFollowing();
+    this.retrieveFollowers();
     this.getCurrentUser();
     this.route.params.subscribe(params => {
       this.authService.getUserById(params.id).subscribe(res => {
@@ -155,6 +163,14 @@ export class ViewProfileComponent implements OnInit{
         this.retrievePhotoGallery();
       }
     }
+    if(tab === 'friends'){
+      let id = this.route.snapshot.params.id;
+      this.pageGallery = event;
+      this.userId = id;
+      if(id === this.userId){
+        this.retrieveFollowers();
+      }
+    }
   }
 
   handlePageSizeChange(event: any, tab: string): void {
@@ -177,6 +193,52 @@ export class ViewProfileComponent implements OnInit{
         this.retrievePhotoGallery();
       }
     }
+    if(tab === 'friends'){
+      let id = this.route.snapshot.params.id;
+      this.pageSizeGallery = event.target.value;
+      this.pageGallery = 1;
+      this.userId = id;
+      if(id === this.userId){
+        this.retrieveFollowers();
+      }
+    }
+  }
+
+  getRequestParamsForFriends(searchTitle: string, pageFriends: number, pageSizeFriends: number, userId: any): any {
+    let params: any = {};
+
+    if (searchTitle) {
+      params[`firstname`] = searchTitle;
+    }
+
+    if (pageFriends) {
+      params[`pageFriends`] = pageFriends - 1;
+    }
+
+    if (pageSizeFriends) {
+      params[`pageSizeFriends`] = pageSizeFriends;
+    }
+    
+    if (userId) {
+      params[`userId`] = userId;
+    }
+
+    return params;
+  }
+
+  retrieveFollowers(): void {
+    const params = this.getRequestParamsForFriends(this.firstname, this.pageFriends, this.pageSizeFriends, this.userId);
+    this.authService.getMyFollowers(params)
+    .subscribe(
+      response => {
+        const { followers, totalItems } = response;
+        this.followers = followers;
+        this.count = totalItems;
+      },
+      error => {
+        console.log(error);
+      });
+
   }
 
   getUserById(id) {

@@ -133,6 +133,7 @@
                         <ul class="profile-header-tab nav nav-tabs">
                             <li class="tab-slider--trigger" [class.active]="viewMode == 'tab1'" rel="tab1" (click)="viewMode ='tab1'"><a data-toggle="tab" href="#timeline">TIMELINE</a></li>
                             <li class="tab-slider--trigger" [class.active]="viewMode == 'tab2'" rel="tab2" (click)="viewMode ='tab2'"><a data-toggle="tab" href="#photos">PHOTOS</a></li>
+                            <li class="tab-slider--trigger" [class.active]="viewMode == 'tab3'" rel="tab3" (click)="viewMode ='tab3'"><a data-toggle="tab" href="#friends">FRIENDS</a></li>
                         </ul>
                     </div>
                 </div>
@@ -227,6 +228,53 @@
                                     <h2 style="font-size: 1.1em; font-weight: bolder;">Photos per Page:
                                         <select class="browser-default custom-select" style="width: 27%;" (change)="handlePageSizeChange($event, 'photos')">
                                 <option *ngFor="let size of pageSizesGallery" [ngValue]="size">
+                                {{ size }}
+                                </option>
+                                </select>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tab3" class="tab-slider--body" *ngSwitchCase="'tab3'">
+                            <div class="container profile-page" style="padding-top:30px; padding-bottom: 90px;">
+                                <div class="dropdown paginate">
+                                    <button type="button" title="Search" class="btn btn-outline-success btn-sm dropdown-toggle" data-toggle="modal" data-target="#exampleModalSearchFriends"><i class="fas fa-search"></i> Search </button>
+                                </div>
+                                <hr>
+                                <h3 style="text-align: center; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; padding-bottom: 20px;">MY FRIENDS</h3>
+                                <div class="row">
+                                    <ng-container *ngFor="let follower of followers | search:searchText | paginate : {itemsPerPage: pageSizeFriends,currentPage: pageFriends,totalItems: countFriends}; let i = index" [class.active]="i == currentIndex">
+                                        <div class="col-xl-6 col-lg-7 col-md-12" *ngIf="follower.status === 'Following'">
+                                            <div class="card profile-header1" style="border-radius: 15px; border: 1px solid rgb(199, 199, 199);">
+                                                <div class="body1">
+                                                    <div class="row">
+                                                        <div class="col-lg-4 col-md-4 col-12">
+                                                            <div class="profile-image1 float-md-right"> <img src="http://localhost:4000/uploads/userphoto/{{follower?.user.photoName}}" alt=""> </div>
+                                                        </div>
+                                                        <div class="col-lg-8 col-md-8 col-12">
+                                                            <h4 class="m-t-0 m-b-0"><strong>{{follower?.user.firstname}} {{follower?.user.lastname}}</strong></h4>
+                                                            <span class="job_post">Friends since: {{ follower?.createdAt | date: "MMM, y" }}</span>
+                                                            <br>
+                                                            <br>
+                                                            <div>
+                                                                <button class="btn btn-outline-success btn-sm" style="margin-right:10px;" routerLink="/view-profile/{{ follower?.user.id }}">View Profile</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </div>
+                            <div style="position:relative; top:365px;">
+                                <div class="paginate">
+                                    <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event, 'friends')"></pagination-controls>
+                                </div>
+                                <div class="paginate">
+                                    <h2 style="font-size: 1.1em; font-weight: bolder;">Friends per Page:
+                                        <select class="browser-default custom-select" style="width: 25%;" (change)="handlePageSizeChange($event, 'friends')">
+                                <option *ngFor="let size of pageSizesFriends" [ngValue]="size">
                                 {{ size }}
                                 </option>
                                 </select>
