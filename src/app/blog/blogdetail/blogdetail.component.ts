@@ -1,4 +1,4 @@
-import { AfterContentChecked, AfterContentInit, AfterViewChecked, AfterViewInit, Component, DoCheck, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Post } from 'src/app/models/post';
@@ -8,6 +8,7 @@ import { TokenStorageService } from 'src/app/services/token-storage.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { Likes } from 'src/app/models/likes';
 import Swal from 'sweetalert2';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-blogdetail',
@@ -15,7 +16,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./blogdetail.component.css']
 })
 export class BlogdetailComponent implements OnInit  {
-
+  @ViewChild('commentForm') public commentForm:NgForm;
   form: any = {
     content: null,
   }
@@ -53,29 +54,32 @@ export class BlogdetailComponent implements OnInit  {
   currentLike = null;
   check: any;
   userRoute: any = {};
+  data: string;
+  currUser: any;
 
   constructor(private blogService: ServiceblogService, private router: Router, private authService: AuthService, public sanitizer: DomSanitizer, private route: ActivatedRoute, private token: TokenStorageService) {}
   
   ngOnInit(): void {
+    this.currUser = this.token.getUser().id;
     if (this.token.getToken()) {
       this.isLoggedIn = true;
     } 
-    this.getPost(this.route.snapshot.params.id);
-    this.postId = this.route.snapshot.params.id;
-    this.retrieveComments();
-    this.retrieveLikes();
-    this.replyUser = this.token.getUser();
-    this.getCurrentUser();
     this.route.params.subscribe(params => {
       this.authService.getUserById(params.id).subscribe(res => {
         this.userRoute = res;
       });
     });
+    this.getPost(this.route.snapshot.params.id);
+    this.postId = this.route.snapshot.params.id;
+    this.retrieveLikes();
+    this.retrieveComments();
+    this.replyUser = this.token.getUser();
+    this.getCurrentUser();
   }
 
   @ViewChild('closeModal') private closeModal: ElementRef;
   public hideModel() {
-    this.closeModal.nativeElement.click();      
+    this.closeModal.nativeElement.click();
   }
 
   getCurrentUser(){
@@ -181,31 +185,25 @@ export class BlogdetailComponent implements OnInit  {
         this.errorMessage = err.error.message;
       }
     );
-    window.location.reload();
-
+    this.hideModel();
+    this.commentForm.form.reset();
+    location.reload();
   }
 
-  reloadCurrentRoute() {
-    const currentUrl = this.router.url;
-    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
-        this.router.navigate([currentUrl]);
-    });
-  }
-
-
-  likePost(): void {
-    this.blogService.likePost(this.currentUser, this.postId).subscribe(
-      data => {
-      },
-      err => {
-        this.errorMessage = err.error.message;
-        if(this.errorMessage){
-          Swal.fire(this.errorMessage);
-        }
-      }
-    );
-    this.reloadCurrentRoute();
-  }
+  // likePost(): void {
+  //   this.blogService.likePost(this.currentUser, this.postId).subscribe(
+  //     data => {
+  //       console.log(data);
+  //     },
+  //     err => {
+  //       this.errorMessage = err.error.message;
+  //     }
+  //   );
+  //   if(this.errorMessage){
+  //     Swal.fire(this.errorMessage);
+  //   }
+    
+  // }
 
   retrieveLikes(): void {
     const params = this.getRequestParamsLikes(this.pageLikes, this.pageSizeLikes, this.postId);
@@ -221,6 +219,20 @@ export class BlogdetailComponent implements OnInit  {
         console.log(error);
       });
   }
+
+  likePost(): void {
+    this.blogService.likePost(this.currentUser, this.postId)
+      .subscribe({
+        next: (res) => {
+          console.log(res);
+        },
+        error: (err) =>  Swal.fire(err.error.message)
+      });
+      this.retrieveLikes();
+      this.ngOnInit();
+  }
+
+
 
   getRequestParamsLikes(pageLikes: number, pageSizeLikes: number, postId: number): any {
     let params: any = {};

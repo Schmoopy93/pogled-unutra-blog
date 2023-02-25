@@ -30,7 +30,8 @@
 
 <section id="profiles" class="page">
     <div class="container" style="width: 100%;">
-        <div class="content text-center" style="padding-top:150px;"></div>
+        <div class="content text-center" style="padding-top:80px;"></div>
+        <h4 class="font-weight-bold text-center my-4" style="text-align: center; padding-bottom: 80px;">OUR SERVICE</h4>
         <div class="container-fluid">
             <div class="row" id="profile-grid">
                 <div class="col-sm-4 col-xs-12 profile">
@@ -141,20 +142,35 @@
         </div>
     </div>
 </section>
-<div class="modal fade modal-profile" tabindex="-1" role="dialog" aria-labelledby="modalProfile" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button class="close" type="button" data-dismiss="modal">×</button>
-                <h3 class="modal-title"></h3>
-            </div>
-            <div class="modal-body">
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-default" data-dismiss="modal">Close</button>
+<div class="content text-center" style="padding-top: 30px;">
+    <div class="heading">
+        <div class="border"></div>
+        <p></p>
+    </div>
+</div>
+<br>
+<br>
+<div>
+    <section id="gallery" style="width: 100%;">
+        <div class="container" style="padding-top:50px;">
+            <h4 class="font-weight-bold text-center my-4" style="text-align: center; padding-bottom: 30px;">LATEST BLOG POSTS</h4>
+            <div class="row">
+                <div class="col-md-4 lg-4 animation" *ngFor="let post of posts  | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActivePost(post, i)">
+                    <div class="card" routerLink="/blogDetail/{{ post.id }}">
+                        <img src="http://localhost:4000/uploads/{{post?.name}}" alt=" " class="card-img-top ">
+                        <div class="card-body ">
+                            <h5 class="card-title ">{{post.title}}</h5>
+                            <p class="card-text" style=" white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{post.content}}</p>
+                            <br>
+                            <a routerLink="/blogDetail/{{ post.id }}" class="btn btn-outline-success btn-sm "> Read More </a>
+                            <hr>
+                            <p class="card-text"> Published: {{post.createdAt | date: "MMMM d, y"}}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
 </div>
 <br>
 <br>
@@ -164,45 +180,26 @@
         <p></p>
     </div>
 </div>
-<!--Section: Contact v.2-->
 <section class="contactform mb-4 animation" style="width: 50%;">
-
-    <!--Section heading-->
     <h2 class="h1-responsive font-weight-bold text-center my-4">Contact us</h2>
-    <!--Section description-->
     <p class="text-center w-responsive mx-auto mb-5">Do you have any questions? Please do not hesitate to contact us directly. Our team will come back to you within a matter of hours to help you.</p>
-
     <div class="row">
-
-        <!--Grid column-->
         <div class="col-md-9 mb-md-0 mb-5">
             <form id="contact-form" name="contact-form" action="mail.php" method="POST">
-
-                <!--Grid row-->
                 <div class="row">
-
-                    <!--Grid column-->
                     <div class="col-md-6">
                         <div class="md-form mb-0">
                             <input type="text" id="name" name="name" class="form-control">
                             <label for="name" class="">Your name</label>
                         </div>
                     </div>
-                    <!--Grid column-->
-
-                    <!--Grid column-->
                     <div class="col-md-6">
                         <div class="md-form mb-0">
                             <input type="text" id="email" name="email" class="form-control">
                             <label for="email" class="">Your email</label>
                         </div>
                     </div>
-                    <!--Grid column-->
-
                 </div>
-                <!--Grid row-->
-
-                <!--Grid row-->
                 <div class="row">
                     <div class="col-md-12">
                         <div class="md-form mb-0">
@@ -211,33 +208,20 @@
                         </div>
                     </div>
                 </div>
-                <!--Grid row-->
-
-                <!--Grid row-->
                 <div class="row">
-
-                    <!--Grid column-->
                     <div class="col-md-12">
-
                         <div class="md-form">
                             <textarea type="text" id="message" name="message" rows="2" class="form-control md-textarea"></textarea>
                             <label for="message">Your message</label>
                         </div>
-
                     </div>
                 </div>
-                <!--Grid row-->
-
             </form>
-
             <div class="text-center text-md-left">
                 <button type="submit" class="btn btn-info btn-sm ml-0">Submit<i class="far fa-paper-plane ml-2"></i></button>
             </div>
             <div class="status"></div>
         </div>
-        <!--Grid column-->
-
-        <!--Grid column-->
         <div class="col-md-3 text-center">
             <ul class="list-unstyled mb-0">
                 <li><i class="fas fa-map-marker-alt fa-2x"></i>
@@ -255,9 +239,5 @@
                 </li>
             </ul>
         </div>
-        <!--Grid column-->
-
     </div>
-
 </section>
-<!--Section: Contact v.2-->
