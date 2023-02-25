@@ -142,6 +142,8 @@
                         <div id="tab1" class="tab-slider--body" *ngSwitchCase="'tab1'">
                             <section>
                                 <div class="container my-5 py-5">
+                                    <hr>
+                                    <h3 style="text-align: center; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif">{{ user?.firstname }}'s TIMELINE</h3>
                                     <div class="row d-flex justify-content-center">
                                         <div class="col-md-12 col-lg-10" *ngFor="let timeline of timelines | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" style="margin-top: 10px;">
                                             <div class="card text-dark">
@@ -202,7 +204,8 @@
                                 <section id="gallery" style="width: 100%;">
                                     <div class="container" style="padding-top:50px;">
                                         <p class="paginate" style="margin-top: 10px;"><strong>Total photos: {{countGallery}}</strong></p>
-                                        <h4 style="text-align: center; padding-bottom: 30px;"></h4>
+                                        <hr>
+                                        <h3 style="text-align: center; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif">{{ user?.firstname }}'s PHOTOS</h3>
                                         <div class="row">
                                             <div class="col-md-4 lg-4 animation" *ngFor="let p of photoGallery | paginate : {itemsPerPage: pageSizeGallery,currentPage: pageGallery,totalItems: countGallery}; let i = index" [class.active]="i == currentIndex" style="margin-top: 10px;">
                                                 <div class="card" style="border: 1px solid rgb(199, 199, 199); box-shadow: 5px 10px #888888;">
@@ -241,7 +244,7 @@
                                     <button type="button" title="Search" class="btn btn-outline-success btn-sm dropdown-toggle" data-toggle="modal" data-target="#exampleModalSearchFriends"><i class="fas fa-search"></i> Search </button>
                                 </div>
                                 <hr>
-                                <h3 style="text-align: center; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; padding-bottom: 20px;">MY FRIENDS</h3>
+                                <h3 style="text-align: center; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; padding-bottom: 20px;">{{ user?.firstname }}'s FRIENDS</h3>
                                 <div class="row">
                                     <ng-container *ngFor="let follower of followers | search:searchText | paginate : {itemsPerPage: pageSizeFriends,currentPage: pageFriends,totalItems: countFriends}; let i = index" [class.active]="i == currentIndex">
                                         <div class="col-xl-6 col-lg-7 col-md-12" *ngIf="follower.status === 'Following'">
@@ -257,7 +260,8 @@
                                                             <br>
                                                             <br>
                                                             <div>
-                                                                <button class="btn btn-outline-success btn-sm" style="margin-right:10px;" routerLink="/view-profile/{{ follower?.user.id }}">View Profile</button>
+                                                                <button *ngIf="currentUserLike !== follower?.followerId" class="btn btn-outline-success btn-sm" style="margin-right:10px;" routerLink="/view-profile/{{ follower?.user.id }}">View Profile</button>
+                                                                <button *ngIf="currentUserLike === follower?.followerId" class="btn btn-outline-success btn-sm" style="margin-right:10px;" routerLink="/my-profile">View Profile</button>
                                                             </div>
                                                         </div>
                                                     </div>
