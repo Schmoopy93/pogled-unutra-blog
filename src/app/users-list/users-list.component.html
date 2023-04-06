@@ -55,7 +55,7 @@
                 </thead>
                 <tbody *ngFor="let user of users | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveUser(user, i)">
                     <tr style="font-family: Georgia, 'Times New Roman', Times, serif">
-                        <td><img class="rounded-square shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="avatar" width="60" height="60" /></td>
+                        <td><img class="rounded-square shadow-1-strong me-3" src="http://localhost:6868/uploads/userphoto/{{user?.photoName}}" alt="avatar" width="60" height="60" /></td>
                         <td>{{user?.username}}</td>
                         <td>{{user?.firstname}}</td>
                         <td>{{user?.lastname}}</td>

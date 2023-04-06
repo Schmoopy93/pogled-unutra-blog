@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpEvent, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-const AUTH_API = 'http://localhost:4000/api/auth/';
-const USER_API = `http://localhost:4000/api/auth/users`;
+const AUTH_API = 'http://localhost:6868/api/auth/';
+const USER_API = `http://localhost:6868/api/auth/users`;
 
 
 const httpOptions = {
@@ -33,7 +33,7 @@ export class AuthService {
     formdata.append('firstname', firstname);
     formdata.append('lastname', lastname);
 
-    const req = new HttpRequest('POST', 'http://localhost:4000/api/auth/signup/upload', formdata, {
+    const req = new HttpRequest('POST', 'http://localhost:6868/api/auth/signup/upload', formdata, {
       reportProgress: true,
       responseType: 'json',
       

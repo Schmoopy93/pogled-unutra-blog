@@ -38,7 +38,7 @@
             <div class="row">
                 <div class="col-md-4 lg-4 animation" *ngFor="let post of posts  | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActivePost(post, i)">
                     <div class="card">
-                        <img src="http://localhost:4000/uploads/{{post?.name}}" alt=" " class="card-img-top ">
+                        <img src="http://localhost:6868/uploads/{{post?.name}}" alt=" " class="card-img-top ">
                         <div class="card-body ">
                             <h5 class="card-title ">{{post.title}}</h5>
                             <p class="card-text" style=" white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{post.content}}</p>
