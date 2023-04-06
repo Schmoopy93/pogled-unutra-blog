@@ -9,6 +9,7 @@ import { base64ToFile, ImageCroppedEvent } from 'ngx-image-cropper';
 import { PhotoGallery } from '../models/photogallery';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { Followers } from '../models/followers';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-myprofile',
@@ -17,6 +18,7 @@ import { Followers } from '../models/followers';
 })
 
 export class MyprofileComponent implements OnInit {
+  @ViewChild('galleryForm') public galleryForm:NgForm;
   form: any = {
     text: null,
   }
@@ -400,95 +402,95 @@ export class MyprofileComponent implements OnInit {
       });
   }
 
-  fileChangeEvent(event: any): void {
-    this.imageChangedEvent = event;
-  }
-
-  imageCropped(event: ImageCroppedEvent) {
-    this.croppedImage = event.base64;
-    let File = base64ToFile(this.croppedImage);
-    this.fileToReturn = this.convertBase64ToFile(event.base64, this.imageChangedEvent.target.files[0].name)
-    
-    var reader = new FileReader();
-    reader.onload = (event: any) => {
-      this.croppedImage = this.fileToReturn;
-    };
-
-    reader.onerror = (event: any) => {
-      console.log("File could not be read: " + event.target.error.code);
-    };
-
-    reader.readAsDataURL(this.fileToReturn);
-
-    return this.fileToReturn;
-  }
-
-  imageLoaded() {
-  }
-
-  cropperReady() {
-  }
-
-  loadImageFailed() {
-  }
-
-  convertBase64ToFile(data, filename) {
-    const arr = data.split(',');
-    const mime = arr[0].match(/:(.*?);/)[1];
-    const bstr = atob(arr[1]);
-    let n = bstr.length;
-    let u8arr = new Uint8Array(n);
-
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-
-    return new File([u8arr], filename, { type: mime });
-  }
-
-    
-  addGallery(): void {
-    this.progress.percentage = 0;
-    const { title } = this.formGallery;
-    const userId = JSON.parse(sessionStorage.getItem('auth-user')).id;
-      if (this.imageChangedEvent) {
-        this.blogService.addGallery(this.croppedImage, title, userId).subscribe(
-          (event: any) => {
-            if (event.type === HttpEventType.UploadProgress) {
-              this.progress.percentage = Math.round(100 * event.loaded / event.total);
-            } else if (event instanceof HttpResponse) {
-              this.errMsg = event.body.message;
-              this.router.navigate(['/my-profile'], { relativeTo: this.route }).then(()=> this.ngOnInit());
-            }
-          },
-          (err: any) => {
-            this.errMsg = err.error.message;
-            this.croppedImage = undefined;
-          });
-      this.imageChangedEvent = undefined;
-    }
-  }
-
-  // selectFile(event) {
-  //   this.selectedFiles = event.target.files;
+  // fileChangeEvent(event: any): void {
+  //   this.imageChangedEvent = event;
   // }
 
-  // addGallery() {
+  // imageCropped(event: ImageCroppedEvent) {
+  //   this.croppedImage = event.base64;
+  //   let File = base64ToFile(this.croppedImage);
+  //   this.fileToReturn = this.convertBase64ToFile(event.base64, this.imageChangedEvent.target.files[0].name)
+    
+  //   var reader = new FileReader();
+  //   reader.onload = (event: any) => {
+  //     this.croppedImage = this.fileToReturn;
+  //   };
+
+  //   reader.onerror = (event: any) => {
+  //     console.log("File could not be read: " + event.target.error.code);
+  //   };
+
+  //   reader.readAsDataURL(this.fileToReturn);
+
+  //   return this.fileToReturn;
+  // }
+
+  // imageLoaded() {
+  // }
+
+  // cropperReady() {
+  // }
+
+  // loadImageFailed() {
+  // }
+
+  // convertBase64ToFile(data, filename) {
+  //   const arr = data.split(',');
+  //   const mime = arr[0].match(/:(.*?);/)[1];
+  //   const bstr = atob(arr[1]);
+  //   let n = bstr.length;
+  //   let u8arr = new Uint8Array(n);
+
+  //   while (n--) {
+  //     u8arr[n] = bstr.charCodeAt(n);
+  //   }
+
+  //   return new File([u8arr], filename, { type: mime });
+  // }
+
+    
+  // addGallery(): void {
   //   this.progress.percentage = 0;
   //   const { title } = this.formGallery;
   //   const userId = JSON.parse(sessionStorage.getItem('auth-user')).id;
-  //   this.currentFileUpload = this.selectedFiles.item(0);
-  //   this.blogService.addGallery(this.currentFileUpload, title, userId).subscribe(event => {
-  //     if (event.type === HttpEventType.UploadProgress) {
-  //       this.progress.percentage = Math.round(100 * event.loaded / event.total);
-  //     } else if (event instanceof HttpResponse) {
-  //       this.router.navigate(['/my-profile'], { relativeTo: this.route }).then(()=> this.ngOnInit());
-        
-  //     }
-  //   });
-  //   this.selectedFiles = undefined;
-    
+  //     if (this.imageChangedEvent) {
+  //       this.blogService.addGallery(this.croppedImage, title, userId).subscribe(
+  //         (event: any) => {
+  //           if (event.type === HttpEventType.UploadProgress) {
+  //             this.progress.percentage = Math.round(100 * event.loaded / event.total);
+  //           } else if (event instanceof HttpResponse) {
+  //             this.errMsg = event.body.message;
+  //             this.router.navigate(['/my-profile'], { relativeTo: this.route }).then(()=> this.ngOnInit());
+  //           }
+  //         },
+  //         (err: any) => {
+  //           this.errMsg = err.error.message;
+  //           this.croppedImage = undefined;
+  //         });
+  //     this.imageChangedEvent = undefined;
+  //   }
   // }
+
+  selectFile(event) {
+    this.selectedFiles = event.target.files;
+  }
+
+  addGallery() {
+    this.progress.percentage = 0;
+    const { title } = this.formGallery;
+    const userId = JSON.parse(sessionStorage.getItem('auth-user')).id;
+    this.currentFileUpload = this.selectedFiles.item(0);
+    this.blogService.addGallery(this.currentFileUpload, title, userId).subscribe(event => {
+      if (event.type === HttpEventType.UploadProgress) {
+        this.progress.percentage = Math.round(100 * event.loaded / event.total);
+      } else if (event instanceof HttpResponse) {
+        this.router.navigate(['/my-profile'], { relativeTo: this.route }).then(()=> this.ngOnInit());
+        
+      }
+    });
+    this.selectedFiles = undefined;
+    
+  }
 
   deletePhoto(id) {
     this.blogService.deletePhoto(id).subscribe(res => {
