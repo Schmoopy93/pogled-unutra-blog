@@ -1,69 +1,289 @@
-<div class="container">
-    <div class="main-body">
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex flex-column align-items-center text-center">
-                            <img src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="Admin" class="rounded-squad" width="110" style="overflow: hidden;">
-                            <div class="mt-3">
-                                <h4>{{ user?.firstname }} {{ user?.lastname }}</h4>
-                                <p class="text-secondary mb-1">Joined At: {{ user?.createdAt | date: "MMM d, y" }}</p>
-                                <p class="text-muted font-size-sm">{{user?.address}}, {{user?.town}}</p>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">My Info</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <h6 class="mb-0">Full Name</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        <input type="text" class="form-control" value="{{ user?.firstname }} {{ user?.lastname }}" disabled>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <h6 class="mb-0">Email</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        <input type="text" class="form-control" value="{{ user?.email }}" disabled>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <h6 class="mb-0">Username</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        <input type="text" class="form-control" value="{{ user?.username }}" disabled>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <h6 class="mb-0">Phone</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        <input type="text" class="form-control" value="{{ user?.phone }}" disabled>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <h6 class="mb-0">Address</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        <input type="text" class="form-control" value="{{ user?.address }}" disabled>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <h6 class="mb-0">Town</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        <input type="text" class="form-control" value="{{ user?.town }}" disabled>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3">
+                        <h6 class="mb-0">Total timelines</h6>
+                    </div>
+                    <div class="col-sm-9 text-secondary">
+                        <input type="text" class="form-control" value="{{ count }}" disabled>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    <div>
+        <div class="modal fade" id="exampleModalTimeline" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelTimeline" aria-hidden="true">
+
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabelTimeline">People who liked this timeline</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="#" class="commenting-form" *ngFor="let like of likes">
+                            <div class="row" *ngIf="toDisplayGroup['id'] === like?.timelineId && like?.userId === like?.user.id">
+                                <div class="form-group col-md-12">
+                                    <a *ngIf="currentUserLike !== like?.userId" routerLink="/view-profile/{{like?.userId}}" (click)="hideModel();" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:6868/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong></a>
+                                    <a *ngIf="currentUserLike === like?.userId" routerLink="/my-profile" (click)="hideModel();" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:6868/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong></a>
+                                    <hr>
+                                </div>
                             </div>
-                        </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button #closeModal type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-8">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">Full Name</h6>
+        </div>
+    </div>
+</div>
+<div class="container" style="padding-bottom: 400px;">
+    <div class="row">
+        <div class="col-md-12">
+            <div id="content" class="content content-full-width">
+                <div class="profile">
+                    <div class="profile-header">
+                        <div class="profile-header-cover"></div>
+                        <div class="profile-header-content">
+                            <div class="profile-header-img">
+                                <img src="http://localhost:6868/uploads/userphoto/{{user?.photoName}}" alt="">
                             </div>
-                            <div class="col-sm-9 text-secondary">
-                                <input type="text" class="form-control" value="{{ user?.firstname }} {{ user?.lastname }}" disabled>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">Email</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary">
-                                <input type="text" class="form-control" value="{{ user?.email }}" disabled>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">Username</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary">
-                                <input type="text" class="form-control" value="{{ user?.username }}" disabled>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">Phone</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary">
-                                <input type="text" class="form-control" value="{{ user?.phone }}" disabled>
+                            <div class="profile-header-info">
+                                <h4 class="m-t-10 m-b-5">{{ user?.firstname }} {{ user?.lastname }}</h4>
+                                <p class="m-b-10">Joined At: {{ user?.createdAt | date: "MMM d, y" }}</p>
+                                <!-- <p class="m-b-10">Total timelines: {{count}}</p> -->
+                                <div>
+                                    <button *ngIf="!followRequest && requestedFollowing == 0" class="btn btn-outline-success btn-sm" style="margin-right:3px;" (click)="onSubmit()">Follow {{user?.firstname}} {{user?.lastname}}</button>
+                                    <button *ngIf="!followRequest && requestedFollowing == 1" class="btn btn-outline-success btn-sm" style="margin-right:3px;">Requested</button>
+                                    <button *ngIf="followRequest" class="btn btn-outline-success btn-sm" style="margin-right:3px;" (click)="unfollow(resId)">Unfollow {{user?.firstname}} {{user?.lastname}}</button>
+                                    <button *ngIf="followRequest" class="btn btn-outline-success btn-sm" style="margin-right:3px;" data-toggle="modal" data-target="#exampleModal">About {{ user?.firstname }} {{ user?.lastname }}</button>
+                                    <button *ngIf="followRequest" class="btn btn-outline-success btn-sm dropdown-toggle" style="margin-right: 10px;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">          Sort Timelines By Date
+                                </button>
+                                </div>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" (click)="compareAlphabeticallyAsc()">Asc <i class="fas fa-arrow-up"></i></a>
+                                    <a class="dropdown-item" (click)="compareAlphabeticallyDesc()">Desc <i class="fas fa-arrow-down"></i></a>
+                                </div>
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">Address</h6>
+                        <ul class="profile-header-tab nav nav-tabs">
+                            <li class="tab-slider--trigger" [class.active]="viewMode == 'tab1'" rel="tab1" (click)="viewMode ='tab1'"><a data-toggle="tab" href="#timeline">TIMELINE</a></li>
+                            <li class="tab-slider--trigger" [class.active]="viewMode == 'tab2'" rel="tab2" (click)="viewMode ='tab2'"><a data-toggle="tab" href="#photos">PHOTOS</a></li>
+                            <li class="tab-slider--trigger" [class.active]="viewMode == 'tab3'" rel="tab3" (click)="viewMode ='tab3'"><a data-toggle="tab" href="#friends">FRIENDS</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="container" *ngIf="followRequest">
+                    <div class="tab-slider--container" [ngSwitch]="viewMode">
+                        <div id="tab1" class="tab-slider--body" *ngSwitchCase="'tab1'">
+                            <section>
+                                <div class="container my-5 py-5">
+                                    <hr>
+                                    <h3 style="text-align: center; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif">{{ user?.firstname }}'s TIMELINE</h3>
+                                    <div class="row d-flex justify-content-center">
+                                        <div class="col-md-12 col-lg-10" *ngFor="let timeline of timelines | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" style="margin-top: 10px;">
+                                            <div class="card text-dark">
+                                                <div class="card-body p-4">
+                                                    <div class="d-flex flex-start">
+                                                        <img class="rounded-circle shadow-1-strong me-3" src="http://localhost:6868/uploads/userphoto/{{user?.photoName}}" alt="avatar" width="60" height="60" />
+                                                        <div>
+                                                            <h6 class="fw-bold mb-1"><strong>{{ user?.firstname }} {{ user?.lastname }}</strong></h6>
+                                                            <div class="d-flex align-items-center mb-3">
+                                                                <p class="mb-0" style="font-style: italic;">
+                                                                    {{ timeline?.createdAt | date: "MMM d, y h:mm a" }}
+                                                                </p>
+                                                            </div>
+                                                            <div>
+                                                                <div>
+                                                                    <button class="btn btn-outline-success dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            <i class="far fa-thumbs-up "></i><strong>{{ timeline.likesTimeline.length }}</strong></button>
+                                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                        <button (click)="likeTimeline(timeline?.id);" class="dropdown-item" style="margin-top:10px; margin-right:3px;"><i class="far fa-thumbs-up "></i>Like</button>
+                                                                        <button style="margin-top:10px;" (click)="toDisplayGroup = timeline" class="dropdown-item" data-toggle="modal" data-target="#exampleModalTimeline"><i class="far fa-user "></i>Who liked</button>
+                                                                    </div>
+                                                                    <button type="button" title="Edit profile" style="margin-left: 10px;" *ngIf="currentUser.id === user?.id" class="btn btn-outline-secondary btn-sm" routerLink="/edit-timeline/{{ timeline.id }}"><i class="fas fa-edit"></i></button>
+                                                                    <a class="btn btn-outline-danger btn-sm " style="margin-left: 10px;" *ngIf="currentUser.id === user?.id" mwlConfirmationPopover placement="top-up" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteTimelineById(timeline.id)"
+                                                                        (cancel)="cancelClicked = true"><i class="fas fa-trash ms-2"></i></a>
+                                                                </div>
+
+                                                            </div>
+                                                            <p class="mb-0" style="padding-top: 20px;">
+                                                                {{timeline?.text}}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="position:relative; top:365px;">
+                                    <div class="paginate">
+                                        <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event, 'timelines')"></pagination-controls>
+                                    </div>
+                                    <div class="paginate">
+                                        <h2 style="font-size: 1.1em; font-weight: bolder;">Timelines per Page:
+                                            <select class="browser-default custom-select" style="width: 24.5%;" (change)="handlePageSizeChange($event, 'timelines')">
+                                        <option *ngFor="let size of pageSizes" [ngValue]="size">
+                                        {{ size }}
+                                        </option>
+                                        </select>
+                                        </h2>
+                                    </div>
+                                </div>
+
+
+                            </section>
+                        </div>
+                        <div id="tab2" class="tab-slider--body" *ngSwitchCase="'tab2'">
+                            <div>
+                                <section id="gallery" style="width: 100%;">
+                                    <div class="container" style="padding-top:50px;">
+                                        <p class="paginate" style="margin-top: 10px;"><strong>Total photos: {{countGallery}}</strong></p>
+                                        <hr>
+                                        <h3 style="text-align: center; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif">{{ user?.firstname }}'s PHOTOS</h3>
+                                        <div class="row">
+                                            <div class="col-md-4 lg-4 animation" *ngFor="let p of photoGallery | paginate : {itemsPerPage: pageSizeGallery,currentPage: pageGallery,totalItems: countGallery}; let i = index" [class.active]="i == currentIndex" style="margin-top: 10px;">
+                                                <div class="card" style="border: 1px solid rgb(199, 199, 199); box-shadow: 5px 10px #888888;">
+                                                    <img src="http://localhost:6868/uploads/{{p?.name}}" alt=" " class="card-img-top ">
+                                                    <div class="card-body ">
+                                                        <h5 class="card-title "></h5>
+                                                        <h4 class="card-text" style=" white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><strong>{{p.title}}</strong></h4>
+                                                        <p class="card-text">Publish date: {{p.createdAt | date: "MMM d, y" }}</p>
+                                                        <!-- <a class="btn btn-outline-danger btn-sm " style="float: right;">
+                                                            <span mwlConfirmationPopover [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessageGallery" (confirm)="deletePhoto(p.id)" (cancel)="cancelClicked = true"><i class="fa fa-trash" aria-hidden="true"></i></span></a> -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
                             </div>
-                            <div class="col-sm-9 text-secondary">
-                                <input type="text" class="form-control" value="{{ user?.address }}" disabled>
+                            <div style="position:relative; top:365px;">
+                                <div class="paginate">
+                                    <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event, 'photos')"></pagination-controls>
+                                </div>
+                                <div class="paginate">
+                                    <h2 style="font-size: 1.1em; font-weight: bolder;">Photos per Page:
+                                        <select class="browser-default custom-select" style="width: 27%;" (change)="handlePageSizeChange($event, 'photos')">
+                                <option *ngFor="let size of pageSizesGallery" [ngValue]="size">
+                                {{ size }}
+                                </option>
+                                </select>
+                                    </h2>
+                                </div>
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">Town</h6>
+                        <div id="tab3" class="tab-slider--body" *ngSwitchCase="'tab3'">
+                            <div class="container profile-page" style="padding-top:30px; padding-bottom: 90px;">
+                                <div class="dropdown paginate">
+                                    <button type="button" title="Search" class="btn btn-outline-success btn-sm dropdown-toggle" data-toggle="modal" data-target="#exampleModalSearchFriends"><i class="fas fa-search"></i> Search </button>
+                                </div>
+                                <hr>
+                                <h3 style="text-align: center; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; padding-bottom: 20px;">{{ user?.firstname }}'s FRIENDS</h3>
+                                <div class="row">
+                                    <ng-container *ngFor="let follower of followers | search:searchText | paginate : {itemsPerPage: pageSizeFriends,currentPage: pageFriends,totalItems: countFriends}; let i = index" [class.active]="i == currentIndex">
+                                        <div class="col-xl-6 col-lg-7 col-md-12" *ngIf="follower.status === 'Following'">
+                                            <div class="card profile-header1" style="border-radius: 15px; border: 1px solid rgb(199, 199, 199);">
+                                                <div class="body1">
+                                                    <div class="row">
+                                                        <div class="col-lg-4 col-md-4 col-12">
+                                                            <div class="profile-image1 float-md-right"> <img src="http://localhost:6868/uploads/userphoto/{{follower?.user.photoName}}" alt=""> </div>
+                                                        </div>
+                                                        <div class="col-lg-8 col-md-8 col-12">
+                                                            <h4 class="m-t-0 m-b-0"><strong>{{follower?.user.firstname}} {{follower?.user.lastname}}</strong></h4>
+                                                            <span class="job_post">Friends since: {{ follower?.createdAt | date: "MMM, y" }}</span>
+                                                            <br>
+                                                            <br>
+                                                            <div>
+                                                                <button *ngIf="currentUserLike !== follower?.followerId" class="btn btn-outline-success btn-sm" style="margin-right:10px;" routerLink="/view-profile/{{ follower?.user.id }}">View Profile</button>
+                                                                <button *ngIf="currentUserLike === follower?.followerId" class="btn btn-outline-success btn-sm" style="margin-right:10px;" routerLink="/my-profile">View Profile</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </div>
                             </div>
-                            <div class="col-sm-9 text-secondary">
-                                <input type="text" class="form-control" value="{{ user?.town }}" disabled>
+                            <div style="position:relative; top:365px;">
+                                <div class="paginate">
+                                    <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event, 'friends')"></pagination-controls>
+                                </div>
+                                <div class="paginate">
+                                    <h2 style="font-size: 1.1em; font-weight: bolder;">Friends per Page:
+                                        <select class="browser-default custom-select" style="width: 25%;" (change)="handlePageSizeChange($event, 'friends')">
+                                <option *ngFor="let size of pageSizesFriends" [ngValue]="size">
+                                {{ size }}
+                                </option>
+                                </select>
+                                    </h2>
+                                </div>
                             </div>
                         </div>
                     </div>

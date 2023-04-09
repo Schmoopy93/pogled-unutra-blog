@@ -1,0 +1,42 @@
+<div class="dropdown">
+    <button type="button" style="margin-top: 20px; margin-bottom: 20px;" title="Appointment" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#exampleModal">Add to-do</button>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Create to-do</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group row">
+                        <label for="inputEmail1" class="label col-sm-3 col-form-label">Content</label>
+                        <div class="col-sm-9">
+                            <input type="text" nbInput fullWidth id="title" placeholder="Title" [(ngModel)]="event.title" [ngModelOptions]="{standalone: true}" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword2" class="label col-sm-3 col-form-label">Date</label>
+                        <div class="col-sm-9">
+                            <input type="date" nbInput fullWidth id="start" [(ngModel)]="event.start" [ngModelOptions]="{standalone: true}" required>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-outline-success btn-sm " (click)="saveEvent()">Save</button>
+                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div style="padding-bottom: 70px; color: black; font-weight: bold;">
+    <div style="background-color:#fcf6f6; width: 80%; height: 100%; margin: auto;">
+        <full-calendar [options]="calendarOptions"></full-calendar>
+    </div>
+
+</div>

@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpEvent, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-const AUTH_API = 'http://localhost:4000/api/auth/';
-const USER_API = `http://localhost:4000/api/auth/users`;
+const AUTH_API = 'http://localhost:6868/api/auth/';
+const USER_API = `http://localhost:6868/api/auth/users`;
 
 
 const httpOptions = {
@@ -15,9 +15,8 @@ const httpOptions = {
 })
 export class AuthService {
   usersURL: string;
-  constructor(private http: HttpClient) {
-    //this.usersURL = 'http://localhost:4000/api/auth/users';
-   }
+  constructor(private http: HttpClient) {}
+  
   login(username: string, password: string): Observable<any> {
     return this.http.post(AUTH_API + 'signin', {
       username,
@@ -34,7 +33,7 @@ export class AuthService {
     formdata.append('firstname', firstname);
     formdata.append('lastname', lastname);
 
-    const req = new HttpRequest('POST', 'http://localhost:4000/api/auth/signup/upload', formdata, {
+    const req = new HttpRequest('POST', 'http://localhost:6868/api/auth/signup/upload', formdata, {
       reportProgress: true,
       responseType: 'json',
       
@@ -45,10 +44,12 @@ export class AuthService {
   getUsers(){
     return this.http.get(USER_API);
   }
+
+  getRoles(){
+    return this.http.get(`${AUTH_API}roles`);
+  }
   editUser(id) {
-    return this
-      .http
-      .get(`${USER_API}/${id}`);
+    return this.http.get(`${USER_API}/${id}`);
   }
   updateUser(username,phone, address, town, id) {
 
@@ -61,7 +62,41 @@ export class AuthService {
     this
       .http
       .put(`${USER_API}/${id}`, obj)
-      .subscribe(res => console.log('Done'));
+      .subscribe();
+  }
+
+  promoteToAdmin(roleId, userId) {
+
+    const obj = {
+      roleId: 3,
+    };
+    this
+      .http
+      .put(`${AUTH_API}roles/${userId}`, obj)
+      .subscribe();
+  }
+
+  
+  promoteToModerator(roleId, userId) {
+
+    const obj = {
+      roleId: 2,
+    };
+    this
+      .http
+      .put(`${AUTH_API}roles/${userId}`, obj)
+      .subscribe();
+  }
+
+  demoteToUser(roleId, userId) {
+
+    const obj = {
+      roleId: 1,
+    };
+    this
+      .http
+      .put(`${AUTH_API}roles/${userId}`, obj)
+      .subscribe();
   }
 
   fillYourData(address, phone, id) {
@@ -73,7 +108,7 @@ export class AuthService {
     this
       .http
       .put(`${USER_API}`, obj)
-      .subscribe(res => console.log('Done'));
+      .subscribe();
   }
   deleteUser(id: number): Observable<any> {
     return this.http.delete(`${USER_API}/${id}`, { responseType: 'text' });
@@ -86,11 +121,37 @@ export class AuthService {
     return this.http.get(`${AUTH_API}confirm/` + confirmationCode);
   }
 
+  acceptFriendship(id: string) {
+    return this.http.get(`${AUTH_API}acceptFriendship/` + id);
+  }
+
+  setNewPassword(password: any, token: string): Observable<any> {
+    return this.http.post(USER_API + '/new-password', {
+      password,
+      token
+    }, httpOptions);
+  }
+
+
   getUserByToken(confirmationCode: any){
     return this.http.get(`${AUTH_API}confirm/` + confirmationCode);
   }
 
   getAllUsers(params: any): Observable<any> {
+    return this.http.get<any>(`${USER_API}/list-users`, { params });
+  }
+
+  getAllUsersForSearch(params: any): Observable<any> {
     return this.http.get<any>(`${USER_API}`, { params });
+  }
+  
+  forgotPassword(email: any): Observable<any> {
+    return this.http.post(USER_API + '/retrieve-password', {
+      email,
+    }, httpOptions);
+  }
+
+  getMyFollowers(params: any): Observable<any> {
+    return this.http.get<any>(`${AUTH_API}getFollowers`, { params });
   }
 }

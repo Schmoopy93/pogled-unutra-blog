@@ -24,6 +24,7 @@ export class ViewblogComponent implements OnInit {
   currentPosts?: Post;
   currentIndex = -1;
   title = '';
+  searchText: string;
   page = 1;
   count = 0;
   pageSize = 6;
@@ -46,7 +47,6 @@ export class ViewblogComponent implements OnInit {
 
   deletePost(id) {
     this.blogService.deletePost(id).subscribe(res => {
-      console.log('Deleted');
       this.router.navigate(['/recent-blogs']);
       this.ngOnInit();
     });

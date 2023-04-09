@@ -1,5 +1,7 @@
-<app-navbar></app-navbar>
-<div>
-    <router-outlet></router-outlet>
+<div id="main-container" [ngClass]="[setMode ? 'darkTheme' : '']">
+    <app-navbar (mode)="receiveMode($event)"></app-navbar>
+    <div>
+        <router-outlet></router-outlet>
+        <app-footer style="display: flex; flex-direction:column;"></app-footer>
+    </div>
 </div>
-<app-footer></app-footer>

@@ -74,7 +74,7 @@ body {
 button.focus,
 button:focus {
     outline: 0;
-    box-shadow: none !important
+    box-shadow: none !important;
 }
 
 .ft {
@@ -130,4 +130,37 @@ button:focus {
 .contactform {
     margin: auto;
     padding: 10px;
+}
+
+@media only screen and (min-width: 150px) and (max-width: 780px) {
+    .search {
+        width: 95%;
+        margin: 0 auto;
+    }
+}
+
+.animation {
+    padding-top: 20px;
+    position: relative;
+    animation: mymove 1s;
+    animation-fill-mode: forwards;
+    transition: box-shadow .3s;
+    height: 100%;
+}
+
+.animation:hover {
+    box-shadow: 0 0 11px rgba(33, 33, 33, .2);
+}
+
+@keyframes mymove {
+    from {
+        top: 0px;
+    }
+    to {
+        top: 15px;
+    }
+}
+
+body.modal-content {
+    overflow: visible;
 }

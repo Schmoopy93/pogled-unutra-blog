@@ -1,21 +1,15 @@
-<!-- <div class="search">
-    <form class="search-form">
-        <input type="text" placeholder="Search posts by title" [(ngModel)]="title" name="title">
-        <input type="submit" class="btn btn-outline-success btn-sm " value="Search" (click)="retrievePosts()">
-    </form>
-</div> -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Search post by title</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Search posts</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
             </div>
             <div class="modal-body">
                 <form>
-                    <input type="text" placeholder="Search..." [(ngModel)]="title" name="title" style="width: 100%;" (keyup.enter)="retrievePosts()">
+                    <input type="text" placeholder="Search..." [(ngModel)]="searchText" name="searchText" style="width: 100%;" (keyup.enter)="retrievePosts()">
 
                 </form>
             </div>
@@ -37,43 +31,44 @@
         <a class="dropdown-item" (click)="setPostsDesc()">Desc <i class="fas fa-arrow-down"></i></a>
     </div>
 </div>
-<!-- <div class="col-md-12">
-    <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
-</div> -->
-<section id="gallery" style="padding-top:50px;">
-    <div class="container">
-        <h4 style="text-align: center; padding-bottom: 30px;">Total published posts: {{count}}</h4>
-        <div class="row">
-            <div class="col-lg-4 mb-4" *ngFor="let post of posts  | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActivePost(post, i)">
-                <div class="card">
-                    <img src="http://localhost:4000/uploads/{{post?.name}}" alt=" " class="card-img-top ">
-                    <div class="card-body ">
-                        <h5 class="card-title ">{{post.title}}</h5>
-                        <p class="card-text" style=" white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{post.content}}</p>
-                        <br>
-                        <a href="/blogDetail/{{ post.id }}" class="btn btn-outline-success btn-sm "> Read More </a>
-                        <a href=" " class="btn btn-outline-danger btn-sm " style="margin-left: 10px;"><i class="far fa-heart "></i></a>
-                        <a *ngIf="currentUser.roles== 'ROLE_ADMIN'" routerLink="/edit-post/{{ post.id }}" class="btn btn-outline-success btn-sm" style="float: right; margin-left: 10px;"> Edit </a>
-                        <a class="btn btn-outline-danger btn-sm " *ngIf="currentUser.roles== 'ROLE_ADMIN'" style="float: right;">
-                            <span mwlConfirmationPopover [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deletePost(post.id)" (cancel)="cancelClicked = true"><i class="fa fa-trash" aria-hidden="true"></i></span>
-                        </a>
-                        <hr>
-                        <p class="card-text"> Published on: {{post.createdAt | date: "MMMM d, y, h:mm:ss a"}}</p>
+<ng-container>
+    <div>
+        <section id="gallery" style="width: 100%;">
+            <div class="container" style="padding-top:50px; padding-bottom: 350px;">
+                <h4 style="text-align: center; padding-bottom: 30px;">Total published posts: {{count}}</h4>
+                <div class="row">
+                    <div class="col-md-4 lg-4 animation" *ngFor="let post of posts | search:searchText | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActivePost(post, i)">
+                        <div class="card">
+                            <img src="http://localhost:6868/uploads/{{post?.name}}" alt=" " class="card-img-top ">
+                            <div class="card-body ">
+                                <h5 class="card-title ">{{post.title}}</h5>
+                                <p class="card-text" style=" white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{post.content}}</p>
+                                <br>
+                                <a routerLink="/blogDetail/{{ post.id }}" class="btn btn-outline-success btn-sm "> Read More </a>
+                                <!-- <a href=" " class="btn btn-outline-danger btn-sm " style="margin-left: 10px;"><i class="far fa-heart "></i></a> -->
+                                <a *ngIf="currentUser.roles== 'ROLE_ADMIN' || currentUser.roles == 'ROLE_MODERATOR'" routerLink="/edit-post/{{ post.id }}" class="btn btn-outline-success btn-sm" style="float: right; margin-left: 10px;"> Edit </a>
+                                <a class="btn btn-outline-danger btn-sm " *ngIf="currentUser.roles== 'ROLE_ADMIN'" style="float: right;">
+                                    <span mwlConfirmationPopover [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deletePost(post.id)" (cancel)="cancelClicked = true"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                                </a>
+                                <hr>
+                                <p class="card-text"> Published: {{post.createdAt | date: "MMMM d, y"}}</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+            <div class="col-md-12">
+                <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
+            </div>
+            <div class="col-md-12">
+                <h2 style="font-size: 1.4em; font-weight: bolder;">Posts per Page:
+                    <select class="browser-default custom-select" style="width: 24%;" (change)="handlePageSizeChange($event)">
+          <option *ngFor="let size of pageSizes" [ngValue]="size">
+            {{ size }}
+          </option>
+        </select>
+                </h2>
+            </div>
+        </section>
     </div>
-    <div class="col-md-12">
-        <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
-    </div>
-    <div class="col-md-12">
-        <h2 style="font-size: 1.5em; font-weight: bolder;">Posts per Page:
-            <select (change)="handlePageSizeChange($event)">
-      <option *ngFor="let size of pageSizes" [ngValue]="size">
-        {{ size }}
-      </option>
-    </select>
-        </h2>
-    </div>
-</section>
+</ng-container>

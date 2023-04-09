@@ -1,12 +1,12 @@
-<section class="vh-100 bg-image" style="background-image: url('https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp');">
-    <div class="mask d-flex align-items-center h-100 gradient-custom-3">
+<section class="vh-100 bg-image" style="padding-top: 100px;">
+    <div class="mask d-flex align-items-center h-100">
         <div class="container h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col-12 col-md-9 col-lg-7 col-xl-6">
-                    <div class="card" style="border-radius: 15px;">
+                    <div class="card" style="border-radius: 15px; border: 1px solid rgb(199, 199, 199);">
                         <div class="card-body p-5">
                             <h2 class="text-uppercase text-center mb-5">Change your profile data</h2>
-                            <form name="form">
+                            <form name="form" style="padding-top:20px;">
                                 <div class="form-outline mb-4">
                                     <input type="text" id="form3Example1cg" class="form-control form-control-lg" name="username" placeholder="Enter your username" [(ngModel)]="user.username" required #username="ngModel" disabled/>
                                 </div>
@@ -19,8 +19,29 @@
                                 <div class="form-outline mb-4">
                                     <input type="text" id="form3Example4cg" class="form-control form-control-lg" name="town" placeholder="Enter your town" [(ngModel)]="user.town" required #town="ngModel" />
                                 </div>
+                                <div class="checkboxes form-outline mb-4" *ngIf="currentUser != adminId">
+                                    <label class="chckbox" *ngIf="!selectedOptionUserStr">
+                                      <input type="checkbox" [(ngModel)]="selectedOptionUser" name="option1">
+                                      Promote to User
+                                    </label>
+                                    <label class="chckbox" *ngIf="!selectedOptionModeratorStr">
+                                      <input type="checkbox" [(ngModel)]="selectedOptionModerator" name="option2">
+                                      Promote to Moderator
+                                    </label>
+                                    <label class="chckbox" *ngIf="!selectedOptionAdminStr">
+                                      <input type="checkbox" [(ngModel)]="selectedOptionAdmin" name="option3">
+                                      Promote to Admin
+                                    </label>
+                                </div>
+                                <div *ngIf="currentUser != adminId">
+                                    <button *ngIf="selectedOptionUser && userRole !== 'User' && !selectedOptionUserStr" type="submit" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" (click)="demoteToUser(user.userId, user.roleId)">Promote to User</button>
+                                    <button *ngIf="selectedOptionModerator && userRole !== 'Moderator' && !selectedOptionModeratorStr" type="submit" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" (click)="promoteToModerator(user.userId, user.roleId)">Promote to Moderator</button>
+                                    <button *ngIf="selectedOptionAdmin && userRole !== 'Admin' && !selectedOptionAdminStr" type="submit" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" (click)="promoteToAdmin(user.userId, user.roleId)">Promote to Admin</button>
+                                    <br>
+                                </div>
+
                                 <div class="d-flex justify-content-center">
-                                    <button type="submit" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" (click)="updateUser(username.value,phone.value, address.value, town.value)">Edit</button>
+                                    <button type="submit" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" (click)="updateUser(username.value,phone.value, address.value, town.value)">Confirm</button>
                                 </div>
                             </form>
                         </div>

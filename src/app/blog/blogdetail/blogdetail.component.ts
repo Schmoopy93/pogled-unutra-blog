@@ -1,25 +1,27 @@
-import { AfterContentChecked, AfterContentInit, AfterViewInit, Component, DoCheck, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { Post } from 'src/app/models/post';
+import { Comment } from 'src/app/models/comment'
 import { ServiceblogService } from 'src/app/services/blog-service';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Likes } from 'src/app/models/likes';
+import Swal from 'sweetalert2';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-blogdetail',
   templateUrl: './blogdetail.component.html',
   styleUrls: ['./blogdetail.component.css']
 })
-export class BlogdetailComponent implements OnInit, AfterContentChecked {
-
+export class BlogdetailComponent implements OnInit  {
+  @ViewChild('commentForm') public commentForm:NgForm;
   form: any = {
     content: null,
   }
   posts: Post[];
   currentPost = null;
-  commentUser = null;
   currentUser = null;
   currentComment = null
   errorMessage = '';
@@ -32,32 +34,56 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
   content = '';
   page = 1;
   count = 0;
-  pageSize = 10;
-  pageSizes = [10, 20, 30];
-  commentsPagination: Comment[] = [];
+  countLikes = 0;
+  pageSize = 6;
+  pageSizes = [6, 12, 18];
   currentIndex = -1;
-  replyUser = null;
+  replyUser : any;
+  postId: any;
+  currPostId: any;
+  firstname = '';
+  public popoverTitle: string = 'WARNING';
+  public popoverMessage: string = 'Are you sure you want to delete this comment???'
+  public cancelClicked: boolean = false;
+  users: any;
+  likes:any;
+  pageLikes = 1;
+  pageSizeLikes = 5;
+  pageSizesLikes = [5, 10, 15];
+  currentIndexLikes = -1;
+  currentLike = null;
+  check: any;
+  userRoute: any = {};
+  data: string;
+  currUser: any;
 
-  constructor(private blogService: ServiceblogService, private authService: AuthService, public sanitizer: DomSanitizer,
-    private router: Router, private route: ActivatedRoute, private token: TokenStorageService, private modalService: NgbModal) {
-  }
-
+  constructor(private blogService: ServiceblogService, private router: Router, private authService: AuthService, public sanitizer: DomSanitizer, private route: ActivatedRoute, private token: TokenStorageService) {}
+  
   ngOnInit(): void {
+    this.currUser = this.token.getUser().id;
     if (this.token.getToken()) {
       this.isLoggedIn = true;
-    }  
-    this.getCommentByPost(this.route.snapshot.params.id);
+    } 
+    this.route.params.subscribe(params => {
+      this.authService.getUserById(params.id).subscribe(res => {
+        this.userRoute = res;
+      });
+    });
     this.getPost(this.route.snapshot.params.id);
-    if (!this.user) {
-      this.user = this.getUserById(this.currentPost?.userId);
-    }
-    this.getCurrentUser();
+    this.postId = this.route.snapshot.params.id;
+    this.retrieveLikes();
+    this.retrieveComments();
     this.replyUser = this.token.getUser();
+    this.getCurrentUser();
+  }
+
+  @ViewChild('closeModal') private closeModal: ElementRef;
+  public hideModel() {
+    this.closeModal.nativeElement.click();
   }
 
   getCurrentUser(){
     this.currentUser = this.token.getUser().id
-
   }
 
   setActiveComment(comment: Comment, index: number): void {
@@ -76,14 +102,28 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
     this.retrieveComments();
   }
 
-  retrieveComments(): void {
-    const params = this.getRequestParams(this.content, this.page, this.pageSize);
+  setActiveLikes(like: Likes, index: number): void {
+    this.currentLike = like;
+    this.currentIndexLikes = index;
+  }
 
+  handlePageChangeLikes(event: number): void {
+    this.pageLikes = event;
+    this.retrieveLikes();
+  }
+
+  handlePageSizeChangeLikes(event: any): void {
+    this.pageSizeLikes = event.target.value;
+    this.pageLikes = 1;
+    this.retrieveLikes();
+  }
+  retrieveComments(): void {
+    const params = this.getRequestParams(this.page, this.pageSize, this.postId);
     this.blogService.getAllComments(params)
     .subscribe(
       response => {
-        const { commentsPagination, totalItems } = response;
-        this.commentsPagination = commentsPagination;
+        const { comments, totalItems } = response;
+        this.comments = comments;
         this.count = totalItems;
       },
       error => {
@@ -91,12 +131,8 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
       });
   }
 
-  getRequestParams(searchTitle: string, page: number, pageSize: number): any {
+  getRequestParams(page: number, pageSize: number, postId: number): any {
     let params: any = {};
-
-    if (searchTitle) {
-      params[`title`] = searchTitle;
-    }
 
     if (page) {
       params[`page`] = page - 1;
@@ -106,28 +142,14 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
       params[`size`] = pageSize;
     }
 
+    if (postId) {
+      params[`postId`] = postId;
+    }
+
     return params;
   }
 
-  ngAfterContentChecked(): void {
-    if (!this.user) {
-      this.user = this.getUserById(this.currentPost?.userId);
-    }
-  }
-
-  getCommentByPost(id) {
-    this.blogService.getCommentsByPost(id)
-      .subscribe(
-        data => {
-          this.comments = data;
-
-        },
-        error => {
-          console.log(error);
-        });
-
-  }
-
+  
   getPost(id) {
     if (!id) return;
     this.blogService.getPostById(id)
@@ -153,7 +175,6 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
   }
 
 
-
   onSubmit(): void {
     const { content } = this.form;
     this.blogService.addComment(content, this.currentPost.id, this.currentUser).subscribe(
@@ -164,27 +185,85 @@ export class BlogdetailComponent implements OnInit, AfterContentChecked {
         this.errorMessage = err.error.message;
       }
     );
-    window.location.reload();
-
+    this.hideModel();
+    this.commentForm.form.reset();
+    location.reload();
   }
 
-  open(content) {
-    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+  // likePost(): void {
+  //   this.blogService.likePost(this.currentUser, this.postId).subscribe(
+  //     data => {
+  //       console.log(data);
+  //     },
+  //     err => {
+  //       this.errorMessage = err.error.message;
+  //     }
+  //   );
+  //   if(this.errorMessage){
+  //     Swal.fire(this.errorMessage);
+  //   }
+    
+  // }
+
+  retrieveLikes(): void {
+    const params = this.getRequestParamsLikes(this.pageLikes, this.pageSizeLikes, this.postId);
+
+    this.blogService.getLikesByPostId(params)
+    .subscribe(
+      response => {
+        const { likes, totalItems } = response;
+        this.likes = likes;
+        this.countLikes = totalItems;
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
+  likePost(): void {
+    this.blogService.likePost(this.currentUser, this.postId)
+      .subscribe({
+        next: (res) => {
+          console.log(res);
+        },
+        error: (err) =>  Swal.fire(err.error.message)
+      });
+      this.retrieveLikes();
+      this.ngOnInit();
+  }
+
+
+
+  getRequestParamsLikes(pageLikes: number, pageSizeLikes: number, postId: number): any {
+    let params: any = {};
+
+    if (pageLikes) {
+      params[`pageLikes`] = pageLikes - 1;
+    }
+
+    if (pageSizeLikes) {
+      params[`pageSizeLikes`] = pageSizeLikes;
+    }
+
+    if (postId) {
+      params[`postId`] = postId;
+    }
+    return params;
+    
+  }
+  
+  deleteComment(id) {
+    this.blogService.deleteComment(id).subscribe(res => {
+      this.ngOnInit();
     });
   }
 
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return `with: ${reason}`;
-    }
+  compareAlphabeticallyAsc() : void {
+    this.comments.sort((a, b) => a.createdAt.localeCompare(b.createdAt))
   }
-  
+
+  compareAlphabeticallyDesc(): void {
+    this.comments.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+  }
 
 }

@@ -1,0 +1,25 @@
+#main-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#main-container.darkTheme {
+    background-color: #c8ffca;
+}
+
+#main-container.darkTheme h1 {
+    color: white;
+}
+
+#main-container.darkTheme nav {
+    background-color: #fafafa;
+}
+
+#main-container.darkTheme .nav-link {
+    color: #000;
+}
+
+#main-container.darkTheme .nav-link.is-active {
+    color: #cb2d67;
+}

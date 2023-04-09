@@ -5,8 +5,8 @@ export class User
     password: string;
     firstname: string;
     lastname: string;
-    role: string;
-    createdAt: Date;
+    roles: string;
+    createdAt: any;
     confirmationCode: string;
     data: ArrayBuffer;
     mimetype: string;

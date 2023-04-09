@@ -26,7 +26,27 @@ import { AboutMeComponent } from './about-me/about-me.component';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ViewProfileComponent } from './view-profile/view-profile.component';
+import { AppointmentComponent } from './appointment/appointment.component';
+import { FlatpickrModule } from 'angularx-flatpickr';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import { FullCalendarModule } from '@fullcalendar/angular'; // the main connector. must go first
+import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin
+import interactionPlugin from '@fullcalendar/interaction';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { NewPasswordComponent } from './new-password/new-password.component';
+import { SearchFriendComponent } from './search-friend/search-friend.component';
+import { FollowersListComponent } from './followers-list/followers-list.component';
+import { EditTimelineComponent } from './edit-timeline/edit-timeline.component';
+import { EditCommentsComponent } from './edit-comments/edit-comments.component';
+import { SearchPipe } from './services/search.pipe';
 
+
+FullCalendarModule.registerPlugins([
+  dayGridPlugin,
+  interactionPlugin
+]);
 
 
 @NgModule({
@@ -46,7 +66,15 @@ import { ViewProfileComponent } from './view-profile/view-profile.component';
     UsersListComponent,
     UpdateUserComponent,
     AboutMeComponent,
-    ViewProfileComponent
+    ViewProfileComponent,
+    AppointmentComponent,
+    ForgotPasswordComponent,
+    NewPasswordComponent,
+    SearchFriendComponent,
+    FollowersListComponent,
+    EditTimelineComponent,
+    EditCommentsComponent,
+    SearchPipe,
   ],
   imports: [
     BrowserModule,
@@ -61,7 +89,14 @@ import { ViewProfileComponent } from './view-profile/view-profile.component';
     MDBBootstrapModule.forRoot(),
     ConfirmationPopoverModule.forRoot({
       confirmButtonType: 'danger'
-    })
+    }),
+    NgbModalModule,
+    FlatpickrModule.forRoot(),
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory,
+    }),
+    FullCalendarModule,
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent]

@@ -1,0 +1,69 @@
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Search your followers</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="text" placeholder="Search..." [(ngModel)]="searchText" name="firstname" style="width: 100%;" (keyup.enter)="retrieveFollowers()">
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button #closeModal type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="dropdown">
+    <button type="button" title="Search" class="btn btn-outline-success btn-sm dropdown-toggle" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-search"></i> Search</button>
+</div>
+<ng-container>
+    <div class="container profile-page" style="padding-bottom: 500px;">
+        <div class="row">
+            <div class="col-md-9 col-sm-7" style="padding-top: 10px;">
+                <h2 style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif">Friends List</h2>
+            </div>
+            <ng-container *ngFor="let follower of followers | search:searchText | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveFollower(follower, i)">
+                <div class="col-xl-6 col-lg-7 col-md-12" *ngIf="follower.status === 'Following'">
+                    <div class="card profile-header" style="border-radius: 15px; border: 1px solid rgb(199, 199, 199);">
+                        <div class="body">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-12">
+                                    <div class="profile-image float-md-right"> <img src="http://localhost:6868/uploads/userphoto/{{follower?.user.photoName}}" alt=""> </div>
+                                </div>
+                                <div class="col-lg-8 col-md-8 col-12">
+                                    <h4 class="m-t-0 m-b-0"><strong>{{follower?.user.firstname}} {{follower?.user.lastname}}</strong></h4>
+                                    <span class="job_post">Member since: {{ follower?.user.createdAt | date: "MMM, y" }}</span>
+                                    <br>
+                                    <br>
+                                    <div>
+                                        <button class="btn btn-outline-success btn-sm" style="margin-right:10px;" routerLink="/view-profile/{{ follower?.user.id }}">View Profile</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </ng-container>
+        </div>
+    </div>
+</ng-container>
+<div class="col-md-12">
+    <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
+</div>
+<div class="col-md-12">
+    <h2 style="font-size: 1.1em; font-weight: bolder; text-align: center;">Load more:
+        <select class="browser-default custom-select" style="width: 35%;" (change)=" handlePageSizeChange($event) ">
+    <option *ngFor="let size of pageSizes " [ngValue]="size ">
+    {{ size }}
+    </option>
+    </select>
+    </h2>
+</div>

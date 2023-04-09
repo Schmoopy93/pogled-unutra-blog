@@ -1,0 +1,25 @@
+<section class="vh-100 bg-image" style="padding-top: 100px;">
+    <div class="mask d-flex align-items-center h-100">
+        <div class="container">
+            <div class="row d-flex justify-content-center align-items-center">
+                <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+                    <div class="card" style="border-radius: 15px; border: 1px solid rgb(199, 199, 199);">
+                        <div class="card-body p-5">
+                            <h2 class="text-uppercase text-center mb-5">Edit your comment</h2>
+                            <div class="btn-group">
+                            </div>
+                            <form name="form" style="padding-top:20px;">
+                                <div class="form-outline mb-4">
+                                    <textarea type="text" id="form3Example1cg" class="form-control form-control-lg" name="content" placeholder="Enter your content" [(ngModel)]="comment.content" required #content="ngModel"></textarea>
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    <button type="submit" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" (click)="updateCommentById(content.value)">Edit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

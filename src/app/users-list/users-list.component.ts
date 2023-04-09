@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../models/user';
 import { AuthService } from '../services/auth.service';
+import { TokenStorageService } from '../services/token-storage.service';
+import {jsPDF} from 'jspdf';
 
 @Component({
   selector: 'app-users-list',
@@ -9,27 +11,53 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./users-list.component.css']
 })
 export class UsersListComponent implements OnInit {
-
+  @ViewChild('content', {static: false}) content: ElementRef;
   public popoverTitle: string = 'WARNING';
   public popoverMessage: string = 'Are you sure you want to delete this user???'
   public cancelClicked: boolean = false;
-  users: User[] = [];
+  users: any;
   currentUser = null;
   user: any = {};
   currentIndex = -1;
   firstname = '';
+  searchText: string;
   page = 1;
   count = 0;
   pageSize = 10;
   pageSizes = [10, 20, 30];
   sortedItems: any;
   countAll: any;
-
-  constructor(private authService: AuthService, private route: ActivatedRoute, private router: Router) { }
+  currentUser_id: any;
+  res: any;
+  roles:any;
+  constructor(private authService: AuthService, private token: TokenStorageService , private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
     this.retrieveUsers();
+    this.retrieveRoles();
+    this.currentUser_id = this.token.getUser().id;
+  }
 
+ 
+  public onExport() {
+    const doc = new jsPDF("l", "pt", "a3");
+    const source = document.getElementById("content");
+    doc.setFontSize(6)
+    doc.html(source, {
+      callback: function(pdf) {
+        doc.output("dataurlnewwindow"); // preview pdf file when exported
+      }
+    });
+  }
+
+  retrieveRoles(): void {
+    this.authService.getRoles().subscribe(
+      data => {
+        this.roles = data;
+      },
+      error => {
+        console.log(error)
+      });
   }
 
   setActiveUser(user: User, index: number): void {
@@ -46,7 +74,6 @@ export class UsersListComponent implements OnInit {
         const { users, totalItems } = response;
         this.users = users;
         this.count = totalItems;
-        console.log(this.users, "users")
       },
       error => {
         console.log(error);
@@ -84,7 +111,6 @@ export class UsersListComponent implements OnInit {
 
   deleteUser(id) {
     this.authService.deleteUser(id).subscribe(res => {
-      console.log('Deleted');
       this.router.navigate(['/all-users']);
       this.ngOnInit();
     });

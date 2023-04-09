@@ -4,59 +4,79 @@
         <main class="post blog-post col-lg-8">
             <div class="container">
                 <div class="post-single">
-                    <div class="post-thumbnail"><img src="http://localhost:4000/uploads/{{currentPost?.name}}" alt="..." class="img-fluid"></div>
+                    <div class="post-thumbnail"><img src="http://localhost:6868/uploads/{{currentPost?.name}}" alt="..." class="img-fluid"></div>
                     <div class="post-details">
                         <div class="post-meta d-flex justify-content-between">
                             <div class="category"><a href="/recent-blogs">My Blog</a></div>
                         </div>
-                        <h1>{{ currentPost?.title }}</h1>
+                        <h1 style="font-family: cursive;">{{ currentPost?.title }}</h1>
                         <div class="post-footer d-flex align-items-center flex-column flex-sm-row">
                             <a href="#" class="author d-flex align-items-center flex-wrap">
-                                <div class="avatar"><img src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="..." class="img-fluid"></div>
-                                <div class="title"><span>{{user?.firstname}} {{user?.lastname}}</span></div>
+                                <div class="avatar"><img src="http://localhost:6868/uploads/userphoto/{{currentPost?.user.photoName}}" alt="..." class="img-fluid"></div>
+                                <div class="title"><span>{{currentPost?.user.firstname}} {{currentPost?.user?.lastname}}</span></div>
                                 <div class="title"><i class="icon-clock"></i> {{ currentPost?.createdAt | date:"MMM d, y h:mm:ss a" }}</div>
                             </a>
                         </div>
+                        <div class="dropdown" style="margin-top:10px;">
+                            <button class="btn btn-outline-success dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="far fa-thumbs-up "></i><strong> {{ countLikes }} </strong>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <button (click)="likePost();" class="dropdown-item" style="margin-top:10px; margin-right:3px;"><i class="far fa-thumbs-up "></i>Like</button>
+                                <button #closeModal style="margin-top:10px;" class="dropdown-item" data-toggle="modal" data-target="#exampleModalTimeline"><i class="far fa-user "></i>Who liked</button>
+                            </div>
+                        </div>
+                        <!-- <div class="dropdown" style="margin-top:10px;">
+                            <button class="btn btn-outline-danger dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="far fa-thumbs-down "></i><strong> </strong>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <button class="dropdown-item" style="margin-top:10px; margin-right:3px;"><i class="far fa-thumbs-up "></i>Dislike</button>
+                                <button style="margin-top:10px;" class="dropdown-item" data-toggle="modal" data-target="#exampleModalTimeline"><i class="far fa-user "></i>Who disliked</button>
+                            </div>
+                        </div> -->
+                        <!-- <div class="alert alert-danger alert-dismissible" *ngIf="errorMessage" style="width: 50%; margin-top:10px;">
+                            <a class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong>{{ errorMessage }}</strong>
+                        </div> -->
                         <div class="post-body">
-                            <p class="lead">{{currentPost?.content}}</p>
-
+                            <p class="lead" style="font-family: cursive;">{{currentPost?.content}}</p>
                         </div>
                         <div class="post-tags"><a class="tag">#Psychology</a><a class="tag">#Blog</a><a class="tag">#My Posts</a></div>
                         <div class="posts-nav d-flex justify-content-between align-items-stretch flex-column flex-md-row">
                         </div>
                         <header>
                             <h3 class="h6">Post Comments<span class="no-of-comments"></span></h3>
-                        </header>
-                        <div class="post-comments" *ngFor="let comment of comments | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveComment(post, i)">
-                            <div class="comment">
-                                <div class="comment-header d-flex justify-content-between">
-                                    <div class="user d-flex align-items-center">
-                                        <div class="image"><img src="http://localhost:4000/uploads/userphoto/{{comment?.user.photoName}}" class="img-fluid rounded-circle"></div>
-                                        <div class="title"><strong>{{comment?.user.firstname}} {{comment?.user.lastname}}</strong><span class="date">{{comment?.createdAt | date:"MMM d, y h:mm:ss a" }}</span></div>
-                                    </div>
+                            <div class="dropdown">
+                                <button style="margin-right: 10px;" *ngIf="isLoggedIn" title="Create a comment" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#exampleModal">Discuss with us... <i class="fa fa-comment"></i></button>
+                                <button class="btn btn-outline-success btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Sort By Date
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" (click)="compareAlphabeticallyAsc()">Asc <i class="fas fa-arrow-up"></i></a>
+                                    <a class="dropdown-item" (click)="compareAlphabeticallyDesc()">Desc <i class="fas fa-arrow-down"></i></a>
                                 </div>
-                                <div class="comment-body">
-                                    <p>{{comment?.content}}</p>
-                                </div>
-                                <hr>
                             </div>
-                        </div>
-                        <!-- <div class="add-comment" *ngIf="isLoggedIn">
-                            <header>
-                                <h3 class="h6">Leave a reply {{replyUser.firstname}}</h3>
-                            </header>
-                            <form action="#" class="commenting-form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm">
-                                <div class="row">
-                                    <div class="form-group col-md-12">
-                                        <textarea name="usercomment" id="usercomment" placeholder="Type your comment" class="form-control" name="content" [(ngModel)]="form.content" #content="ngModel"></textarea>
+                        </header>
+                        <ng-container *ngFor="let comment of comments | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveComment(comment, i)">
+                            <div class="post-comments">
+                                <div class="comment">
+                                    <div class="comment-header d-flex justify-content-between">
+                                        <div class="user d-flex align-items-center">
+                                            <div class="image" style="margin-left: 10px;"><img src="http://localhost:6868/uploads/userphoto/{{comment?.user.photoName}}" class="img-fluid rounded-circle"></div>
+                                            <div class="title"><strong>{{comment?.user.firstname}} {{comment?.user.lastname}}</strong><span class="date">{{comment?.createdAt | date:"MMM d, y h:mm:ss a" }}</span></div>
+                                        </div>
                                     </div>
-                                    <div class="form-group col-md-12">
-                                        <button type="submit" class="btn btn-secondary">Submit Comment</button>
+                                    <div class="comment-body">
+                                        <a title="Edit profile" *ngIf="currentUser === comment?.userId || replyUser.roles== 'ROLE_ADMIN'" style="margin-right: 10px;" class="btn btn-outline-secondary btn-sm" routerLink="/edit-comment/{{ comment.id }}"><i class="fas fa-edit"></i></a>
+                                        <a class="btn btn-outline-danger btn-sm " *ngIf="replyUser.roles== 'ROLE_ADMIN'">
+                                            <span mwlConfirmationPopover placement="left" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteComment(comment.id)" (cancel)="cancelClicked = true"><i class="fa fa-trash" aria-hidden="true"></i></span>
+                                        </a>
+                                        <p style="margin-top:20px;">{{comment?.content}}</p>
                                     </div>
                                 </div>
-                            </form>
-                        </div> -->
-                        <button type="button" *ngIf="isLoggedIn" title="Search" class="btn btn-outline-success" data-toggle="modal" data-target="#exampleModal">Discuss with us... <i class="fa fa-comment"></i></button>
+                            </div>
+                        </ng-container>
                         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -67,7 +87,7 @@
                                 </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" class="commenting-form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm">
+                                        <form action="#" class="commenting-form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" #commentForm="ngForm">
                                             <div class="row">
                                                 <div class="form-group col-md-12">
                                                     <textarea name="usercomment" id="usercomment" placeholder="Type your comment" class="form-control" name="content" [(ngModel)]="form.content" #content="ngModel"></textarea>
@@ -76,8 +96,46 @@
                                         </form>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="submit" class="btn btn-outline-success btn-sm " (click)="onSubmit()">Post</button>
-                                        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-outline-success btn-sm " (click)="onSubmit(); hideModel()">Post</button>
+                                        <button #closeModal type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="exampleModalTimeline" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelTimeline" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabelTimeline">People who liked this post</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="#" class="commenting-form">
+                                            <div class="row">
+                                                <div class="form-group col-md-12" *ngFor="let like of likes | paginate : {itemsPerPage: pageSizeLikes,currentPage: pageLikes,totalItems: countLikes, id: 'like'}; let i = index" [class.active]="i == currentIndexLikes" (click)="setActiveLikes(like, i)">
+                                                    <a *ngIf="currUser !== like?.userId" routerLink="/view-profile/{{like?.userId}}" (click)="hideModel();" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:6868/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong></a>
+                                                    <a *ngIf="currUser === like?.userId" routerLink="/my-profile" (click)="hideModel();" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:6868/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong></a>
+                                                    <hr>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button #closeModal type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                                    </div>
+                                    <div class="col-md-12 paginate">
+                                        <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChangeLikes($event)" id="like"></pagination-controls>
+                                    </div>
+                                    <div class="col-md-12 paginate2">
+                                        <h2 style="font-size: 1.1em; font-weight: bolder;">
+                                            <select class="browser-default custom-select" style="width: 100%;" (change)="handlePageSizeChangeLikes($event)">
+                                      <option *ngFor="let sizeLikes of pageSizesLikes" [ngValue]="sizeLikes">
+                                        {{ sizeLikes }}
+                                      </option>
+                                    </select>
+                                        </h2>
                                     </div>
                                 </div>
                             </div>
@@ -114,79 +172,16 @@
             </div>
         </aside>
     </div>
-    <div class="paginate">
-        <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
-    </div>
-    <div class="paginate">
-        <h2 style="font-size: 1.5em; font-weight: bolder;">Comments per page:
-            <select (change)="handlePageSizeChange($event)">
-      <option *ngFor="let size of pageSizes" [ngValue]="size">
-        {{ size }}
-      </option>
-    </select>
-        </h2>
-    </div>
 </div>
-<!-- <div class="container mt-5">
-    <div class="row">
-        <div class="col-lg-8">
-            <article>
-                <header class="mb-4">
-                    <h1 class="fw-bolder mb-1">{{ currentPost?.title }}</h1>
-                    <div class="text-muted fst-italic mb-2">Posted on {{ currentPost?.createdAt | date:"MMM d, y h:mm:ss a" }}</div>
-                    <div class="text-muted fst-italic mb-2">Authored By: {{user?.firstname}} {{user?.lastname}}</div>
-                </header>
-                <figure class="mb-4"><img class="img-fluid rounded" src="http://localhost:4000/uploads/{{currentPost?.name}}" alt="..." /></figure>
-                <section class="mb-5">
-                    <p class="fs-5 mb-4">{{ currentPost?.content }}</p>
-                </section>
-                <div class="text-muted fst-italic mb-2">Last time updated on {{ currentPost?.updatedAt | date:"MMM d, y h:mm:ss a" }}</div>
-            </article>
-            <div *ngIf="isLoggedIn">
-                <hr>
-                <button type="button" mdbBtn color="default" data-toggle="modal" data-target="#basicExample" (click)="open(content)" mdbWavesEffect>Discuss with us...</button>
-                <ng-template #content let-modal>
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="modal-basic-title">Create a comment</h4>
-                        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate id="signup-form" class="signup-form">
-                            <div class="form-outline mb-4">
-                                <textarea class="form-control" id="form3Example1q" type="text" name="content" [(ngModel)]="form.content" #content="ngModel" placeholder="Discuss with us... "></textarea>
-                                <span class="focus-input100"></span>
-                            </div>
-                            <div class="modal-footer d-flex justify-content-center">
-                                <button type="submit" mdbBtn color="default" class="waves-light" mdbWavesEffect>Submit</button>
-                            </div>
-                        </form>
-                    </div>
-                </ng-template>
-            </div>
-            <br>
-            <div class="container-fluid mt-100" *ngFor="let comment of comments">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <div class="media flex-wrap w-100 align-items-center"> <img src="https://i.imgur.com/iNmBizf.jpg" class="d-block ui-w-40 rounded-circle" alt="">
-                                    <div class="media-body ml-3"><a>{{comment?.userId}}</a>
-                                        <div class="text-muted small">Published: {{comment?.createdAt | date:"MMM d, y h:mm:ss a" }}</div>
-                                    </div>
-                                    <div class="text-muted small ml-3">
-                                        <div>Member since <strong>01/1/2019</strong></div>
-                                        <div><strong>134</strong> posts</div>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <p>{{comment?.content}}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> -->
+<div class="paginate">
+    <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
+</div>
+<div class="paginate">
+    <h2 style="font-size: 1.1em; font-weight: bolder; text-align: center;">Load more:
+        <select style="margin-top:20px; width:50%" class="browser-default custom-select" (change)="handlePageSizeChange($event)">
+<option *ngFor="let size of pageSizes" [ngValue]="size">
+{{ size }}
+</option>
+</select>
+    </h2>
+</div>

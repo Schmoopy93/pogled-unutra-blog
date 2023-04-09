@@ -18,22 +18,23 @@ export class BlogComponent implements OnInit {
   currentPost = null;
   user: User;
   confirmationCode: string;
+  currentPosts?: Post;
+  currentIndex = -1;
+  title = '';
+  page = 1;
+  count = 0;
+  pageSize = 6;
+  pageSizes = [6, 9, 12];
+  sortedItems: any;
+  public popoverTitle: string = 'WARNING';
+  public popoverMessage: string = 'Are you sure you want to delete this post???'
+  public cancelClicked: boolean = false;
 
-  constructor(private blogService: ServiceblogService, private authService: AuthService, private route: ActivatedRoute,
-    private router: Router,) {
-    //this.confirmationCode = this.route.snapshot.params['confirmationCode'];
+  constructor(private blogService: ServiceblogService, private authService: AuthService, private route: ActivatedRoute, private router: Router) {
   }
 
   ngOnInit() {
-    // this.blogService.findAll().subscribe(data => {
-    //   this.posts = data;
-    // });
-
-    // const el = document.querySelector('.counter')
-    // counterUp(el, {
-    //   duration: 1000,
-    //   delay: 1,
-    // })
+    this.retrievePosts();
     this.confirmationCode = this.route.snapshot.params['confirmationCode'];
     if(!this.confirmationCode){
       return;
@@ -46,9 +47,56 @@ export class BlogComponent implements OnInit {
           this.router.navigate(['/'], { relativeTo: this.route });
         }
       });
-    console.log(this.confirmationCode);
   }
 
+  setActivePost(post: Post, index: number): void {
+    this.currentPost = post;
+    this.currentIndex = index;
+  }
 
+  retrievePosts(): void {
+    const params = this.getRequestParams(this.title, this.page, this.pageSize);
 
+    this.blogService.getAllPostsForHomePage(params)
+    .subscribe(
+      response => {
+        const { posts, totalItems } = response;
+        this.posts = posts;
+        this.count = totalItems;
+      },
+      error => {
+        console.log(error);
+      });
+  }
+  
+  handlePageChange(event: number): void {
+    this.page = event;
+    this.retrievePosts();
+  }
+
+  handlePageSizeChange(event: any): void {
+    this.pageSize = event.target.value;
+    this.page = 1;
+    this.retrievePosts();
+  }
+
+  getRequestParams(searchTitle: string, page: number, pageSize: number): any {
+    let params: any = {};
+
+    if (searchTitle) {
+      params[`title`] = searchTitle;
+    }
+
+    if (page) {
+      params[`page`] = page - 1;
+    }
+
+    if (pageSize) {
+      params[`size`] = pageSize;
+    }
+
+    return params;
+  }
+
+  
 }
