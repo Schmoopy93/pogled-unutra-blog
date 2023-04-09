@@ -20,6 +20,7 @@ export class UsersListComponent implements OnInit {
   user: any = {};
   currentIndex = -1;
   firstname = '';
+  searchText: string;
   page = 1;
   count = 0;
   pageSize = 10;

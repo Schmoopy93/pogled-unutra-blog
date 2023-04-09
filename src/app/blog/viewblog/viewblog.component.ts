@@ -24,6 +24,7 @@ export class ViewblogComponent implements OnInit {
   currentPosts?: Post;
   currentIndex = -1;
   title = '';
+  searchText: string;
   page = 1;
   count = 0;
   pageSize = 6;

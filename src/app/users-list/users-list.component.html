@@ -2,14 +2,14 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Search user by firstname</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Search users</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
             </div>
             <div class="modal-body">
                 <form>
-                    <input type="text" placeholder="Search..." [(ngModel)]="firstname" name="firstname" style="width: 100%;" (keyup.enter)="retrieveUsers()">
+                    <input type="text" placeholder="Search..." [(ngModel)]="searchText" name="searchText" style="width: 100%;" (keyup.enter)="retrieveUsers()">
 
                 </form>
             </div>
@@ -53,7 +53,7 @@
                         <th scope="col">Delete Profile</th>
                     </tr>
                 </thead>
-                <tbody *ngFor="let user of users | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveUser(user, i)">
+                <tbody *ngFor="let user of users | search:searchText | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveUser(user, i)">
                     <tr style="font-family: Georgia, 'Times New Roman', Times, serif">
                         <td><img class="rounded-square shadow-1-strong me-3" src="http://localhost:6868/uploads/userphoto/{{user?.photoName}}" alt="avatar" width="60" height="60" /></td>
                         <td>{{user?.username}}</td>
@@ -77,17 +77,17 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-md-12">
-            <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
-        </div>
-        <div class="col-md-12">
-            <h2 style="font-size: 1.1em; font-weight: bolder;">Users per Page:
-                <select class="browser-default custom-select" style="width: 30%;" (change)="handlePageSizeChange($event)">
-      <option *ngFor="let size of pageSizes" [ngValue]="size">
-        {{ size }}
-      </option>
-    </select>
-            </h2>
-        </div>
     </div>
+</div>
+<div class="col-md-12">
+    <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
+</div>
+<div class="col-md-12">
+    <h2 style="font-size: 1.1em; font-weight: bolder;">Users per Page:
+        <select class="browser-default custom-select" style="width: 30%;" (change)="handlePageSizeChange($event)">
+<option *ngFor="let size of pageSizes" [ngValue]="size">
+{{ size }}
+</option>
+</select>
+    </h2>
 </div>
