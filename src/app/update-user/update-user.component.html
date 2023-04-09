@@ -19,16 +19,27 @@
                                 <div class="form-outline mb-4">
                                     <input type="text" id="form3Example4cg" class="form-control form-control-lg" name="town" placeholder="Enter your town" [(ngModel)]="user.town" required #town="ngModel" />
                                 </div>
-                                <div class="form-outline mb-4" *ngIf="currentUser != adminId">
-                                    <button type="button" style="margin: auto;" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                      Permissions
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <button class="dropdown-item" *ngIf="roleModerator || roleAdmin" (click)="demoteToUser(user.userId, user.roleId)">Demote to User</button>
-                                        <button class="dropdown-item" *ngIf="!roleModerator && !roleAdmin" (click)="promoteToModerator(user.userId, user.roleId)">Promote to Moderator</button>
-                                        <!-- <button class="dropdown-item" *ngIf="!roleAdmin" (click)="promoteToAdmin(user.userId, user.roleId)">Promote to Admin</button> -->
-                                    </div>
+                                <div class="checkboxes form-outline mb-4" *ngIf="currentUser != adminId">
+                                    <label class="chckbox" *ngIf="!selectedOptionUserStr">
+                                      <input type="checkbox" [(ngModel)]="selectedOptionUser" name="option1">
+                                      Promote to User
+                                    </label>
+                                    <label class="chckbox" *ngIf="!selectedOptionModeratorStr">
+                                      <input type="checkbox" [(ngModel)]="selectedOptionModerator" name="option2">
+                                      Promote to Moderator
+                                    </label>
+                                    <label class="chckbox" *ngIf="!selectedOptionAdminStr">
+                                      <input type="checkbox" [(ngModel)]="selectedOptionAdmin" name="option3">
+                                      Promote to Admin
+                                    </label>
                                 </div>
+                                <div *ngIf="currentUser != adminId">
+                                    <button *ngIf="selectedOptionUser && userRole !== 'User' && !selectedOptionUserStr" type="submit" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" (click)="demoteToUser(user.userId, user.roleId)">Promote to User</button>
+                                    <button *ngIf="selectedOptionModerator && userRole !== 'Moderator' && !selectedOptionModeratorStr" type="submit" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" (click)="promoteToModerator(user.userId, user.roleId)">Promote to Moderator</button>
+                                    <button *ngIf="selectedOptionAdmin && userRole !== 'Admin' && !selectedOptionAdminStr" type="submit" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" (click)="promoteToAdmin(user.userId, user.roleId)">Promote to Admin</button>
+                                    <br>
+                                </div>
+
                                 <div class="d-flex justify-content-center">
                                     <button type="submit" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" (click)="updateUser(username.value,phone.value, address.value, town.value)">Confirm</button>
                                 </div>
