@@ -56,13 +56,14 @@ export class ServiceblogService {
     return null;
   }
 
-  addPost(file: File, title: string, content: string, userId: string): Observable<HttpEvent<{}>> {
+  addPost(file: File, title: string, content: string, userId: string, categoryId: any): Observable<HttpEvent<{}>> {
     const formdata: FormData = new FormData();
 
     formdata.append('file', file);
     formdata.append('title', title);
     formdata.append('content', content);
     formdata.append('userId', userId);
+    formdata.append('categoryId', categoryId);
 
     const req = new HttpRequest('POST', 'http://localhost:6868/api/auth/posts/upload', formdata, {
       reportProgress: true,
@@ -232,5 +233,15 @@ export class ServiceblogService {
 
   deletePhoto(id: number): Observable<any> {
     return this.http.delete(`${this.commURL}gallery/${id}`, { responseType: 'text' });
+  }
+
+  getAllCategories(): Observable<any> {
+    return this.http.get<any>(this.commURL + 'findAllCategories');
+  }
+
+  addCategory(text: string): Observable<any> {
+    return this.http.post(AUTH_API + 'posts/createCategory', {
+      text
+    }, httpOptions);
   }
 }

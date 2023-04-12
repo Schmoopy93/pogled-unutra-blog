@@ -164,3 +164,22 @@ button:focus {
 body.modal-content {
     overflow: visible;
 }
+
+.category-input {
+    display: inline-block;
+    margin: 5px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    border: 1px solid #28a745;
+    color: #28a745;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    background-color: #fff;
+}
+
+.category-input:hover {
+    background-color: #28a745;
+    color: #fff;
+}

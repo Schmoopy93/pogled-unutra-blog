@@ -70,3 +70,14 @@
         top: 15px;
     }
 }
+
+.btn.btn-outline-success {
+    background-color: transparent;
+    color: #28a745;
+    border-color: #28a745;
+}
+
+.btn.btn-outline-success:hover {
+    background-color: #28a745;
+    color: #fff;
+}

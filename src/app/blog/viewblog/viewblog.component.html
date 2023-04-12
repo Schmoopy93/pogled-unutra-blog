@@ -25,11 +25,18 @@
     <button class="btn btn-outline-success btn-sm dropdown-toggle" style="margin-right: 10px;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
       Sort By Date
     </button>
-    <button type="button" title="Search" class="btn btn-outline-success btn-sm dropdown-toggle" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-search"></i></button>
+    <button type="button" title="Search" class="btn btn-outline-success btn-sm dropdown-toggle" style="margin-right: 10px;" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-search"></i></button>
     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
         <a class="dropdown-item" (click)="setPostsAsc()">Asc <i class="fas fa-arrow-up"></i></a>
         <a class="dropdown-item" (click)="setPostsDesc()">Desc <i class="fas fa-arrow-down"></i></a>
     </div>
+    <select class="btn btn-outline-success btn-sm dropdown-toggle" #mySelect (change)="onOptionSelect(mySelect.value)">
+        <option value="" selected disabled>Filter By Category</option>
+        <option *ngFor="let category of categories" [value]="category.id"><strong>{{category.text}}</strong></option>
+        <br>
+        <hr>
+        <option style="color: rgb(245, 108, 108);">Reset Filter</option>
+    </select>
 </div>
 <ng-container>
     <div>
@@ -45,13 +52,14 @@
                                 <p class="card-text" style=" white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{post.content}}</p>
                                 <br>
                                 <a routerLink="/blogDetail/{{ post.id }}" class="btn btn-outline-success btn-sm "> Read More </a>
-                                <!-- <a href=" " class="btn btn-outline-danger btn-sm " style="margin-left: 10px;"><i class="far fa-heart "></i></a> -->
                                 <a *ngIf="currentUser.roles== 'ROLE_ADMIN' || currentUser.roles == 'ROLE_MODERATOR'" routerLink="/edit-post/{{ post.id }}" class="btn btn-outline-success btn-sm" style="float: right; margin-left: 10px;"> Edit </a>
                                 <a class="btn btn-outline-danger btn-sm " *ngIf="currentUser.roles== 'ROLE_ADMIN'" style="float: right;">
                                     <span mwlConfirmationPopover [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deletePost(post.id)" (cancel)="cancelClicked = true"><i class="fa fa-trash" aria-hidden="true"></i></span>
                                 </a>
                                 <hr>
-                                <p class="card-text"> Published: {{post.createdAt | date: "MMMM d, y"}}</p>
+                                <p class="card-text" style="text-align:center;color:#28a745;font-weight: bold;">Category: {{post.category.text}}</p>
+                                <hr>
+                                <p class="card-text" style="text-align:center;font-family: italic;"> Published: {{post.createdAt | date: "MMMM d, y"}}</p>
                             </div>
                         </div>
                     </div>
