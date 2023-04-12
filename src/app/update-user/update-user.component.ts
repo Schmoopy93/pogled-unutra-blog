@@ -19,9 +19,9 @@ export class UpdateUserComponent implements OnInit {
   adminId:number;
   currentUser:any;
   userRole: any;
-  selectedOptionUser: number;
-  selectedOptionModerator: number;
-  selectedOptionAdmin: number;
+  selectedOptionUser = false;
+  selectedOptionModerator= false;
+  selectedOptionAdmin= false;
   selectedOptionUserStr: string;
   selectedOptionModeratorStr: string;
   selectedOptionAdminStr: string;
@@ -82,7 +82,7 @@ export class UpdateUserComponent implements OnInit {
     userId = this.route.snapshot.params.id;
     this.route.params.subscribe(params => {
       this.authService.promoteToAdmin(roleId, userId);
-      this.router.navigate(['/all-users']).then(() => window.location.reload());
+      this.router.navigate(['/all-users']).then(() => this.ngOnInit());
     });
   }
 
@@ -90,7 +90,7 @@ export class UpdateUserComponent implements OnInit {
     userId = this.route.snapshot.params.id;
     this.route.params.subscribe(params => {
       this.authService.promoteToModerator(roleId, userId);
-      this.router.navigate(['/all-users']).then(() => window.location.reload());
+      this.router.navigate(['/all-users']).then(() => this.ngOnInit());
     });
   }
 
@@ -98,8 +98,26 @@ export class UpdateUserComponent implements OnInit {
     userId = this.route.snapshot.params.id;
     this.route.params.subscribe(params => {
       this.authService.demoteToUser(roleId, userId);
-      this.router.navigate(['/all-users']).then(() => window.location.reload());
+      this.router.navigate(['/all-users']).then(() => this.ngOnInit());
     });
+  }
+
+  onCheckboxChange(event) {
+    const checkbox = event.target;
+    const checked = checkbox.checked;
+    const name = checkbox.name;
+    if (checked) {
+      if (name === 'option1') {
+        this.selectedOptionModerator = false;
+        this.selectedOptionAdmin = false;
+      } else if (name === 'option2') {
+        this.selectedOptionUser = false;
+        this.selectedOptionAdmin = false;
+      } else if (name === 'option3') {
+        this.selectedOptionUser = false;
+        this.selectedOptionModerator = false;
+      }
+    }
   }
 
 }

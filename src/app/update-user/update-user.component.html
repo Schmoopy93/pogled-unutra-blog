@@ -1,4 +1,4 @@
-<section class="vh-100 bg-image" style="padding-top: 100px;">
+<section class="vh-100 bg-image" style="margin-top: 20px; margin-bottom: 150px;">
     <div class="mask d-flex align-items-center h-100">
         <div class="container h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
@@ -21,15 +21,15 @@
                                 </div>
                                 <div class="checkboxes form-outline mb-4" *ngIf="currentUser != adminId">
                                     <label class="chckbox" *ngIf="!selectedOptionUserStr">
-                                      <input type="checkbox" [(ngModel)]="selectedOptionUser" name="option1">
+                                      <input type="checkbox" [(ngModel)]="selectedOptionUser" (change)="onCheckboxChange($event)" name="option1">
                                       Promote to User
                                     </label>
                                     <label class="chckbox" *ngIf="!selectedOptionModeratorStr">
-                                      <input type="checkbox" [(ngModel)]="selectedOptionModerator" name="option2">
+                                      <input type="checkbox" [(ngModel)]="selectedOptionModerator" (change)="onCheckboxChange($event)" name="option2">
                                       Promote to Moderator
                                     </label>
                                     <label class="chckbox" *ngIf="!selectedOptionAdminStr">
-                                      <input type="checkbox" [(ngModel)]="selectedOptionAdmin" name="option3">
+                                      <input type="checkbox" [(ngModel)]="selectedOptionAdmin" (change)="onCheckboxChange($event)" name="option3">
                                       Promote to Admin
                                     </label>
                                 </div>
