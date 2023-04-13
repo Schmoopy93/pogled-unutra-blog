@@ -81,3 +81,12 @@
     background-color: #28a745;
     color: #fff;
 }
+
+.tag-text {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    background-color: #bebebe;
+    color: white;
+    font-weight: bold;
+    border-radius: 0.5rem;
+}

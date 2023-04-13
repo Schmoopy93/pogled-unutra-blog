@@ -57,9 +57,9 @@
                                     <span mwlConfirmationPopover [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deletePost(post.id)" (cancel)="cancelClicked = true"><i class="fa fa-trash" aria-hidden="true"></i></span>
                                 </a>
                                 <hr>
-                                <p class="card-text" style="text-align:center;color:#28a745;font-weight: bold;">Category: {{post.category.text}}</p>
+                                <p class="card-text" style="text-align:center;font-family: italic; font-weight: bold;"> Published: {{post.createdAt | date: "MMMM d, y"}}</p>
                                 <hr>
-                                <p class="card-text" style="text-align:center;font-family: italic;"> Published: {{post.createdAt | date: "MMMM d, y"}}</p>
+                                <p class="card-text tag-text">Category: {{post.category.text}}</p>
                             </div>
                         </div>
                     </div>
