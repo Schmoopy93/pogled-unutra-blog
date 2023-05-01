@@ -98,9 +98,9 @@ h4 {
 }
 
 .table-bordered:hover tbody tr {
-    background-color: #eee;
+    background-color: #e6f5e6;
 }
 
 .table-bordered:hover tbody tr:hover {
-    background-color: #ddd;
+    background-color: #c2f0c2;
 }
