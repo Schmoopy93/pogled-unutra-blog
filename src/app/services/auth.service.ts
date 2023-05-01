@@ -132,6 +132,15 @@ export class AuthService {
     }, httpOptions);
   }
 
+  sendEmailContractForm(name: any, email: any, message: any): Observable<any> {
+    return this.http.post(AUTH_API + 'send-email', {
+      name,
+      email,
+      message
+    }, httpOptions);
+  }
+
+
 
   getUserByToken(confirmationCode: any){
     return this.http.get(`${AUTH_API}confirm/` + confirmationCode);
