@@ -23,13 +23,14 @@ export class AuthService {
       password
     }, httpOptions);
   }
-  register(file: File, username: string, email: string, password: string, firstname: string, lastname: string): Observable<HttpEvent<{}>> {
+  register(file: File, username: string, email: string, password: string, repeatPassword: string, firstname: string, lastname: string): Observable<HttpEvent<{}>> {
     const formdata: FormData = new FormData();
 
     formdata.append('file', file);
     formdata.append('username', username);
     formdata.append('email', email);
     formdata.append('password', password);
+    formdata.append('repeatPassword', repeatPassword);
     formdata.append('firstname', firstname);
     formdata.append('lastname', lastname);
 
@@ -125,9 +126,10 @@ export class AuthService {
     return this.http.get(`${AUTH_API}acceptFriendship/` + id);
   }
 
-  setNewPassword(password: any, token: string): Observable<any> {
+  setNewPassword(password: any, repeatPassword: any, token: string): Observable<any> {
     return this.http.post(USER_API + '/new-password', {
       password,
+      repeatPassword,
       token
     }, httpOptions);
   }

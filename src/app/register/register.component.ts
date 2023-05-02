@@ -1,5 +1,5 @@
 import { HttpEventType, HttpResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { base64ToFile, ImageCroppedEvent } from 'ngx-image-cropper';
@@ -15,16 +15,20 @@ export class RegisterComponent implements OnInit {
     username: null,
     email: null,
     password: null,
+    repeatPassword: null,
     firstname: null,
     lastname: null
   };
   isSuccessful = false;
   isSignUpFailed = false;
-  message = '';
+  errorMessage = '';
   progress: { percentage: number } = { percentage: 0 };
   imageChangedEvent: any = '';
   croppedImage: any = '';
   fileToReturn: any;
+  hasImage: boolean = false;
+  @ViewChild('fileInput') fileInput: ElementRef;
+
 
   constructor(private authService: AuthService, private router: Router) { }
 
@@ -38,6 +42,7 @@ export class RegisterComponent implements OnInit {
 
   imageCropped(event: ImageCroppedEvent) {
     this.croppedImage = event.base64;
+    this.hasImage = true;
     let File = base64ToFile(this.croppedImage);
     this.fileToReturn = this.convertBase64ToFile(event.base64, this.imageChangedEvent.target.files[0].name)
     
@@ -80,24 +85,29 @@ export class RegisterComponent implements OnInit {
   
   onSubmit(): void {
     this.progress.percentage = 0;
-      const { username, email, password, firstname, lastname } = this.form;
-      if (this.imageChangedEvent) {
-        this.authService.register(this.croppedImage, username, email, password, firstname, lastname).subscribe(
-          (event: any) => {
-            if (event.type === HttpEventType.UploadProgress) {
-              this.progress.percentage = Math.round(100 * event.loaded / event.total);
-            } else if (event instanceof HttpResponse) {
-              this.message = event.body.message;
-              this.isSuccessful = true;
-              this.isSignUpFailed = false;
-            }
-          },
-          (err: any) => {
-            this.message = err.error.message;
-            this.isSignUpFailed = true;
-            this.croppedImage = undefined;
-          });
+  
+    const { username, email, password, repeatPassword, firstname, lastname } = this.form;
+  
+    if (this.imageChangedEvent) {
+      this.authService.register(this.croppedImage, username, email, password, repeatPassword, firstname, lastname).subscribe(
+        (response: any) => {
+          if (response && response.type === HttpEventType.UploadProgress) {
+            this.progress.percentage = Math.round(100 * response.loaded / response.total);
+          } else if (response instanceof HttpResponse) {
+            this.errorMessage = response.body.message;
+            this.isSuccessful = true;
+            this.isSignUpFailed = false;
+          }
+        },
+        (err: any) => {
+          this.errorMessage = err.error.error;
+          this.isSignUpFailed = true;
+          this.croppedImage = undefined;
+          this.fileInput.nativeElement.value = ''; 
+        }
+      );
       this.imageChangedEvent = undefined;
     }
   }
+  
 }

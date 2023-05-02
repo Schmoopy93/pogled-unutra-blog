@@ -13,6 +13,7 @@ export class ForgotPasswordComponent implements OnInit {
     email: "",
   };
   errorMessage = '';
+  isSuccessful = false;
   constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
@@ -21,13 +22,15 @@ export class ForgotPasswordComponent implements OnInit {
   onSubmit(): void {
     const { email } = this.form;
     this.authService.forgotPassword(email).subscribe(
-      data => {},
+      data => {
+        this.isSuccessful = true;
+      },
       err => {
         this.errorMessage = err.error.message;
        
       }
     );
-    this.router.navigateByUrl('/', { skipLocationChange: false })
+    this.isSuccessful = true;
   }
 
 }
