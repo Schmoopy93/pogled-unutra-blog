@@ -80,11 +80,12 @@ export class ServiceblogService {
       .get(`${this.postsURL}/${id}`);
   }
 
-  updatePost(title, content, id) {
+  updatePost(title, content, categoryId, id) {
 
     const obj = {
       title: title,
       content: content,
+      categoryId: categoryId,
     };
     this
       .http

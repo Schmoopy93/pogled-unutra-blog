@@ -6,7 +6,7 @@
                     <div class="card" style="border-radius: 15px; border: 1px solid rgb(199, 199, 199);">
                         <div class="card-body p-5">
                             <h2 class="text-uppercase text-center mb-5">Edit a post</h2>
-                            <form [formGroup]="angForm" novalidate class="signup-form" (ngSubmit)="updatePost(title.value, content.value)">
+                            <form [formGroup]="angForm" novalidate class="signup-form" (ngSubmit)="updatePost(title.value, content.value, categoryId.value)">
                                 <div class="form-outline mb-4" data-validate="Title is required">
                                     <input type="text" class="form-control" formControlName="title" #title [(ngModel)]="post.title" />
                                 </div>
@@ -23,6 +23,10 @@
                                         Text is required.
                                     </div>
                                 </div>
+                                <select class="custom-option form-outline mb-4t" style="width: 100%;" #mySelect (change)="onOptionSelect(mySelect.value)">
+                                    <option value="" selected disabled>Selected: {{post.category?.text}}</option>
+                                    <option *ngFor="let category of categories" [value]="category.id">{{category.text}}</option>
+                                </select>
                                 <div class="d-flex justify-content-center">
                                     <input type="submit" value="Submit" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" style="width: 50%;margin: auto; padding: 10px;" [disabled]="angForm.invalid">
                                 </div>

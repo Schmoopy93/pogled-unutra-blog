@@ -15,12 +15,24 @@ export class EditblogComponent implements OnInit {
   form: any = {
     title: null,
     content: null,
-
   };
+  categories: any;
+  errorMessage = '';
+  selectedOption: string;
+  categoryId: any;
 
-  constructor(private route: ActivatedRoute, private router: Router, private bs: ServiceblogService, private fb: FormBuilder) {
+  constructor(private route: ActivatedRoute, private router: Router, private bs: ServiceblogService, private fb: FormBuilder, private blogService: ServiceblogService) {
       this.createForm();
  }
+
+ ngOnInit() {
+  this.route.params.subscribe(params => {
+      this.bs.editPost(params.id).subscribe(res => {
+        this.post = res;
+    });
+  });
+  this.getCategories();
+}
 
   createForm() {
     this.angForm = this.fb.group({
@@ -29,20 +41,38 @@ export class EditblogComponent implements OnInit {
       });
     }
 
-  updatePost(title, content) {
+  getCategories(){
+    this.blogService.getAllCategories().subscribe(
+      response => {
+        this.categories = response;
+      },
+      error => {
+        console.log(error);
+      });
+  }
+ 
+  onOptionSelect(selectedValue: string) {
+    this.categoryId = selectedValue;
+    console.log(this.categoryId);
+  }
+
+  refreshPage() {
+    const currentUrl = this.router.url;
+    this.router.navigateByUrl('/', { skipLocationChange: true })
+      .then(() => this.router.navigate([currentUrl]));
+  }
+
+  updatePost(title, content, categoryId) {
     this.route.params.subscribe(params => {
-      this.bs.updatePost(title, content, params.id);
+      console.log(categoryId, 'params')
+      this.bs.updatePost(title, content, this.categoryId, params.id);
       this.router.navigate(['/recent-blogs'])
       .then(() => {
-        window.location.reload();
+        this.refreshPage();
       });
     });
   }
-  ngOnInit() {
-    this.route.params.subscribe(params => {
-        this.bs.editPost(params.id).subscribe(res => {
-          this.post = res;
-      });
-    });
-  }
+
+
+
 }
