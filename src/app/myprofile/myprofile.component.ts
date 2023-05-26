@@ -10,6 +10,7 @@ import { PhotoGallery } from '../models/photogallery';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { Followers } from '../models/followers';
 import { NgForm } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-myprofile',
@@ -18,7 +19,6 @@ import { NgForm } from '@angular/forms';
 })
 
 export class MyprofileComponent implements OnInit {
-  @ViewChild('galleryForm') public galleryForm:NgForm;
   form: any = {
     text: null,
   }
@@ -88,7 +88,7 @@ export class MyprofileComponent implements OnInit {
   pageSizeFriends = 6;
   pageSizesFriends = [6, 12, 18];
   
-  constructor(private router: Router, private route: ActivatedRoute, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService, private blogService: ServiceblogService) {}
+  constructor(private router: Router, private route: ActivatedRoute, private modalService: NgbModal, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService, private blogService: ServiceblogService) {}
 
   ngOnInit(): void {
     this.currentUser = this.token.getUser();
@@ -315,6 +315,14 @@ export class MyprofileComponent implements OnInit {
     return params;
   }
 
+  @ViewChild('timelineForm', { static: false }) timelineForm: NgForm;
+  resetModalFormTimeline() {
+    if (this.timelineForm) {
+      this.timelineForm.resetForm();
+    }
+  }
+
+
   onSubmit(): void {
     const { text } = this.form;
     this.blogService.addTimeline(text, this.currentUser.id).subscribe(
@@ -323,9 +331,12 @@ export class MyprofileComponent implements OnInit {
         this.errorMessage = err.error.message;
       }
     );
-    window.location.reload();
+    this.resetModalFormTimeline();
+    this.ngOnInit();
+ 
 
   }
+
 
   deleteTimelineById(id) {
     this.blogService.deleteTimeline(id).subscribe(res => {
@@ -402,78 +413,26 @@ export class MyprofileComponent implements OnInit {
       });
   }
 
-  // fileChangeEvent(event: any): void {
-  //   this.imageChangedEvent = event;
-  // }
-
-  // imageCropped(event: ImageCroppedEvent) {
-  //   this.croppedImage = event.base64;
-  //   let File = base64ToFile(this.croppedImage);
-  //   this.fileToReturn = this.convertBase64ToFile(event.base64, this.imageChangedEvent.target.files[0].name)
-    
-  //   var reader = new FileReader();
-  //   reader.onload = (event: any) => {
-  //     this.croppedImage = this.fileToReturn;
-  //   };
-
-  //   reader.onerror = (event: any) => {
-  //     console.log("File could not be read: " + event.target.error.code);
-  //   };
-
-  //   reader.readAsDataURL(this.fileToReturn);
-
-  //   return this.fileToReturn;
-  // }
-
-  // imageLoaded() {
-  // }
-
-  // cropperReady() {
-  // }
-
-  // loadImageFailed() {
-  // }
-
-  // convertBase64ToFile(data, filename) {
-  //   const arr = data.split(',');
-  //   const mime = arr[0].match(/:(.*?);/)[1];
-  //   const bstr = atob(arr[1]);
-  //   let n = bstr.length;
-  //   let u8arr = new Uint8Array(n);
-
-  //   while (n--) {
-  //     u8arr[n] = bstr.charCodeAt(n);
-  //   }
-
-  //   return new File([u8arr], filename, { type: mime });
-  // }
-
-    
-  // addGallery(): void {
-  //   this.progress.percentage = 0;
-  //   const { title } = this.formGallery;
-  //   const userId = JSON.parse(sessionStorage.getItem('auth-user')).id;
-  //     if (this.imageChangedEvent) {
-  //       this.blogService.addGallery(this.croppedImage, title, userId).subscribe(
-  //         (event: any) => {
-  //           if (event.type === HttpEventType.UploadProgress) {
-  //             this.progress.percentage = Math.round(100 * event.loaded / event.total);
-  //           } else if (event instanceof HttpResponse) {
-  //             this.errMsg = event.body.message;
-  //             this.router.navigate(['/my-profile'], { relativeTo: this.route }).then(()=> this.ngOnInit());
-  //           }
-  //         },
-  //         (err: any) => {
-  //           this.errMsg = err.error.message;
-  //           this.croppedImage = undefined;
-  //         });
-  //     this.imageChangedEvent = undefined;
-  //   }
-  // }
-
   selectFile(event) {
     this.selectedFiles = event.target.files;
   }
+
+  // addGallery() {
+  //   this.progress.percentage = 0;
+  //   const { title } = this.formGallery;
+  //   const userId = JSON.parse(sessionStorage.getItem('auth-user')).id;
+  //   this.currentFileUpload = this.selectedFiles.item(0);
+  //   this.blogService.addGallery(this.currentFileUpload, title, userId).subscribe(event => {
+  //     if (event.type === HttpEventType.UploadProgress) {
+  //       this.progress.percentage = Math.round(100 * event.loaded / event.total);
+  //     } else if (event instanceof HttpResponse) {
+  //       this.ngOnInit();
+  //       //this.router.navigate(['/my-profile'], { relativeTo: this.route }).then(()=> this.ngOnInit());
+        
+  //     }
+  //   });
+  //   this.selectedFiles = undefined;
+  // }
 
   addGallery() {
     this.progress.percentage = 0;
@@ -484,13 +443,22 @@ export class MyprofileComponent implements OnInit {
       if (event.type === HttpEventType.UploadProgress) {
         this.progress.percentage = Math.round(100 * event.loaded / event.total);
       } else if (event instanceof HttpResponse) {
-        this.router.navigate(['/my-profile'], { relativeTo: this.route }).then(()=> this.ngOnInit());
-        
+        this.ngOnInit();
+        this.resetModalFormGallery();
+        this.fileInput.nativeElement.value = ''; 
       }
     });
     this.selectedFiles = undefined;
-    
   }
+
+  @ViewChild('fileInput') fileInput: ElementRef;
+  @ViewChild('galleryForm', { static: false }) galleryForm: NgForm;
+  resetModalFormGallery() {
+    if (this.galleryForm) {
+      this.galleryForm.resetForm();
+    }
+  }
+  
 
   deletePhoto(id) {
     this.blogService.deletePhoto(id).subscribe(res => {

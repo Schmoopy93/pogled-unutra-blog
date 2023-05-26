@@ -4,6 +4,8 @@ import { User } from '../models/user';
 import { AuthService } from '../services/auth.service';
 import { TokenStorageService } from '../services/token-storage.service';
 import {jsPDF} from 'jspdf';
+import { HttpClient, HttpEventType } from '@angular/common/http';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-users-list',
@@ -30,7 +32,8 @@ export class UsersListComponent implements OnInit {
   currentUser_id: any;
   res: any;
   roles:any;
-  constructor(private authService: AuthService, private token: TokenStorageService , private route: ActivatedRoute, private router: Router) { }
+  exportPdf: any;
+  constructor(private authService: AuthService, private token: TokenStorageService , private route: ActivatedRoute, private router: Router, private http: HttpClient) { }
 
   ngOnInit(): void {
     this.retrieveUsers();
@@ -38,7 +41,7 @@ export class UsersListComponent implements OnInit {
     this.currentUser_id = this.token.getUser().id;
   }
 
- 
+
   public onExport() {
     const doc = new jsPDF("l", "pt", "a3");
     const source = document.getElementById("content");
@@ -50,6 +53,21 @@ export class UsersListComponent implements OnInit {
     });
   }
 
+  generatePDF() {
+    const url = 'http://localhost:6868/generate-pdf';
+    const req = this.http.get(url, { responseType: 'arraybuffer', reportProgress: true, observe: 'events' });
+
+    req.subscribe((event) => {
+      if (event.type === HttpEventType.DownloadProgress) {
+        console.log(`Downloaded ${event.loaded} bytes`);
+      } else if (event.type === HttpEventType.Response) {
+        const blob = new Blob([event.body], { type: 'application/pdf' });
+        saveAs(blob, 'user-list.pdf');
+      }
+    });
+  }
+  
+  
   retrieveRoles(): void {
     this.authService.getRoles().subscribe(
       data => {

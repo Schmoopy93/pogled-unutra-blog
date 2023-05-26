@@ -115,7 +115,7 @@
         </button>
             </div>
             <div class="modal-body">
-                <form action="#" class="commenting-form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm">
+                <form action="#" class="commenting-form" (ngSubmit)="timelineForm.form.valid && onSubmit()" #timelineForm="ngForm">
                     <div class="row">
                         <div class="form-group col-md-12">
                             <textarea name="usercomment" id="usercomment" placeholder="Add to timeline" class="form-control" name="text" [(ngModel)]="form.text" #content="ngModel"></textarea>
@@ -124,7 +124,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-outline-success btn-sm " (click)="onSubmit()">Post</button>
+                <button type="submit" class="btn btn-outline-success btn-sm " (click)="onSubmit()" data-dismiss="modal">Post</button>
                 <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
             </div>
         </div>
@@ -160,7 +160,6 @@
         </div>
     </div>
 </div>
-
 <div>
     <div>
         <div class="modal fade" id="exampleModalLabelTimelinePhotos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelTimelinePhotos" aria-hidden="true">
@@ -172,26 +171,22 @@
                     </div>
                     <div class="modal-body">
                         <div class="modal-body">
-                            <form action="#" class="commenting-form" (ngSubmit)="f.form.valid && addGallery()" #f="ngForm" #galleryForm="ngForm">
+                            <form action="#" class="commenting-form" (ngSubmit)="galleryForm.form.valid && addGallery()" #galleryForm="ngForm">
                                 <div class="form-group">
-                                    <label for="inputEmail1" class="label col-sm-3 col-form-label">Content</label>
+                                    <label for="content" class="label col-sm-3 col-form-label">Content</label>
                                     <div>
-                                        <input class="form-control" type="text" nbInput fullWidth id="title" placeholder="Title" [(ngModel)]="formGallery.title" [ngModelOptions]="{standalone: true}" required>
+                                        <input name="titlePhoto" id="titlePhoto" placeholder="Title" class="form-control" name="text" [(ngModel)]="formGallery.title" #title="ngModel" />
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="file" class="form-control" id="customFile" (change)="selectFile($event)" style="height: auto;" />
+                                    <input type="file" class="form-control" id="customFile" (change)="selectFile($event)" #fileInput style="height: auto;" />
                                     <label class="form-label" for="form3Example3cg">Gallery photo</label>
                                 </div>
-                                <!-- <div class="col-md-8" style="margin: auto;">
-                                    <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="4 / 4" [resizeToWidth]="256" format="png" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()" (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()">
-                                    </image-cropper>
-                                </div> -->
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <button #closeModal type="submit" class="btn btn-outline-success btn-sm " data-dismiss="modal" (click)="addGallery();">Upload</button>
-                            <button #closeModal type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-outline-success btn-sm" (click)="addGallery();" data-dismiss="modal">Upload</button>
+                            <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
 
                         </div>
                     </div>
