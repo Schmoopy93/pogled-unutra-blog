@@ -803,3 +803,36 @@ select.form-control:not([size]):not([multiple]) {
 .shadow-background:hover {
     box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.7);
 }
+
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+.cardFollowers {
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+.cardFollowers:hover {
+    transform: translateY(-0.25rem);
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
+}
+
+.cardFollowers::after {
+    content: "";
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    right: 0.5rem;
+    bottom: 0.5rem;
+    z-index: -1;
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.cardFollowers:hover::after {
+    opacity: 1;
+}

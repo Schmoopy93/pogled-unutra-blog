@@ -222,6 +222,20 @@ export class ServiceblogService {
     return this.http.request(req);
   }
 
+  changeProfilePicture(file: File, userId: string): Observable<HttpEvent<{}>> {
+    const formdata: FormData = new FormData();
+
+    formdata.append('file', file);
+    formdata.append('userId', userId);
+
+    const req = new HttpRequest('PUT', 'http://localhost:4000/api/auth/changeProfilePicture/upload', formdata, {
+      reportProgress: true,
+      responseType: 'text',
+    });
+
+    return this.http.request(req);
+  }
+
   getAllGallery(params: any): Observable<any> {
     return this.http.get<any>(this.commURL + 'gallery', { params });
   }

@@ -121,12 +121,6 @@
                                     <button *ngIf="!followRequest && requestedFollowing == 1" class="btn btn-outline-success btn-sm" style="margin-right:3px;">Requested</button>
                                     <button *ngIf="followRequest" class="btn btn-outline-success btn-sm" style="margin-right:3px;" (click)="unfollow(resId)">Unfollow {{user?.firstname}} {{user?.lastname}}</button>
                                     <button *ngIf="followRequest" class="btn btn-outline-success btn-sm" style="margin-right:3px;" data-toggle="modal" data-target="#exampleModal">About {{ user?.firstname }} {{ user?.lastname }}</button>
-                                    <button *ngIf="followRequest" class="btn btn-outline-success btn-sm dropdown-toggle" style="margin-right: 10px;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">          Sort Timelines By Date
-                                </button>
-                                </div>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" (click)="compareAlphabeticallyAsc()">Asc <i class="fas fa-arrow-up"></i></a>
-                                    <a class="dropdown-item" (click)="compareAlphabeticallyDesc()">Desc <i class="fas fa-arrow-down"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -142,6 +136,15 @@
                         <div id="tab1" class="tab-slider--body" *ngSwitchCase="'tab1'">
                             <section>
                                 <div class="container my-5 py-5">
+                                    <div class="center">
+                                        <button class="btn btn-outline-success btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Sort Timelines By Date
+                                          </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" (click)="compareAlphabeticallyAsc()">Asc <i class="fas fa-arrow-up"></i></a>
+                                            <a class="dropdown-item" (click)="compareAlphabeticallyDesc()">Desc <i class="fas fa-arrow-down"></i></a>
+                                        </div>
+                                    </div>
                                     <hr>
                                     <h3 style="text-align: center; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif">{{ user?.firstname }}'s TIMELINE</h3>
                                     <div class="row d-flex justify-content-center">
@@ -248,7 +251,7 @@
                                 <div class="row">
                                     <ng-container *ngFor="let follower of followers | search:searchText | paginate : {itemsPerPage: pageSizeFriends,currentPage: pageFriends,totalItems: countFriends}; let i = index" [class.active]="i == currentIndex">
                                         <div class="col-xl-6 col-lg-7 col-md-12" *ngIf="follower.status === 'Following'">
-                                            <div class="card profile-header1" style="border-radius: 15px; border: 1px solid rgb(199, 199, 199);">
+                                            <div class="card profile-header1 cardFollowers" style="border-radius: 15px; border: 1px solid rgb(199, 199, 199);">
                                                 <div class="body1">
                                                     <div class="row">
                                                         <div class="col-lg-4 col-md-4 col-12">

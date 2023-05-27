@@ -5,7 +5,7 @@ import { TokenStorageService } from '../services/token-storage.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ServiceblogService } from '../services/blog-service';
 import { User } from '../models/user';
-import { base64ToFile, ImageCroppedEvent } from 'ngx-image-cropper';
+import { base64ToFile, ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper';
 import { PhotoGallery } from '../models/photogallery';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { Followers } from '../models/followers';
@@ -87,6 +87,7 @@ export class MyprofileComponent implements OnInit {
   countFriends = 0;
   pageSizeFriends = 6;
   pageSizesFriends = [6, 12, 18];
+  hasImage: boolean = false;
   
   constructor(private router: Router, private route: ActivatedRoute, private modalService: NgbModal, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService, private blogService: ServiceblogService) {}
 
@@ -322,7 +323,6 @@ export class MyprofileComponent implements OnInit {
     }
   }
 
-
   onSubmit(): void {
     const { text } = this.form;
     this.blogService.addTimeline(text, this.currentUser.id).subscribe(
@@ -336,7 +336,6 @@ export class MyprofileComponent implements OnInit {
  
 
   }
-
 
   deleteTimelineById(id) {
     this.blogService.deleteTimeline(id).subscribe(res => {
@@ -434,6 +433,9 @@ export class MyprofileComponent implements OnInit {
   }
 
   @ViewChild('fileInput') fileInput: ElementRef;
+  @ViewChild('fileInputChangePhoto') fileInputChangePhoto: ElementRef;
+  @ViewChild('fileInputChangePhotoCropped')
+  fileInputChangePhotoCropped: ImageCropperComponent;
   @ViewChild('galleryForm', { static: false }) galleryForm: NgForm;
   resetModalFormGallery() {
     if (this.galleryForm) {
@@ -484,5 +486,87 @@ export class MyprofileComponent implements OnInit {
         console.log(error);
       });
 
+  }
+
+  fileChangeEvent(event: any): void {
+    this.imageChangedEvent = event;
+  }
+
+  imageCropped(event: ImageCroppedEvent) {
+    this.croppedImage = event.base64;
+    this.hasImage = true;
+    let File = base64ToFile(this.croppedImage);
+    this.fileToReturn = this.convertBase64ToFile(event.base64, this.imageChangedEvent.target.files[0].name)
+    
+    var reader = new FileReader();
+    reader.onload = (event: any) => {
+      this.croppedImage = this.fileToReturn;
+    };
+
+    reader.onerror = (event: any) => {
+      console.log("File could not be read: " + event.target.error.code);
+    };
+
+    reader.readAsDataURL(this.fileToReturn);
+
+    return this.fileToReturn;
+  }
+
+  imageLoaded() {
+  }
+
+  cropperReady() {
+  }
+
+  loadImageFailed() {
+  }
+
+  convertBase64ToFile(data, filename) {
+    const arr = data.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    let u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new File([u8arr], filename, { type: mime });
+  }
+
+  @ViewChild('hideModalChangePicture') private hideModalChangePicture: ElementRef;
+  public hideModalChangePictureFunc() {
+    this.hideModalChangePicture.nativeElement.click();
+  }
+
+  public clearFileInputChangePhoto(){
+    this.fileInputChangePhoto.nativeElement.value = ''; 
+    this.imageChangedEvent = null;
+  }
+
+  changeProfilePicture(): void {
+    this.progress.percentage = 0;
+    const userId = JSON.parse(sessionStorage.getItem('auth-user')).id;
+    if (this.imageChangedEvent) {
+      this.blogService.changeProfilePicture(this.croppedImage, userId).subscribe(
+        (response: any) => {
+          if (response && response.type === HttpEventType.UploadProgress) {
+            this.progress.percentage = Math.round(100 * response.loaded / response.total);
+          } else if (response instanceof HttpResponse) {
+            this.errorMessage = response.body.message;
+            this.hideModalChangePictureFunc();
+            this.fileInputChangePhoto.nativeElement.value = ''; 
+            this.ngOnInit();
+          }
+        },
+        (err: any) => {
+          this.errorMessage = err.error.error;
+          this.croppedImage = undefined;
+          this.fileInputChangePhoto.nativeElement.value = ''; 
+        }
+      );
+      this.imageChangedEvent = undefined;
+    }
   }
 }

@@ -75,6 +75,32 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="exampleModalChangeProfilePicture" tabindex="-1" role="dialog" aria-labelledby="exampleModalChangeProfilePicture" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalChangeProfilePicture">Change your profile photo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <form name="form" (ngSubmit)="f.form.valid && changeProfilePicture()" #f="ngForm" novalidate id="signup-form" class="signup-form">
+                    <div class="form-outline mb-4t">
+                        <input type="file" class="form-control" id="customFile" (change)="fileChangeEvent($event)" #fileInputChangePhoto style="height: auto;" />
+                    </div>
+                    <div class="col-md-8" style="margin: auto;">
+                        <image-cropper #fileInputChangePhotoCropped [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="4 / 4" [resizeToWidth]="256" format="png" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()" (cropperReady)="cropperReady()"
+                            (loadImageFailed)="loadImageFailed()">
+                        </image-cropper>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" value="Submit" class="btn btn-outline-success btn-sm">Submit</button>
+                        <button #hideModalChangePicture type="button" class="btn btn-danger btn-sm" data-dismiss="modal" (click)="clearFileInputChangePhoto();">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <div>
     <div>
         <div class="modal fade" id="exampleModalLabelTimelineLikes" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelTimelineLikes" aria-hidden="true">
@@ -226,6 +252,10 @@
                         <div class="profile-header-cover"></div>
                         <div class="profile-header-content">
                             <div class="profile-header-img">
+                                <span class="edit-button">
+                                    <button title="Change your profile photo" data-toggle="modal" data-target="#exampleModalChangeProfilePicture"><i class="fa fa-camera" aria-hidden="true"></i>
+                                    </button> 
+                                  </span>
                                 <img src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="">
                             </div>
                             <div class="profile-header-info">
@@ -373,7 +403,7 @@
                                 <div class="row">
                                     <ng-container *ngFor="let follower of followers | search:searchText | paginate : {itemsPerPage: pageSizeFriends,currentPage: pageFriends,totalItems: countFriends}; let i = index" [class.active]="i == currentIndex">
                                         <div class="col-xl-6 col-lg-7 col-md-12" *ngIf="follower.status === 'Following'">
-                                            <div class="card profile-header1" style="border-radius: 15px; border: 1px solid rgb(199, 199, 199);">
+                                            <div class="card profile-header1 cardFollowers" style="border-radius: 15px; border: 1px solid rgb(199, 199, 199);">
                                                 <div class="body1">
                                                     <div class="row">
                                                         <div class="col-lg-4 col-md-4 col-12">
