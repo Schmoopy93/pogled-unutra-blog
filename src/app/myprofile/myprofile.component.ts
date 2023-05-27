@@ -374,7 +374,6 @@ export class MyprofileComponent implements OnInit {
     });
   }
 
-
   acceptFriendShip(id) {
     this.authService.acceptFriendship(id).subscribe();
     window.location.reload();
@@ -416,23 +415,6 @@ export class MyprofileComponent implements OnInit {
   selectFile(event) {
     this.selectedFiles = event.target.files;
   }
-
-  // addGallery() {
-  //   this.progress.percentage = 0;
-  //   const { title } = this.formGallery;
-  //   const userId = JSON.parse(sessionStorage.getItem('auth-user')).id;
-  //   this.currentFileUpload = this.selectedFiles.item(0);
-  //   this.blogService.addGallery(this.currentFileUpload, title, userId).subscribe(event => {
-  //     if (event.type === HttpEventType.UploadProgress) {
-  //       this.progress.percentage = Math.round(100 * event.loaded / event.total);
-  //     } else if (event instanceof HttpResponse) {
-  //       this.ngOnInit();
-  //       //this.router.navigate(['/my-profile'], { relativeTo: this.route }).then(()=> this.ngOnInit());
-        
-  //     }
-  //   });
-  //   this.selectedFiles = undefined;
-  // }
 
   addGallery() {
     this.progress.percentage = 0;

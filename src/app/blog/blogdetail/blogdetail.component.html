@@ -23,7 +23,7 @@
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <button (click)="likePost();" class="dropdown-item" style="margin-top:10px; margin-right:3px;"><i class="far fa-thumbs-up "></i>Like</button>
-                                <button #closeModal style="margin-top:10px;" class="dropdown-item" data-toggle="modal" data-target="#exampleModalTimeline"><i class="far fa-user "></i>Who liked</button>
+                                <button #closeModal style="margin-top:10px;" class="dropdown-item" data-toggle="modal" data-target="#exampleModalLike"><i class="far fa-user "></i>Who liked</button>
                             </div>
                         </div>
                         <!-- <div class="dropdown" style="margin-top:10px;">
@@ -60,7 +60,7 @@
                         </header>
                         <ng-container *ngFor="let comment of comments | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveComment(comment, i)">
                             <div class="post-comments">
-                                <div class="comment">
+                                <div class="comment shadow-background">
                                     <div class="comment-header d-flex justify-content-between">
                                         <div class="user d-flex align-items-center">
                                             <div class="image" style="margin-left: 10px;"><img src="http://localhost:6868/uploads/userphoto/{{comment?.user.photoName}}" class="img-fluid rounded-circle"></div>
@@ -68,11 +68,12 @@
                                         </div>
                                     </div>
                                     <div class="comment-body">
-                                        <a title="Edit profile" *ngIf="currentUser === comment?.userId || replyUser.roles== 'ROLE_ADMIN'" style="margin-right: 10px;" class="btn btn-outline-secondary btn-sm" routerLink="/edit-comment/{{ comment.id }}"><i class="fas fa-edit"></i></a>
-                                        <a class="btn btn-outline-danger btn-sm " *ngIf="replyUser.roles== 'ROLE_ADMIN'">
+                                        <a title="Edit comment" *ngIf="currentUser === comment?.userId || replyUser.roles== 'ROLE_ADMIN'" style="margin-right: 10px;" class="btn btn-outline-warning btn-sm" routerLink="/edit-comment/{{ comment.id }}"><i class="fas fa-edit"></i></a>
+                                        <a title="Delete comment" class="btn btn-outline-danger btn-sm " *ngIf="replyUser.roles== 'ROLE_ADMIN'">
                                             <span mwlConfirmationPopover placement="left" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteComment(comment.id)" (cancel)="cancelClicked = true"><i class="fa fa-trash" aria-hidden="true"></i></span>
                                         </a>
-                                        <p style="margin-top:20px;">{{comment?.content}}</p>
+                                        <p style="margin-top: 20px; font-size: 16px; color: #e7a457; font-weight: bold; font-style: italic; font-family:cursive ">{{comment?.content}}</p>
+
                                     </div>
                                 </div>
                             </div>
@@ -87,7 +88,7 @@
                                 </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" class="commenting-form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" #commentForm="ngForm">
+                                        <form action="#" class="commenting-form" (ngSubmit)="commentForm.form.valid && onSubmit()" #commentForm="ngForm">
                                             <div class="row">
                                                 <div class="form-group col-md-12">
                                                     <textarea name="usercomment" id="usercomment" placeholder="Type your comment" class="form-control" name="content" [(ngModel)]="form.content" #content="ngModel"></textarea>
@@ -96,17 +97,17 @@
                                         </form>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="submit" class="btn btn-outline-success btn-sm " (click)="onSubmit(); hideModel()">Post</button>
-                                        <button #closeModal type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-outline-success btn-sm " (click)="onSubmit();">Post</button>
+                                        <button #hideModalComment type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="modal fade" id="exampleModalTimeline" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelTimeline" aria-hidden="true">
+                        <div class="modal fade" id="exampleModalLike" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLike" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabelTimeline">People who liked this post</h5>
+                                        <h5 class="modal-title" id="exampleModalLabelLike">People who liked this post</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                   <span aria-hidden="true">&times;</span>
                                 </button>

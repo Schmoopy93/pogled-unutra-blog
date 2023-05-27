@@ -9,6 +9,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { Likes } from 'src/app/models/likes';
 import Swal from 'sweetalert2';
 import { NgForm } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-blogdetail',
@@ -16,7 +17,6 @@ import { NgForm } from '@angular/forms';
   styleUrls: ['./blogdetail.component.css']
 })
 export class BlogdetailComponent implements OnInit  {
-  @ViewChild('commentForm') public commentForm:NgForm;
   form: any = {
     content: null,
   }
@@ -57,7 +57,7 @@ export class BlogdetailComponent implements OnInit  {
   data: string;
   currUser: any;
 
-  constructor(private blogService: ServiceblogService, private router: Router, private authService: AuthService, public sanitizer: DomSanitizer, private route: ActivatedRoute, private token: TokenStorageService) {}
+  constructor(private blogService: ServiceblogService, private modalService: NgbModal,  private router: Router, private authService: AuthService, public sanitizer: DomSanitizer, private route: ActivatedRoute, private token: TokenStorageService) {}
   
   ngOnInit(): void {
     this.currUser = this.token.getUser().id;
@@ -80,6 +80,11 @@ export class BlogdetailComponent implements OnInit  {
   @ViewChild('closeModal') private closeModal: ElementRef;
   public hideModel() {
     this.closeModal.nativeElement.click();
+  }
+
+  @ViewChild('hideModalComment') private hideModalComment: ElementRef;
+  public hideModalCommentFunc() {
+    this.hideModalComment.nativeElement.click();
   }
 
   getCurrentUser(){
@@ -174,9 +179,19 @@ export class BlogdetailComponent implements OnInit  {
         });
   }
 
+  @ViewChild('commentForm', { static: false }) commentForm: NgForm;
+  resetModalFormPostComment() {
+    if (this.commentForm) {
+      this.commentForm.resetForm();
+    }
+  }
 
   onSubmit(): void {
     const { content } = this.form;
+    if (content == undefined || content == null || content == "") {
+      Swal.fire("Comment is required!") 
+      return;
+    }
     this.blogService.addComment(content, this.currentPost.id, this.currentUser).subscribe(
       data => {
         console.log(data);
@@ -185,9 +200,9 @@ export class BlogdetailComponent implements OnInit  {
         this.errorMessage = err.error.message;
       }
     );
-    this.hideModel();
-    this.commentForm.form.reset();
-    location.reload();
+    this.hideModalCommentFunc();
+    this.resetModalFormPostComment();
+    this.ngOnInit();
   }
 
   // likePost(): void {
