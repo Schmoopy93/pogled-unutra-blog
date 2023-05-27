@@ -89,8 +89,8 @@
                             <div class="row" *ngIf="toDisplayGroup['id'] === like?.timelineId && like?.userId === like?.user.id">
                                 <div class="form-group col-md-12">
                                     <div>
-                                        <a *ngIf="currentUserLike !== like?.userId" routerLink="/view-profile/{{like?.userId}}" (click)="hideModel();" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:6868/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong></a>
-                                        <a *ngIf="currentUserLike === like?.userId" routerLink="/my-profile" (click)="hideModel();" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:6868/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong></a>
+                                        <a *ngIf="currentUserLike !== like?.userId" routerLink="/view-profile/{{like?.userId}}" (click)="hideModel();" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong></a>
+                                        <a *ngIf="currentUserLike === like?.userId" routerLink="/my-profile" (click)="hideModel();" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong></a>
                                         <hr>
                                     </div>
                                 </div>
@@ -226,7 +226,7 @@
                         <div class="profile-header-cover"></div>
                         <div class="profile-header-content">
                             <div class="profile-header-img">
-                                <img src="http://localhost:6868/uploads/userphoto/{{user?.photoName}}" alt="">
+                                <img src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="">
                             </div>
                             <div class="profile-header-info">
                                 <h4 class="m-t-10 m-b-5">{{ user?.firstname }} {{ user?.lastname }}</h4>
@@ -271,7 +271,7 @@
                                             <div class="card text-dark">
                                                 <div class="card-body p-4">
                                                     <div class="d-flex flex-start">
-                                                        <img class="rounded-circle shadow-1-strong me-3" src="http://localhost:6868/uploads/userphoto/{{user?.photoName}}" alt="avatar" width="60" height="60" />
+                                                        <img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="avatar" width="60" height="60" />
                                                         <div>
                                                             <h6 class="fw-bold mb-1"><strong>{{ user?.firstname }} {{ user?.lastname }}</strong></h6>
                                                             <div class="d-flex align-items-center mb-3">
@@ -334,7 +334,7 @@
                                         <div class="row">
                                             <div class="col-md-4 lg-4 animation" *ngFor="let p of photoGallery | paginate : {itemsPerPage: pageSizeGallery,currentPage: pageGallery,totalItems: countGallery}; let i = index" [class.active]="i == currentIndex" style="margin-top: 10px;">
                                                 <div class="card" style="border: 1px solid rgb(199, 199, 199); box-shadow: 5px 10px #888888;">
-                                                    <img src="http://localhost:6868/uploads/{{p?.name}}" alt=" " class="card-img-top ">
+                                                    <img src="http://localhost:4000/uploads/{{p?.name}}" alt=" " class="card-img-top ">
                                                     <div class="card-body ">
                                                         <h5 class="card-title "></h5>
                                                         <h4 class="card-text" style=" white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><strong>{{p.title}}</strong></h4>
@@ -377,7 +377,7 @@
                                                 <div class="body1">
                                                     <div class="row">
                                                         <div class="col-lg-4 col-md-4 col-12">
-                                                            <div class="profile-image1 float-md-right"> <img src="http://localhost:6868/uploads/userphoto/{{follower?.user.photoName}}" alt=""> </div>
+                                                            <div class="profile-image1 float-md-right"> <img src="http://localhost:4000/uploads/userphoto/{{follower?.user.photoName}}" alt=""> </div>
                                                         </div>
                                                         <div class="col-lg-8 col-md-8 col-12">
                                                             <h4 class="m-t-0 m-b-0"><strong>{{follower?.user.firstname}} {{follower?.user.lastname}}</strong></h4>

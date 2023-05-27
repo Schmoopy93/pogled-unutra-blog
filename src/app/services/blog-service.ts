@@ -5,7 +5,7 @@ import { Post } from '../models/post';
 import { TokenStorageService } from './token-storage.service';
 import { ActivatedRoute } from '@angular/router';
 
-const AUTH_API = 'http://localhost:6868/api/auth/';
+const AUTH_API = 'http://localhost:4000/api/auth/';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -20,9 +20,9 @@ export class ServiceblogService {
   commURL: string;
 
   constructor(private http: HttpClient, private token: TokenStorageService, private route: ActivatedRoute) {
-    this.postsURL = 'http://localhost:6868/api/auth/posts';
-    this.commentURL = 'http://localhost:6868/api/auth/showComments'
-    this.commURL = 'http://localhost:6868/api/auth/'
+    this.postsURL = 'http://localhost:4000/api/auth/posts';
+    this.commentURL = 'http://localhost:4000/api/auth/showComments'
+    this.commURL = 'http://localhost:4000/api/auth/'
    
   }
   getAllPosts(params: any): Observable<any> {
@@ -65,7 +65,7 @@ export class ServiceblogService {
     formdata.append('userId', userId);
     formdata.append('categoryId', categoryId);
 
-    const req = new HttpRequest('POST', 'http://localhost:6868/api/auth/posts/upload', formdata, {
+    const req = new HttpRequest('POST', 'http://localhost:4000/api/auth/posts/upload', formdata, {
       reportProgress: true,
       responseType: 'text',
     });
@@ -214,7 +214,7 @@ export class ServiceblogService {
     formdata.append('title', title);
     formdata.append('userId', userId);
 
-    const req = new HttpRequest('POST', 'http://localhost:6868/api/auth/photogallery/upload', formdata, {
+    const req = new HttpRequest('POST', 'http://localhost:4000/api/auth/photogallery/upload', formdata, {
       reportProgress: true,
       responseType: 'text',
     });

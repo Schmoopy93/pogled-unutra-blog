@@ -54,7 +54,7 @@ export class UsersListComponent implements OnInit {
   }
 
   generatePDF() {
-    const url = 'http://localhost:6868/generate-pdf';
+    const url = 'http://localhost:4000/generate-pdf';
     const req = this.http.get(url, { responseType: 'arraybuffer', reportProgress: true, observe: 'events' });
 
     req.subscribe((event) => {

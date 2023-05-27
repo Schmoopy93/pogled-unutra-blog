@@ -4,7 +4,7 @@
         <main class="post blog-post col-lg-8">
             <div class="container">
                 <div class="post-single">
-                    <div class="post-thumbnail"><img src="http://localhost:6868/uploads/{{currentPost?.name}}" alt="..." class="img-fluid"></div>
+                    <div class="post-thumbnail"><img src="http://localhost:4000/uploads/{{currentPost?.name}}" alt="..." class="img-fluid"></div>
                     <div class="post-details">
                         <div class="post-meta d-flex justify-content-between">
                             <div class="category"><a href="/recent-blogs">My Blog</a></div>
@@ -12,7 +12,7 @@
                         <h1 style="font-family: cursive;">{{ currentPost?.title }}</h1>
                         <div class="post-footer d-flex align-items-center flex-column flex-sm-row">
                             <a href="#" class="author d-flex align-items-center flex-wrap">
-                                <div class="avatar"><img src="http://localhost:6868/uploads/userphoto/{{currentPost?.user.photoName}}" alt="..." class="img-fluid"></div>
+                                <div class="avatar"><img src="http://localhost:4000/uploads/userphoto/{{currentPost?.user.photoName}}" alt="..." class="img-fluid"></div>
                                 <div class="title"><span>{{currentPost?.user.firstname}} {{currentPost?.user?.lastname}}</span></div>
                                 <div class="title"><i class="icon-clock"></i> {{ currentPost?.createdAt | date:"MMM d, y h:mm:ss a" }}</div>
                             </a>
@@ -63,7 +63,7 @@
                                 <div class="comment shadow-background">
                                     <div class="comment-header d-flex justify-content-between">
                                         <div class="user d-flex align-items-center">
-                                            <div class="image" style="margin-left: 10px;"><img src="http://localhost:6868/uploads/userphoto/{{comment?.user.photoName}}" class="img-fluid rounded-circle"></div>
+                                            <div class="image" style="margin-left: 10px;"><img src="http://localhost:4000/uploads/userphoto/{{comment?.user.photoName}}" class="img-fluid rounded-circle"></div>
                                             <div class="title"><strong>{{comment?.user.firstname}} {{comment?.user.lastname}}</strong><span class="date">{{comment?.createdAt | date:"MMM d, y h:mm:ss a" }}</span></div>
                                         </div>
                                     </div>
@@ -116,8 +116,8 @@
                                         <form action="#" class="commenting-form">
                                             <div class="row">
                                                 <div class="form-group col-md-12" *ngFor="let like of likes | paginate : {itemsPerPage: pageSizeLikes,currentPage: pageLikes,totalItems: countLikes, id: 'like'}; let i = index" [class.active]="i == currentIndexLikes" (click)="setActiveLikes(like, i)">
-                                                    <a *ngIf="currUser !== like?.userId" routerLink="/view-profile/{{like?.userId}}" (click)="hideModel();" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:6868/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong></a>
-                                                    <a *ngIf="currUser === like?.userId" routerLink="/my-profile" (click)="hideModel();" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:6868/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong></a>
+                                                    <a *ngIf="currUser !== like?.userId" routerLink="/view-profile/{{like?.userId}}" (click)="hideModel();" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong></a>
+                                                    <a *ngIf="currUser === like?.userId" routerLink="/my-profile" (click)="hideModel();" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong></a>
                                                     <hr>
                                                 </div>
                                             </div>
