@@ -268,7 +268,7 @@
                                     <h3 style="text-align: center; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif">MY TIMELINE</h3>
                                     <div class="row d-flex justify-content-center">
                                         <div class="col-md-12 col-lg-10" *ngFor="let timeline of timelines | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" style="margin-top: 10px;">
-                                            <div class="card text-dark">
+                                            <div class="card text-dark shadow-background">
                                                 <div class="card-body p-4">
                                                     <div class="d-flex flex-start">
                                                         <img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="avatar" width="60" height="60" />
@@ -286,13 +286,13 @@
                                                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                                         <button style="margin-top:10px;" (click)="toDisplayGroup = timeline" class="dropdown-item" data-toggle="modal" data-target="#exampleModalLabelTimelineLikes"><i class="far fa-user "></i>Who liked</button>
                                                                     </div>
-                                                                    <button type="button" title="Edit timeline" style="margin-left: 10px;" class="btn btn-outline-secondary btn-sm" routerLink="/edit-timeline/{{ timeline.id }}"><i class="fas fa-edit"></i></button>
+                                                                    <button type="button" title="Edit timeline" style="margin-left: 10px;" class="btn btn-outline-warning btn-sm" routerLink="/edit-timeline/{{ timeline.id }}"><i class="fas fa-edit"></i></button>
                                                                     <a class="btn btn-outline-danger btn-sm " title="Delete timeline" style="margin-left: 10px;" *ngIf="currentUser.id === user?.id" mwlConfirmationPopover placement="top-up" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteTimelineById(timeline.id)"
                                                                         (cancel)="cancelClicked = true"><i class="fas fa-trash ms-2"></i></a>
                                                                 </div>
 
                                                             </div>
-                                                            <p class="mb-0" style="padding-top: 20px;">
+                                                            <p class="mb-0" style="padding-top: 20px; font-size: 16px; color: #e7a457; font-weight: bold; font-style: italic; font-family:cursive">
                                                                 {{timeline?.text}}
                                                             </p>
                                                         </div>
