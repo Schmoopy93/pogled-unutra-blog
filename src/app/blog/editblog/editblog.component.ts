@@ -53,7 +53,6 @@ export class EditblogComponent implements OnInit {
  
   onOptionSelect(selectedValue: string) {
     this.categoryId = selectedValue;
-    console.log(this.categoryId);
   }
 
   refreshPage() {
@@ -64,7 +63,6 @@ export class EditblogComponent implements OnInit {
 
   updatePost(title, content, categoryId) {
     this.route.params.subscribe(params => {
-      console.log(categoryId, 'params')
       this.bs.updatePost(title, content, this.categoryId, params.id);
       this.router.navigate(['/recent-blogs'])
       .then(() => {

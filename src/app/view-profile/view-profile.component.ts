@@ -309,7 +309,8 @@ export class ViewProfileComponent implements OnInit{
         }
       }
     );
-    this.reloadCurrentRoute();
+    this.ngOnInit()
+    //this.reloadCurrentRoute();
   }
 
 
