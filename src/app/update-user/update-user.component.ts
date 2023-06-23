@@ -25,6 +25,11 @@ export class UpdateUserComponent implements OnInit {
   selectedOptionUserStr: string;
   selectedOptionModeratorStr: string;
   selectedOptionAdminStr: string;
+  firstname = '';
+  page = 1;
+  count = 0;
+  pageSize = 10;
+  pageSizes = [10, 20, 30];
   constructor(private authService: AuthService, private route: ActivatedRoute,
     private router: Router, private token: TokenStorageService) { }
 
@@ -49,6 +54,39 @@ export class UpdateUserComponent implements OnInit {
         });
       });
     });
+  }
+
+  getRequestParams(searchTitle: string, page: number, pageSize: number): any {
+    let params: any = {};
+
+    if (searchTitle) {
+      params[`firstname`] = searchTitle;
+    }
+
+    if (page) {
+      params[`page`] = page - 1;
+    }
+
+    if (pageSize) {
+      params[`size`] = pageSize;
+    }
+
+    return params;
+  }
+
+  retrieveUsers(): void {
+    const params = this.getRequestParams(this.firstname, this.page, this.pageSize);
+
+    this.authService.getAllUsers(params)
+    .subscribe(
+      response => {
+        const { users, totalItems } = response;
+        this.users = users;
+        this.count = totalItems;
+      },
+      error => {
+        console.log(error);
+      });
   }
 
   promoteToRole(userId: string, roleId: string): void {
@@ -82,7 +120,7 @@ export class UpdateUserComponent implements OnInit {
     userId = this.route.snapshot.params.id;
     this.route.params.subscribe(params => {
       this.authService.promoteToAdmin(roleId, userId);
-      this.router.navigate(['/all-users']).then(() => this.ngOnInit());
+      this.router.navigate(['/all-users']).then(() => this.retrieveUsers());
     });
   }
 
@@ -90,7 +128,7 @@ export class UpdateUserComponent implements OnInit {
     userId = this.route.snapshot.params.id;
     this.route.params.subscribe(params => {
       this.authService.promoteToModerator(roleId, userId);
-      this.router.navigate(['/all-users']).then(() => this.ngOnInit());
+      this.router.navigate(['/all-users']).then(() => this.retrieveUsers());
     });
   }
 
@@ -98,7 +136,7 @@ export class UpdateUserComponent implements OnInit {
     userId = this.route.snapshot.params.id;
     this.route.params.subscribe(params => {
       this.authService.demoteToUser(roleId, userId);
-      this.router.navigate(['/all-users']).then(() => this.ngOnInit());
+      this.router.navigate(['/all-users']).then(() => this.retrieveUsers());
     });
   }
 

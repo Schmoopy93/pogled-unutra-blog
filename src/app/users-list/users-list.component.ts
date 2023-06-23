@@ -41,28 +41,18 @@ export class UsersListComponent implements OnInit {
     this.currentUser_id = this.token.getUser().id;
   }
 
-
-  public onExport() {
-    const doc = new jsPDF("l", "pt", "a3");
-    const source = document.getElementById("content");
-    doc.setFontSize(6)
-    doc.html(source, {
-      callback: function(pdf) {
-        doc.output("dataurlnewwindow"); // preview pdf file when exported
-      }
-    });
-  }
-
   generatePDF() {
     const url = 'http://localhost:4000/generate-pdf';
     const req = this.http.get(url, { responseType: 'arraybuffer', reportProgress: true, observe: 'events' });
-
     req.subscribe((event) => {
-      if (event.type === HttpEventType.DownloadProgress) {
+      if (event.type === HttpEventType.DownloadProgress) { 
         console.log(`Downloaded ${event.loaded} bytes`);
       } else if (event.type === HttpEventType.Response) {
-        const blob = new Blob([event.body], { type: 'application/pdf' });
-        saveAs(blob, 'user-list.pdf');
+        const arrayBuffer = event.body as ArrayBuffer;
+        const uint8Array = new Uint8Array(arrayBuffer);
+        const blob = new Blob([uint8Array], { type: 'application/pdf' });
+        const filename = `users.pdf`;
+        saveAs(blob, filename);
       }
     });
   }
