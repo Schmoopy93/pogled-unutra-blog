@@ -22,6 +22,7 @@ export class RegisterComponent implements OnInit {
   isSuccessful = false;
   isSignUpFailed = false;
   errorMessage = '';
+  erroMessagePswd= '';
   progress: { percentage: number } = { percentage: 0 };
   imageChangedEvent: any = '';
   croppedImage: any = '';
@@ -100,7 +101,8 @@ export class RegisterComponent implements OnInit {
           }
         },
         (err: any) => {
-          this.errorMessage = err.error.error;
+          this.errorMessage = err.error.message;
+          this.erroMessagePswd = err.error.error;
           this.isSignUpFailed = true;
           this.croppedImage = undefined;
           this.fileInput.nativeElement.value = ''; 
