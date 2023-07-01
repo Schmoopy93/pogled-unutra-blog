@@ -49,7 +49,7 @@
                             <span class="border border-secondary rounded-top rounded-bottom shadow-background">
                             <img src="http://localhost:4000/uploads/{{post?.name}}" alt=" " class="card-img-top ">
                             <div class="card-body ">
-                                <h5 class="card-title ">{{post.title}}</h5>
+                                <h5 class="card-title" title="{{post.title}}" style=" white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{post.title}}</h5>
                                 <p class="card-text" style=" white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{post.content}}</p>
                                 <br>
                                 <a routerLink="/blogDetail/{{ post.id }}" class="btn btn-outline-success btn-sm "> Read More </a>

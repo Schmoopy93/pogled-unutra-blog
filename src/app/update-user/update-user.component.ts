@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../models/user';
 import { AuthService } from '../services/auth.service';
 import { TokenStorageService } from '../services/token-storage.service';
+import { environment } from '../../environments/environment';
+
 
 @Component({
   selector: 'app-update-user',
@@ -30,6 +32,7 @@ export class UpdateUserComponent implements OnInit {
   count = 0;
   pageSize = 10;
   pageSizes = [10, 20, 30];
+  myCheck:any;
   constructor(private authService: AuthService, private route: ActivatedRoute,
     private router: Router, private token: TokenStorageService) { }
 
@@ -54,6 +57,7 @@ export class UpdateUserComponent implements OnInit {
         });
       });
     });
+    this.myCheck = environment.myCheck;
   }
 
   getRequestParams(searchTitle: string, page: number, pageSize: number): any {
