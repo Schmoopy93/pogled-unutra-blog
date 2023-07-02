@@ -11,6 +11,7 @@ import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { Followers } from '../models/followers';
 import { NgForm } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { SocketService } from '../services/socket-service';
 
 @Component({
   selector: 'app-myprofile',
@@ -88,8 +89,8 @@ export class MyprofileComponent implements OnInit {
   pageSizeFriends = 6;
   pageSizesFriends = [6, 12, 18];
   hasImage: boolean = false;
-  
-  constructor(private router: Router, private route: ActivatedRoute, private modalService: NgbModal, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService, private blogService: ServiceblogService) {}
+  notificationsInitialized: boolean = false;
+  constructor(private router: Router, private route: ActivatedRoute, private socketService: SocketService, private modalService: NgbModal, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService, private blogService: ServiceblogService) {}
 
   ngOnInit(): void {
     this.currentUser = this.token.getUser();
@@ -111,6 +112,12 @@ export class MyprofileComponent implements OnInit {
     this.role_user = JSON.parse(window.sessionStorage.getItem('auth-user')).roles;
     this.getCurrentUser();
     this.getNotifications();
+    this.socketService.notificationsUpdated.subscribe(() => {
+      if (this.socketService.notificationSent == true) {
+        this.ngOnInit();
+        this.notificationsInitialized == true;
+      }
+    });
   }
 
   @ViewChild('closeModal') private closeModal: ElementRef;
@@ -367,6 +374,7 @@ export class MyprofileComponent implements OnInit {
       });
   }
 
+
   unfollow(id) {
     this.blogService.unfollow(id).subscribe(res => {
       this.ngOnInit();
@@ -375,7 +383,7 @@ export class MyprofileComponent implements OnInit {
 
   acceptFriendShip(id) {
     this.authService.acceptFriendship(id).subscribe();
-    window.location.reload();
+    this.ngOnInit();
   }
   
   getRequestParamsForGallery(pageGallery: number, pageSizeGallery: number, userId: any): any {
