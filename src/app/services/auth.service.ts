@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpEvent, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { map } from 'rxjs/operators';
 const AUTH_API = 'http://localhost:4000/api/auth/';
 const USER_API = `http://localhost:4000/api/auth/users`;
 
@@ -122,9 +122,14 @@ export class AuthService {
     return this.http.get(`${AUTH_API}confirm/` + confirmationCode);
   }
 
-  acceptFriendship(id: string) {
-    return this.http.get(`${AUTH_API}acceptFriendship/` + id);
+  acceptFriendship(id): Observable<any> {
+    return this.http.get(`${AUTH_API}acceptFriendship/` + id).pipe(
+      map(response => {
+        return response;
+      })
+    );
   }
+  
 
   setNewPassword(password: any, repeatPassword: any, token: string): Observable<any> {
     return this.http.post(USER_API + '/new-password', {

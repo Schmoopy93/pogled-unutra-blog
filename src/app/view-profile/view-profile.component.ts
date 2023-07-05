@@ -10,6 +10,8 @@ import { TokenStorageService } from '../services/token-storage.service';
 import Swal from 'sweetalert2';
 import { PhotoGallery } from '../models/photogallery';
 import { SocketService } from '../services/socket-service';
+import { debounceTime, take, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 @Component({
   selector: 'app-view-profile',
   templateUrl: './view-profile.component.html',
@@ -72,6 +74,10 @@ export class ViewProfileComponent implements OnInit{
   firstname = '';
   followers: any;
   currentFollower:any;
+  notificationsInitialized: boolean = false;
+  private unsubscribe$ = new Subject<void>();
+  requestAccepted: any;
+
   
   constructor(private blogService: ServiceblogService, private socketService: SocketService, private router: Router, private route : ActivatedRoute, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService) { }
 
@@ -101,6 +107,33 @@ export class ViewProfileComponent implements OnInit{
     });
   }
 
+  ngAfterViewInit(): void {
+    this.socketService.friendshipAccepted$
+      .pipe(
+        debounceTime(500),
+        takeUntil(this.unsubscribe$)
+      )
+      .subscribe(() => {
+        this.requestAccepted = this.socketService.socketMsg.message;
+        this.getFollowing();
+        if(this.currentUser){
+          this.blogService.createMessageFromSocket(this.requestAccepted, this.currentUserId).subscribe(
+            data => {
+              console.log(data);
+            },
+            err => {
+              this.errorMessage = err.error.message;
+            }
+          );
+        }
+      });
+  }
+  
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   @ViewChild('closeModal') private closeModal: ElementRef;
   public hideModel() {
     this.closeModal.nativeElement.click();
@@ -111,6 +144,8 @@ export class ViewProfileComponent implements OnInit{
   }
   
   getFollowing(): void {
+    this.followerId = this.route.snapshot.params.id;
+    this.currentUserId = this.token.getUser().id;
     const params = this.getRequestParamsForFollow(this.followerId,  this.currentUserId);
     this.blogService.getFollows(params)
     .subscribe(
@@ -130,6 +165,8 @@ export class ViewProfileComponent implements OnInit{
           this.followRequest = false;
           
         }
+        this.socketService.emitFriendshipAccepted(); // Trigger emitFriendshipAccepted(
+        
       },
       error => {
         console.log(error);

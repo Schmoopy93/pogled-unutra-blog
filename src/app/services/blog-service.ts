@@ -97,6 +97,11 @@ export class ServiceblogService {
     return this.http.delete(`${this.postsURL}/${id}`, { responseType: 'text' });
   }
 
+  deleteHistoryNotificationById(id: number): Observable<any> {
+    return this.http.delete(`${AUTH_API}notificationsHistory/${id}`, { responseType: 'text' });
+  }
+
+
   addComment(content: string, postId: number, userId:number): Observable<any> {
     return this.http.post(AUTH_API + 'comments', {
       postId,
@@ -259,4 +264,23 @@ export class ServiceblogService {
       text
     }, httpOptions);
   }
+
+  createMessageFromSocket(text: string, userId: string): Observable<any> {
+    return this.http.post(AUTH_API + 'createMessageFromSocket', {
+      text,
+      userId
+    }, httpOptions);
+  }
+
+  // getNotificationsHistory(params: any): Observable<any> {
+  //   console.log(params, 'params')
+  //   return this.http.get<any>(AUTH_API + 'notificationsHistory', { params });
+  // }
+
+  getNotificationsHistory(userId: string): Observable<any> {
+    const params = { userId: userId }; // Create the params object with userId
+  
+    return this.http.get<any>(AUTH_API + 'notificationsHistory', { params });
+  }
+  
 }

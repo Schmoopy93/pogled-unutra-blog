@@ -90,6 +90,8 @@ export class MyprofileComponent implements OnInit {
   pageSizesFriends = [6, 12, 18];
   hasImage: boolean = false;
   notificationsInitialized: boolean = false;
+  historyNotifications: any;
+  viewModeBackToPreviousPage: string;
   constructor(private router: Router, private route: ActivatedRoute, private socketService: SocketService, private modalService: NgbModal, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService, private blogService: ServiceblogService) {}
 
   ngOnInit(): void {
@@ -112,12 +114,21 @@ export class MyprofileComponent implements OnInit {
     this.role_user = JSON.parse(window.sessionStorage.getItem('auth-user')).roles;
     this.getCurrentUser();
     this.getNotifications();
+    this.getNotificationHistory();
     this.socketService.notificationsUpdated.subscribe(() => {
       if (this.socketService.notificationSent == true) {
         this.ngOnInit();
         this.notificationsInitialized == true;
       }
     });
+    const storedViewMode = localStorage.getItem('selectedTab');
+    this.viewMode = storedViewMode || 'tab1';
+    console.log(this.toDisplayGroup, "THIS DISPLAY GROUP")
+  }
+
+  selectTab(tab: string): void {
+    this.viewMode = tab;
+    localStorage.setItem('selectedTab', tab);
   }
 
   @ViewChild('closeModal') private closeModal: ElementRef;
@@ -243,6 +254,7 @@ export class MyprofileComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.likes = data;
+          console.log(data, "Dataaaaaaaaaa")
         },
         error: (e) => console.error(e)
       });
@@ -382,9 +394,30 @@ export class MyprofileComponent implements OnInit {
   }
 
   acceptFriendShip(id) {
-    this.authService.acceptFriendship(id).subscribe();
+    this.authService.acceptFriendship(id).subscribe((data) => {
+    });
+    this.socketService.emitFriendshipAccepted();
     this.ngOnInit();
   }
+
+  getNotificationHistory(){
+    const params = this.currentUserId;
+    this.blogService.getNotificationsHistory(params)
+    .subscribe(
+      response => {
+        this.historyNotifications = response.rows
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
+  deleteHistoryNotificationById(id) {
+    this.blogService.deleteHistoryNotificationById(id).subscribe(res => {
+      this.ngOnInit();
+    });
+  }
+
   
   getRequestParamsForGallery(pageGallery: number, pageSizeGallery: number, userId: any): any {
     let params: any = {};

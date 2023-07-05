@@ -865,3 +865,41 @@ select.form-control:not([size]):not([multiple]) {
 .cardFollowers:hover::after {
     opacity: 1;
 }
+
+.commenting-form {
+    margin-bottom: 20px;
+}
+
+.notification {
+    border: 1px solid #ccc;
+    background-color: #f5ffba;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.notification .form-group {
+    margin-bottom: 10px;
+}
+
+.notification strong {
+    font-weight: bold;
+    color: #000;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: medium;
+}
+
+.form-group.col-md-12 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.delete-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.delete-button i {
+    color: red;
+}
