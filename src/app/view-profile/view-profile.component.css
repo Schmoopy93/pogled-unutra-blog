@@ -836,3 +836,90 @@ select.form-control:not([size]):not([multiple]) {
 .cardFollowers:hover::after {
     opacity: 1;
 }
+
+.custom-card-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -15px;
+    /* Adjust to match the padding on .custom-card-col */
+}
+
+.custom-card-col {
+    flex: 0 0 calc(33.333% - 30px);
+    /* Adjust to match the margin on .custom-card-col */
+    max-width: calc(33.333% - 30px);
+    padding: 15px;
+    transition: transform 0.2s ease-in-out;
+    box-sizing: border-box;
+    /* Ensure padding doesn't affect width */
+}
+
+@media (max-width: 768px) {
+    .custom-card-col {
+        flex: 0 0 calc(50% - 30px);
+        /* Adjust for smaller screens */
+        max-width: calc(50% - 30px);
+    }
+}
+
+@media (max-width: 576px) {
+    .custom-card-col {
+        flex: 0 0 100%;
+        /* Adjust for even smaller screens */
+        max-width: 100%;
+    }
+}
+
+.custom-card-col:hover {
+    transform: translateY(-5px);
+}
+
+.custom-card {
+    background-color: #fff;
+    border: 1px solid rgb(199, 199, 199);
+    border-radius: 8px;
+    box-shadow: 5px 10px #888888;
+    overflow: hidden;
+}
+
+.custom-card-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.custom-card-body {
+    padding: 15px;
+    position: relative;
+}
+
+.custom-card-title {
+    font-size: 1.45rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.custom-card-date {
+    font-size: 0.9rem;
+    color: #3b3b3b;
+    margin-bottom: 10px;
+    margin-top: 70px;
+    font-family: cursive;
+}
+
+.custom-btn-outline-danger {
+    color: #dc3545;
+    border-color: #dc3545;
+}
+
+.custom-btn-outline-danger:hover {
+    background-color: #7e7e7e;
+    color: #fff;
+}

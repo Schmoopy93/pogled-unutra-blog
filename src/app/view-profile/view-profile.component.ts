@@ -105,6 +105,8 @@ export class ViewProfileComponent implements OnInit{
         };
       });
     });
+    const storedViewMode = localStorage.getItem('selectedTabViewProfile');
+    this.viewMode = storedViewMode || 'tab1';
   }
 
   ngAfterViewInit(): void {
@@ -132,6 +134,11 @@ export class ViewProfileComponent implements OnInit{
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+  selectTab(tab: string): void {
+    this.viewMode = tab;
+    localStorage.setItem('selectedTabViewProfile', tab);
   }
 
   @ViewChild('closeModal') private closeModal: ElementRef;

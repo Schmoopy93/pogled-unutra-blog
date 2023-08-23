@@ -291,7 +291,7 @@
                                 <!-- <button *ngIf="role_user == 'ROLE_ADMIN'" class="btn btn-outline-success btn-sm" style="margin-right:3px;" routerLink="/all-users">List of Users</button> -->
                                 <!-- <button class="btn btn-outline-success btn-sm" style="margin-right:3px;" routerLink="/followers">My Friends</button> -->
                                 <button type="button" style="margin-right:3px;" class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#exampleModalTimelineNotifications"><i class="fa fa-bell" aria-hidden="true"></i> {{checkStatus?.length}} </button>
-                                <button type="button" title="Notification History" class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#exampleModalNotificationHistory"><i class="fa fa-list" aria-hidden="true"></i></button>
+                                <button type="button" title="Notification History" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#exampleModalNotificationHistory"><i class="fa fa-list" aria-hidden="true"></i> {{historyNotificationsLength}} </button>
 
                             </div>
                         </div>
@@ -384,16 +384,18 @@
                                         <hr>
                                         <h3 style="text-align: center; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif">MY PHOTOS</h3>
                                         <!-- <h4 style="text-align: center; padding-bottom: 30px;"></h4> -->
-                                        <div class="row">
-                                            <div class="col-md-4 lg-4 animation" *ngFor="let p of photoGallery | paginate : {itemsPerPage: pageSizeGallery,currentPage: pageGallery,totalItems: countGallery}; let i = index" [class.active]="i == currentIndex" style="margin-top: 10px;">
-                                                <div class="card" style="border: 1px solid rgb(199, 199, 199); box-shadow: 5px 10px #888888;">
-                                                    <img src="http://localhost:4000/uploads/{{p?.name}}" alt=" " class="card-img-top ">
-                                                    <div class="card-body ">
-                                                        <h5 class="card-title "></h5>
-                                                        <h4 class="card-text" style=" white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><strong>{{p.title}}</strong></h4>
-                                                        <p class="card-text">Publish date: {{p.createdAt | date: "MMM d, y" }}</p>
-                                                        <a class="btn btn-outline-danger btn-sm " style="float: right;">
-                                                            <span mwlConfirmationPopover placement="left" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessageGallery" (confirm)="deletePhoto(p.id)" (cancel)="cancelClicked = true"><i class="fa fa-trash" aria-hidden="true"></i></span></a>
+                                        <div class="custom-card-row">
+                                            <div class="custom-card-col animation" *ngFor="let p of photoGallery | paginate : {itemsPerPage: pageSizeGallery, currentPage: pageGallery, totalItems: countGallery}; let i = index" [class.active]="i == currentIndex" style="margin-top: 10px;">
+                                                <div class="custom-card" style="border: 1px solid rgb(199, 199, 199); box-shadow: 5px 10px #888888; position: relative;">
+                                                    <img src="http://localhost:4000/uploads/{{p?.name}}" alt=" " class="custom-card-img">
+                                                    <div class="custom-card-content">
+                                                        <div class="custom-card-body">
+                                                            <h4 class="custom-card-title">{{p.title}}</h4>
+                                                            <p class="custom-card-date">Publish date: {{p.createdAt | date: "MMM d, y" }}</p>
+                                                        </div>
+                                                        <a class="custom-btn-outline-danger btn-sm" style="position: absolute; bottom: 10px; right: 10px;">
+                                                            <span mwlConfirmationPopover placement="top-right" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessageGallery" (confirm)="deletePhoto(p.id)" (cancel)="cancelClicked = true"><i class="fa fa-trash" style="color:#d9534f ;" aria-hidden="true"></i></span>
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>

@@ -92,6 +92,7 @@ export class MyprofileComponent implements OnInit {
   notificationsInitialized: boolean = false;
   historyNotifications: any;
   viewModeBackToPreviousPage: string;
+  historyNotificationsLength: any;
   constructor(private router: Router, private route: ActivatedRoute, private socketService: SocketService, private modalService: NgbModal, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService, private blogService: ServiceblogService) {}
 
   ngOnInit(): void {
@@ -406,6 +407,7 @@ export class MyprofileComponent implements OnInit {
     .subscribe(
       response => {
         this.historyNotifications = response.rows
+        this.historyNotificationsLength = this.historyNotifications.length;
       },
       error => {
         console.log(error);

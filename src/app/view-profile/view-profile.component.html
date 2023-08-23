@@ -125,9 +125,9 @@
                             </div>
                         </div>
                         <ul class="profile-header-tab nav nav-tabs">
-                            <li class="tab-slider--trigger" [class.active]="viewMode == 'tab1'" rel="tab1" (click)="viewMode ='tab1'"><a data-toggle="tab" href="#timeline">TIMELINE</a></li>
-                            <li class="tab-slider--trigger" [class.active]="viewMode == 'tab2'" rel="tab2" (click)="viewMode ='tab2'"><a data-toggle="tab" href="#photos">PHOTOS</a></li>
-                            <li class="tab-slider--trigger" [class.active]="viewMode == 'tab3'" rel="tab3" (click)="viewMode ='tab3'"><a data-toggle="tab" href="#friends">FRIENDS</a></li>
+                            <li class="tab-slider--trigger" [class.active]="viewMode == 'tab1'" (click)="selectTab('tab1')"><a data-toggle="tab" href="#timeline">TIMELINE</a></li>
+                            <li class="tab-slider--trigger" [class.active]="viewMode == 'tab2'" (click)="selectTab('tab2')"><a data-toggle="tab" href="#photos">PHOTOS</a></li>
+                            <li class="tab-slider--trigger" [class.active]="viewMode == 'tab3'" (click)="selectTab('tab3')"><a data-toggle="tab" href="#friends">FRIENDS</a></li>
                         </ul>
                     </div>
                 </div>
@@ -209,16 +209,15 @@
                                         <p class="paginate" style="margin-top: 10px;"><strong>Total photos: {{countGallery}}</strong></p>
                                         <hr>
                                         <h3 style="text-align: center; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif">{{ user?.firstname }}'s PHOTOS</h3>
-                                        <div class="row">
-                                            <div class="col-md-4 lg-4 animation" *ngFor="let p of photoGallery | paginate : {itemsPerPage: pageSizeGallery,currentPage: pageGallery,totalItems: countGallery}; let i = index" [class.active]="i == currentIndex" style="margin-top: 10px;">
-                                                <div class="card" style="border: 1px solid rgb(199, 199, 199); box-shadow: 5px 10px #888888;">
-                                                    <img src="http://localhost:4000/uploads/{{p?.name}}" alt=" " class="card-img-top ">
-                                                    <div class="card-body ">
-                                                        <h5 class="card-title "></h5>
-                                                        <h4 class="card-text" style=" white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><strong>{{p.title}}</strong></h4>
-                                                        <p class="card-text">Publish date: {{p.createdAt | date: "MMM d, y" }}</p>
-                                                        <!-- <a class="btn btn-outline-danger btn-sm " style="float: right;">
-                                                            <span mwlConfirmationPopover [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessageGallery" (confirm)="deletePhoto(p.id)" (cancel)="cancelClicked = true"><i class="fa fa-trash" aria-hidden="true"></i></span></a> -->
+                                        <div class="custom-card-row">
+                                            <div class="custom-card-col animation" *ngFor="let p of photoGallery | paginate : {itemsPerPage: pageSizeGallery, currentPage: pageGallery, totalItems: countGallery}; let i = index" [class.active]="i == currentIndex" style="margin-top: 10px;">
+                                                <div class="custom-card" style="border: 1px solid rgb(199, 199, 199); box-shadow: 5px 10px #888888; position: relative;">
+                                                    <img src="http://localhost:4000/uploads/{{p?.name}}" alt=" " class="custom-card-img">
+                                                    <div class="custom-card-content">
+                                                        <div class="custom-card-body">
+                                                            <h4 class="custom-card-title">{{p.title}}</h4>
+                                                            <p class="custom-card-date">Publish date: {{p.createdAt | date: "MMM d, y" }}</p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
