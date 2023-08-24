@@ -990,3 +990,15 @@ select.form-control:not([size]):not([multiple]) {
     background-color: #7e7e7e;
     color: #fff;
 }
+
+.like-row {
+    margin-bottom: 20px;
+}
+
+.like-hr {
+    margin: 15px 0;
+    /* Add the desired margin for the horizontal rule */
+    border: none;
+    border-top: 1px solid #ccc;
+    /* Customize the style of the horizontal rule */
+}

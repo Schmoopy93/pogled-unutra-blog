@@ -111,8 +111,22 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     </div>
                     <div class="modal-body">
-                        <form action="#" class="commenting-form" *ngFor="let like of likes;">
-                            <div class="row" *ngIf="toDisplayGroup['id'] === like?.timelineId && like?.userId === like?.user.id">
+                        <div *ngIf="currentTimelineId !== null">
+                            <div *ngFor="let like of groupedLikes[currentTimelineId]" class="like-row">
+                                <a *ngIf="currentUserLike !== like?.userId" routerLink="/view-profile/{{like?.userId}}" (click)="hideModel();" style="font-size: 30px; font-weight: bold;">
+                                    <img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" />
+                                    <strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong>
+                                </a>
+                                <br>
+                                <a *ngIf="currentUserLike === like?.userId" routerLink="/my-profile" (click)="hideModel();" style="font-size: 30px; font-weight: bold;">
+                                    <img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" />
+                                    <strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong>
+                                </a>
+                                <hr class="like-hr">
+                            </div>
+                        </div>
+                        <!-- <form action="#" class="commenting-form" *ngFor="let like of likes;">
+                            <div class="row" *ngIf="isTimelineLikeValid(like, toDisplayGroup)">
                                 <div class="form-group col-md-12">
                                     <div>
                                         <a *ngIf="currentUserLike !== like?.userId" routerLink="/view-profile/{{like?.userId}}" (click)="hideModel();" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong></a>
@@ -121,7 +135,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </form>
+                        </form> -->
                     </div>
                     <div class="modal-footer">
                         <button #closeModal type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
@@ -203,6 +217,7 @@
                             </div>
                         </div>
                     </form>
+                    <p *ngIf="!historyNotificationsLength">No new notifications history</p>
                 </ng-container>
             </div>
         </div>
@@ -337,7 +352,10 @@
                                                                     <button class="btn btn-outline-success dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                             <i class="far fa-thumbs-up "></i><strong>{{ timeline.likesTimeline.length }}</strong></button>
                                                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                        <button style="margin-top:10px;" (click)="toDisplayGroup = timeline" class="dropdown-item" data-toggle="modal" data-target="#exampleModalLabelTimelineLikes"><i class="far fa-user "></i>Who liked</button>
+                                                                        <button style="margin-top:10px;" (click)="openLikesModal(timeline.id)" class="dropdown-item" data-toggle="modal" data-target="#exampleModalLabelTimelineLikes">
+                                                                            <i class="far fa-user"></i> Who liked
+                                                                            </button>
+
                                                                     </div>
                                                                     <button type="button" title="Edit timeline" style="margin-left: 10px;" class="btn btn-outline-warning btn-sm" routerLink="/edit-timeline/{{ timeline.id }}"><i class="fas fa-edit"></i></button>
                                                                     <a class="btn btn-outline-danger btn-sm " title="Delete timeline" style="margin-left: 10px;" *ngIf="currentUser.id === user?.id" mwlConfirmationPopover placement="top-up" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteTimelineById(timeline.id)"

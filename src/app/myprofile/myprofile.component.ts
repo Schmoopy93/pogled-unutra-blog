@@ -93,6 +93,9 @@ export class MyprofileComponent implements OnInit {
   historyNotifications: any;
   viewModeBackToPreviousPage: string;
   historyNotificationsLength: any;
+  groupedLikes: { [key: string]: any[] } = {}; 
+  currentTimelineId: number | null = null;
+
   constructor(private router: Router, private route: ActivatedRoute, private socketService: SocketService, private modalService: NgbModal, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService, private blogService: ServiceblogService) {}
 
   ngOnInit(): void {
@@ -101,7 +104,7 @@ export class MyprofileComponent implements OnInit {
     this.getUserById(this.currentUser.id);
     this.userId = JSON.parse(window.sessionStorage.getItem('auth-user')).id;
     if(this.currentUser.id === this.userId){
-      this.getTimeline();
+      //this.getTimeline();
       this.getTimelinePage();
       this.retrievePhotoGallery();
     }
@@ -124,7 +127,6 @@ export class MyprofileComponent implements OnInit {
     });
     const storedViewMode = localStorage.getItem('selectedTab');
     this.viewMode = storedViewMode || 'tab1';
-    console.log(this.toDisplayGroup, "THIS DISPLAY GROUP")
   }
 
   selectTab(tab: string): void {
@@ -210,77 +212,75 @@ export class MyprofileComponent implements OnInit {
         });
   }
 
-  getTimeline(): void {
-    const params = this.getRequestParams(this.text, this.page, this.pageSize, this.userId);
-    this.blogService.getAllTimelines(params)
-    .subscribe(
-      response => {
-        const { timelines, totalItems, userId } = response;
-        this.timelines = timelines;
-        this.count = totalItems;
-        this.userId = userId;
-        // this.timelines.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-        //this.timeline_Id = this.timelines.map(e => e.id);
-        //console.log(response, 'res')
-        // for (let index = 0; index < timelines.length; index++) {
-        //   this.timelineId = timelines[index].id;
-        //   this.retrieveLikesTimeline();
-        //   //console.log(timelines, 'timelines u foru')
-        // }
-        
-      },
-      error => {
-        console.log(error);
-      });
-  }
-
   getTimelinePage(): void {
     const params = this.getRequestParams(this.text, this.page, this.pageSize, this.userId);
-    this.blogService.getAllTimelines(params)
-    .subscribe(
-      response => {
+    this.blogService.getAllTimelines(params).subscribe(
+      (response) => {
         const { timelines, totalItems, userId } = response;
         this.timelines = timelines;
         this.count = totalItems;
         this.userId = userId;
-        this.timelines.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+        this.timelines.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+        this.checkValidLikes();
       },
-      error => {
+      (error) => {
         console.log(error);
-      });
+      }
+    );
   }
 
   retrieveLikesTimeline(): void {
-    this.blogService.getLikesByTimelineId()
-      .subscribe({
-        next: (data) => {
-          this.likes = data;
-          console.log(data, "Dataaaaaaaaaa")
-        },
-        error: (e) => console.error(e)
-      });
+    this.blogService.getLikesByTimelineId().subscribe({
+      next: (data) => {
+        this.likes = data;
+        this.groupedLikes = this.groupLikesByTimelineId(this.likes);
+        this.checkValidLikes();     
+      },
+      error: (e) => console.error(e),
+    });
   }
   
-  // retrieveLikesTimeline(): void {
-  //     this.blogService.getLikesByTimelineId()
-  //     .subscribe(
-  //       response => {
-  //         const { likes } = response;
-  //         this.likes = likes;
-  //         console.log(likes);
-  //         // this.likeArrayByTimeline.push(...likes);
-  //         // console.log(this.likeArrayByTimeline, 'arr')
-  //         //console.log(likes, "likes")
-  //         // this.getLikes = likes.forEach(element => {
-  //         //     this.getEachLike = element
-  //         //     console.log(element);
-  //         //     //this.likeArrayByTimeline.push(this.getEachLike);
-  //         //   });
-  //       },
-  //       error => {
-  //         console.log(error);
-  //       });
-  //   }
+
+  checkValidLikes(): void {
+    this.timelines.forEach((timeline) => {
+      const validLikesForTimeline = this.groupedLikes[timeline.id] || [];
+      
+      validLikesForTimeline.forEach((like) => {
+        if (this.isTimelineLikeValid(like, timeline)) {
+          // Do something with valid likes and timeline
+        }
+      });
+    });
+  }
+
+  isTimelineLikeValid(like: any, timeline: any): boolean {   
+    return like?.timelineId === timeline.id && like?.userId === like?.user.id;
+  }
+
+  groupLikesByTimelineId(likes: any[]): { [key: string]: any[] } {
+    const grouped: { [key: string]: any[] } = {};
+
+    likes.forEach((like) => {
+      if (!grouped[like.timelineId]) {
+        grouped[like.timelineId] = [];
+      }
+      grouped[like.timelineId].push(like);
+    });
+
+    return grouped;
+  }
+
+openLikesModal(timelineId: number): void {
+  this.currentTimelineId = timelineId;
+  if (!this.groupedLikes[timelineId]) {
+    this.blogService.getLikesByTimelineIds(timelineId).subscribe({
+      next: (data) => {
+        this.groupedLikes[timelineId] = data;
+      },
+      error: (e) => console.error(e),
+    });
+  }
+}
 
     getRequestParamsLikesTimeline(pageLikes: number, pageSizeLikes: number): any {
       let params: any = {};
