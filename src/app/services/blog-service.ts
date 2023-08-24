@@ -4,6 +4,7 @@ import { Observable, of, Subject } from 'rxjs';
 import { Post } from '../models/post';
 import { TokenStorageService } from './token-storage.service';
 import { ActivatedRoute } from '@angular/router';
+import { Appointment } from '../models/appointment';
 
 const AUTH_API = 'http://localhost:4000/api/auth/';
 const httpOptions = {
@@ -41,6 +42,9 @@ export class ServiceblogService {
     return this.http.get<any>(`${AUTH_API}findAllAppointments`);
   }
 
+  updateAppointment(appointment: Appointment): Observable<Appointment> {
+    return this.http.put<Appointment>(`${AUTH_API}updateAppointment/${appointment.id}`, appointment);
+  }
   getAllTimelines(params: any): Observable<any> {
     return this.http.get<any>(this.commURL + 'showAllPaginatedTimelines', { params });
   }
@@ -126,6 +130,9 @@ export class ServiceblogService {
     
   }
 
+  getLikesByTimelineIds(id: number): Observable<any> {
+    return this.http.get(`${AUTH_API}showTimelines/${id}`, { responseType: 'text' });
+  }
 
   addTimeline(text: string, userId:number): Observable<any> {
     return this.http.post(AUTH_API + 'timelines', {
