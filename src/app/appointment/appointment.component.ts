@@ -19,6 +19,8 @@ export class AppointmentComponent implements OnInit {
     userId: '',
     start: '',
   };
+  completedTasks: any;
+  inProgressTasks: any;
 
   constructor(private blogService: ServiceblogService, private token: TokenStorageService) {}
 
@@ -65,6 +67,10 @@ export class AppointmentComponent implements OnInit {
         completed: eventData.completed,
         backgroundColor: eventData.completed ? 'green' : 'blue'
       }));
+      const completedTasks = events.filter(e => e.completed == true);
+      this.completedTasks = completedTasks.length;
+      const inProgressTasks = events.filter(e => e.completed == false);
+      this.inProgressTasks = inProgressTasks.length;
       this.events = events;
       this.calendarOptions = {
         initialView: 'dayGridMonth',
