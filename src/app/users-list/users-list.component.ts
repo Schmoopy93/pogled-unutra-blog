@@ -6,6 +6,7 @@ import { TokenStorageService } from '../services/token-storage.service';
 import {jsPDF} from 'jspdf';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { saveAs } from 'file-saver';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-users-list',
@@ -33,12 +34,14 @@ export class UsersListComponent implements OnInit {
   res: any;
   roles:any;
   exportPdf: any;
+  myCheck:any;
   constructor(private authService: AuthService, private token: TokenStorageService , private route: ActivatedRoute, private router: Router, private http: HttpClient) { }
 
   ngOnInit(): void {
     this.retrieveUsers();
     this.retrieveRoles();
     this.currentUser_id = this.token.getUser().id;
+    this.myCheck = environment.myCheck;
   }
 
   generatePDF() {
