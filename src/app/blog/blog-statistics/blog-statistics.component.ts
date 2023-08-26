@@ -32,7 +32,11 @@ export class BlogStatisticsComponent implements OnInit {
   constructor(private blogService: ServiceblogService) { }
 
   ngOnInit(): void {
-    this.blogService.getAllPostsWithoutParams().subscribe((postData: any) => {
+    this.getPostsForBarChart();
+  }
+
+  getPostsForBarChart(){
+      this.blogService.getAllPostsWithoutParams().subscribe((postData: any) => {
       const posts = postData.posts;
 
       const monthNames = this.generateMonthNames();
@@ -78,7 +82,7 @@ export class BlogStatisticsComponent implements OnInit {
       // Prikazivanje podataka u vertikalnom grafikonu
       this.barChartLabels = monthNames;
       this.barChartData = [
-        { data: barData, label: `Number of posts for ${this.selectedYear} year.` }
+        { data: barData, label: `Number of posts for ${this.selectedYear} year` }
       ];
       this.barChartOptions.scales = {
         y: [
@@ -94,6 +98,7 @@ export class BlogStatisticsComponent implements OnInit {
         ]
       };
     });
+
   }
 
   private getMonthName(monthIndex: number): string {
