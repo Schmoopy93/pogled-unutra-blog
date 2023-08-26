@@ -30,12 +30,13 @@ export class ViewblogComponent implements OnInit {
   pageSize = 6;
   pageSizes = [6, 9, 12];
   sortedItems: any;
-  
-
+  categoryId: any;
+  categories: any;
   constructor(private route: ActivatedRoute, private blogService: ServiceblogService, private token: TokenStorageService, private router: Router, private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     this.retrievePosts();
+    this.getCategories();
     this.route.params.subscribe(params => {
       this.blogService.editPost(params.id).subscribe(res => {
         this.post = res;
@@ -68,19 +69,18 @@ export class ViewblogComponent implements OnInit {
   }
 
   retrievePosts(): void {
-    const params = this.getRequestParams(this.title, this.page, this.pageSize);
-
-    this.blogService.getAllPosts(params)
-    .subscribe(
-      response => {
-        const { posts, totalItems } = response;
-        this.posts = posts;
-        this.count = totalItems;
-      },
-      error => {
-        console.log(error);
-      });
-  }
+        const params = this.getRequestParams(this.title, this.page, this.pageSize, this.categoryId);
+        this.blogService.getAllPosts(params)
+        .subscribe(
+          response => {
+            const { posts, totalItems } = response;
+            this.posts = posts;
+            this.count = totalItems;
+          },
+          error => {
+            console.log(error);
+          });
+    }
   
   handlePageChange(event: number): void {
     this.page = event;
@@ -93,7 +93,7 @@ export class ViewblogComponent implements OnInit {
     this.retrievePosts();
   }
 
-  getRequestParams(searchTitle: string, page: number, pageSize: number): any {
+  getRequestParamsNoFilter(searchTitle: string, page: number, pageSize: number): any {
     let params: any = {};
 
     if (searchTitle) {
@@ -111,6 +111,27 @@ export class ViewblogComponent implements OnInit {
     return params;
   }
 
+  getRequestParams(searchTitle: string, page: number, pageSize: number, categoryId: number): any {
+    let params: any = {};
+
+    if (searchTitle) {
+      params[`title`] = searchTitle;
+    }
+
+    if (page) {
+      params[`page`] = page - 1;
+    }
+
+    if (pageSize) {
+      params[`size`] = pageSize;
+    }
+    if(categoryId){
+      params['categoryId'] = categoryId;
+    }
+
+    return params;
+  }
+
   searchTitle(): void {
     this.blogService.findByTitle(this.title)
       .subscribe(
@@ -122,4 +143,19 @@ export class ViewblogComponent implements OnInit {
           console.log(error);
         });
   }
+
+  getCategories(){
+    this.blogService.getAllCategories().subscribe(
+      response => {
+        this.categories = response;
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
+  onOptionSelect(selectedValue: string) {
+      this.categoryId = parseInt(selectedValue);
+      this.retrievePosts();
+    }
 }

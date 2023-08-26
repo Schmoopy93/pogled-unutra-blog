@@ -3,3 +3,34 @@
     justify-content: center;
     padding-top: 20px;
 }
+
+.legend {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+}
+
+.completed {
+    background-color: green;
+}
+
+.in-progress {
+    background-color: blue;
+}
+
+.legend-label {
+    font-size: 14px;
+}

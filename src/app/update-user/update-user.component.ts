@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../models/user';
 import { AuthService } from '../services/auth.service';
 import { TokenStorageService } from '../services/token-storage.service';
+import { environment } from '../../environments/environment';
+
 
 @Component({
   selector: 'app-update-user',
@@ -19,12 +21,18 @@ export class UpdateUserComponent implements OnInit {
   adminId:number;
   currentUser:any;
   userRole: any;
-  selectedOptionUser: number;
-  selectedOptionModerator: number;
-  selectedOptionAdmin: number;
+  selectedOptionUser = false;
+  selectedOptionModerator= false;
+  selectedOptionAdmin= false;
   selectedOptionUserStr: string;
   selectedOptionModeratorStr: string;
   selectedOptionAdminStr: string;
+  firstname = '';
+  page = 1;
+  count = 0;
+  pageSize = 10;
+  pageSizes = [10, 20, 30];
+  myCheck:any;
   constructor(private authService: AuthService, private route: ActivatedRoute,
     private router: Router, private token: TokenStorageService) { }
 
@@ -49,6 +57,40 @@ export class UpdateUserComponent implements OnInit {
         });
       });
     });
+    this.myCheck = environment.myCheck;
+  }
+
+  getRequestParams(searchTitle: string, page: number, pageSize: number): any {
+    let params: any = {};
+
+    if (searchTitle) {
+      params[`firstname`] = searchTitle;
+    }
+
+    if (page) {
+      params[`page`] = page - 1;
+    }
+
+    if (pageSize) {
+      params[`size`] = pageSize;
+    }
+
+    return params;
+  }
+
+  retrieveUsers(): void {
+    const params = this.getRequestParams(this.firstname, this.page, this.pageSize);
+
+    this.authService.getAllUsers(params)
+    .subscribe(
+      response => {
+        const { users, totalItems } = response;
+        this.users = users;
+        this.count = totalItems;
+      },
+      error => {
+        console.log(error);
+      });
   }
 
   promoteToRole(userId: string, roleId: string): void {
@@ -82,7 +124,7 @@ export class UpdateUserComponent implements OnInit {
     userId = this.route.snapshot.params.id;
     this.route.params.subscribe(params => {
       this.authService.promoteToAdmin(roleId, userId);
-      this.router.navigate(['/all-users']).then(() => window.location.reload());
+      this.router.navigate(['/all-users']).then(() => this.retrieveUsers());
     });
   }
 
@@ -90,7 +132,7 @@ export class UpdateUserComponent implements OnInit {
     userId = this.route.snapshot.params.id;
     this.route.params.subscribe(params => {
       this.authService.promoteToModerator(roleId, userId);
-      this.router.navigate(['/all-users']).then(() => window.location.reload());
+      this.router.navigate(['/all-users']).then(() => this.retrieveUsers());
     });
   }
 
@@ -98,8 +140,26 @@ export class UpdateUserComponent implements OnInit {
     userId = this.route.snapshot.params.id;
     this.route.params.subscribe(params => {
       this.authService.demoteToUser(roleId, userId);
-      this.router.navigate(['/all-users']).then(() => window.location.reload());
+      this.router.navigate(['/all-users']).then(() => this.retrieveUsers());
     });
+  }
+
+  onCheckboxChange(event) {
+    const checkbox = event.target;
+    const checked = checkbox.checked;
+    const name = checkbox.name;
+    if (checked) {
+      if (name === 'option1') {
+        this.selectedOptionModerator = false;
+        this.selectedOptionAdmin = false;
+      } else if (name === 'option2') {
+        this.selectedOptionUser = false;
+        this.selectedOptionAdmin = false;
+      } else if (name === 'option3') {
+        this.selectedOptionUser = false;
+        this.selectedOptionModerator = false;
+      }
+    }
   }
 
 }

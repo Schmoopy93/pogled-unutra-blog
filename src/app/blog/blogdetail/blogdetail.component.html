@@ -4,7 +4,7 @@
         <main class="post blog-post col-lg-8">
             <div class="container">
                 <div class="post-single">
-                    <div class="post-thumbnail"><img src="http://localhost:6868/uploads/{{currentPost?.name}}" alt="..." class="img-fluid"></div>
+                    <div class="post-thumbnail"><img src="http://localhost:4000/uploads/{{currentPost?.name}}" alt="..." class="img-fluid"></div>
                     <div class="post-details">
                         <div class="post-meta d-flex justify-content-between">
                             <div class="category"><a href="/recent-blogs">My Blog</a></div>
@@ -12,7 +12,7 @@
                         <h1 style="font-family: cursive;">{{ currentPost?.title }}</h1>
                         <div class="post-footer d-flex align-items-center flex-column flex-sm-row">
                             <a href="#" class="author d-flex align-items-center flex-wrap">
-                                <div class="avatar"><img src="http://localhost:6868/uploads/userphoto/{{currentPost?.user.photoName}}" alt="..." class="img-fluid"></div>
+                                <div class="avatar"><img src="http://localhost:4000/uploads/userphoto/{{currentPost?.user.photoName}}" alt="..." class="img-fluid"></div>
                                 <div class="title"><span>{{currentPost?.user.firstname}} {{currentPost?.user?.lastname}}</span></div>
                                 <div class="title"><i class="icon-clock"></i> {{ currentPost?.createdAt | date:"MMM d, y h:mm:ss a" }}</div>
                             </a>
@@ -23,9 +23,15 @@
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <button (click)="likePost();" class="dropdown-item" style="margin-top:10px; margin-right:3px;"><i class="far fa-thumbs-up "></i>Like</button>
-                                <button #closeModal style="margin-top:10px;" class="dropdown-item" data-toggle="modal" data-target="#exampleModalTimeline"><i class="far fa-user "></i>Who liked</button>
+                                <button #closeModal style="margin-top:10px;" class="dropdown-item" data-toggle="modal" data-target="#exampleModalLike"><i class="far fa-user "></i>Who liked</button>
                             </div>
                         </div>
+                        <div class="dropdown" style="margin-left: 10px;">
+                            <a type="button" Title="Export to PDF" (click)="generatePDF(currentPost?.id)">
+                                <i class="far fa-file-pdf fa-lg" aria-hidden="true"></i>
+                            </a>
+                        </div>
+
                         <!-- <div class="dropdown" style="margin-top:10px;">
                             <button class="btn btn-outline-danger dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="far fa-thumbs-down "></i><strong> </strong>
@@ -40,7 +46,8 @@
                             <strong>{{ errorMessage }}</strong>
                         </div> -->
                         <div class="post-body">
-                            <p class="lead" style="font-family: cursive;">{{currentPost?.content}}</p>
+                            <!-- <p class="lead" style="font-family: cursive;">{{currentPost?.content}}</p> -->
+                            <pre class="lead" style="white-space: pre-line; font-family: cursive; color: #808080;">{{currentPost?.content}}</pre>
                         </div>
                         <div class="post-tags"><a class="tag">#Psychology</a><a class="tag">#Blog</a><a class="tag">#My Posts</a></div>
                         <div class="posts-nav d-flex justify-content-between align-items-stretch flex-column flex-md-row">
@@ -60,19 +67,20 @@
                         </header>
                         <ng-container *ngFor="let comment of comments | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveComment(comment, i)">
                             <div class="post-comments">
-                                <div class="comment">
+                                <div class="comment shadow-background">
                                     <div class="comment-header d-flex justify-content-between">
                                         <div class="user d-flex align-items-center">
-                                            <div class="image" style="margin-left: 10px;"><img src="http://localhost:6868/uploads/userphoto/{{comment?.user.photoName}}" class="img-fluid rounded-circle"></div>
+                                            <div class="image" style="margin-left: 10px;"><img src="http://localhost:4000/uploads/userphoto/{{comment?.user.photoName}}" class="img-fluid rounded-circle"></div>
                                             <div class="title"><strong>{{comment?.user.firstname}} {{comment?.user.lastname}}</strong><span class="date">{{comment?.createdAt | date:"MMM d, y h:mm:ss a" }}</span></div>
                                         </div>
                                     </div>
                                     <div class="comment-body">
-                                        <a title="Edit profile" *ngIf="currentUser === comment?.userId || replyUser.roles== 'ROLE_ADMIN'" style="margin-right: 10px;" class="btn btn-outline-secondary btn-sm" routerLink="/edit-comment/{{ comment.id }}"><i class="fas fa-edit"></i></a>
-                                        <a class="btn btn-outline-danger btn-sm " *ngIf="replyUser.roles== 'ROLE_ADMIN'">
+                                        <a title="Edit comment" *ngIf="currentUser === comment?.userId || replyUser.roles== 'ROLE_ADMIN'" style="margin-right: 10px;" class="btn btn-outline-warning btn-sm" routerLink="/edit-comment/{{ comment.id }}"><i class="fas fa-edit"></i></a>
+                                        <a title="Delete comment" class="btn btn-outline-danger btn-sm " *ngIf="replyUser.roles== 'ROLE_ADMIN'">
                                             <span mwlConfirmationPopover placement="left" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteComment(comment.id)" (cancel)="cancelClicked = true"><i class="fa fa-trash" aria-hidden="true"></i></span>
                                         </a>
-                                        <p style="margin-top:20px;">{{comment?.content}}</p>
+                                        <p style="margin-top: 20px; font-size: 16px; color: #e7a457; font-weight: bold; font-style: italic; font-family:cursive ">{{comment?.content}}</p>
+
                                     </div>
                                 </div>
                             </div>
@@ -87,7 +95,7 @@
                                 </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" class="commenting-form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" #commentForm="ngForm">
+                                        <form action="#" class="commenting-form" (ngSubmit)="commentForm.form.valid && onSubmit()" #commentForm="ngForm">
                                             <div class="row">
                                                 <div class="form-group col-md-12">
                                                     <textarea name="usercomment" id="usercomment" placeholder="Type your comment" class="form-control" name="content" [(ngModel)]="form.content" #content="ngModel"></textarea>
@@ -96,17 +104,17 @@
                                         </form>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="submit" class="btn btn-outline-success btn-sm " (click)="onSubmit(); hideModel()">Post</button>
-                                        <button #closeModal type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-outline-success btn-sm " (click)="onSubmit();">Post</button>
+                                        <button #hideModalComment type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="modal fade" id="exampleModalTimeline" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelTimeline" aria-hidden="true">
+                        <div class="modal fade" id="exampleModalLike" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLike" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabelTimeline">People who liked this post</h5>
+                                        <h5 class="modal-title" id="exampleModalLabelLike">People who liked this post</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                   <span aria-hidden="true">&times;</span>
                                 </button>
@@ -115,8 +123,8 @@
                                         <form action="#" class="commenting-form">
                                             <div class="row">
                                                 <div class="form-group col-md-12" *ngFor="let like of likes | paginate : {itemsPerPage: pageSizeLikes,currentPage: pageLikes,totalItems: countLikes, id: 'like'}; let i = index" [class.active]="i == currentIndexLikes" (click)="setActiveLikes(like, i)">
-                                                    <a *ngIf="currUser !== like?.userId" routerLink="/view-profile/{{like?.userId}}" (click)="hideModel();" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:6868/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong></a>
-                                                    <a *ngIf="currUser === like?.userId" routerLink="/my-profile" (click)="hideModel();" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:6868/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong></a>
+                                                    <a *ngIf="currUser !== like?.userId" routerLink="/view-profile/{{like?.userId}}" (click)="hideModel();" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong></a>
+                                                    <a *ngIf="currUser === like?.userId" routerLink="/my-profile" (click)="hideModel();" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong></a>
                                                     <hr>
                                                 </div>
                                             </div>
@@ -177,8 +185,8 @@
     <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event)"></pagination-controls>
 </div>
 <div class="paginate">
-    <h2 style="font-size: 1.1em; font-weight: bolder; text-align: center;">Load more:
-        <select style="margin-top:20px; width:50%" class="browser-default custom-select" (change)="handlePageSizeChange($event)">
+    <h2 style="font-size: 1.1em; font-weight: bolder; text-align: center;">Comments per page:
+        <select class="browser-default custom-select" style="width: 23%;" (change)="handlePageSizeChange($event)">
 <option *ngFor="let size of pageSizes" [ngValue]="size">
 {{ size }}
 </option>

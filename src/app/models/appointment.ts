@@ -3,5 +3,6 @@ export class Appointment
     title: string;
     start: string;
     createdAt: Date;
-    _id: string;
+    completed: boolean;
+    backgroundColor: string;
 }

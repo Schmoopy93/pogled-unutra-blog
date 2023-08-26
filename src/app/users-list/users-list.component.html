@@ -30,32 +30,38 @@
         <a class="dropdown-item" (click)="compareAlphabeticallyAsc()">Asc <i class="fas fa-arrow-up"></i></a>
         <a class="dropdown-item" (click)="compareAlphabeticallyDesc()">Desc <i class="fas fa-arrow-down"></i></a>
     </div>
-    <button class="btn btn-outline-success btn-sm" type="button" (click)="onExport()">
-        Export to PDF
-      </button>
+
 </div>
 <div class="container" id="content">
-    <h4>Total registred users: {{count}}</h4>
+    <div class="flex-container">
+        <h4>Total registered users: {{ count }}</h4>
+        <h4 style="margin-left: auto;">
+            <a type="button" Title="Export to PDF" (click)="generatePDF()">
+                <i class="far fa-file-pdf fa-lg" aria-hidden="true"></i>
+            </a>
+        </h4>
+    </div>
     <div class="row">
         <div class="table-responsive">
             <table class="table table-bordered">
-                <thead>
-                    <tr style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif">
-                        <th scope="col">Photo</th>
-                        <th scope="col">Username</th>
-                        <th scope="col">Firstname</th>
-                        <th scope="col">Lastname</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Joined</th>
-                        <th scope="col">Roles</th>
-                        <th scope="col">Edit Profile</th>
-                        <th scope="col">View Profile</th>
-                        <th scope="col">Delete Profile</th>
+                <thead style="font-family: 'Roboto', sans-serif;">
+                    <tr>
+                        <th>Photo</th>
+                        <th>Username</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Joined</th>
+                        <th>Roles</th>
+                        <th>Edit Profile</th>
+                        <th>View Profile</th>
+                        <th>Delete Profile</th>
                     </tr>
                 </thead>
+
                 <tbody *ngFor="let user of users | search:searchText | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActiveUser(user, i)">
                     <tr style="font-family: Georgia, 'Times New Roman', Times, serif">
-                        <td><img class="rounded-square shadow-1-strong me-3" src="http://localhost:6868/uploads/userphoto/{{user?.photoName}}" alt="avatar" width="60" height="60" /></td>
+                        <td><img class="rounded-square shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="avatar" width="60" height="60" /></td>
                         <td>{{user?.username}}</td>
                         <td>{{user?.firstname}}</td>
                         <td>{{user?.lastname}}</td>
@@ -67,10 +73,11 @@
                         </td>
                         <td>
                             <button type="button" title="Show profile" *ngIf="user.id != currentUser_id" style="margin-right: 10px;" class="btn btn-primary" routerLink="/view-profile/{{ user.id }}"><i class="fas fa-eye"></i></button>
+                            <button type="button" title="Show profile" *ngIf="user.id == currentUser_id" style="margin-right: 10px;" class="btn btn-primary" routerLink="/my-profile"><i class="fas fa-eye"></i></button>
                         </td>
                         <td>
-                            <button type="button" title="Delete profile" *ngIf="user.id != currentUser_id" style="margin-right: 10px;" class="btn btn-danger" mwlConfirmationPopover placement="top-right" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteUser(user.id)"
-                                (cancel)="cancelClicked = true"><i class="far fa-trash-alt"></i></button>
+                            <button type="button" title="Delete profile" *ngIf="user.id != currentUser_id && myCheck != user?.id" style="margin-right: 10px;" class="btn btn-danger" mwlConfirmationPopover placement="top-right" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage"
+                                (confirm)="deleteUser(user.id)" (cancel)="cancelClicked = true"><i class="far fa-trash-alt"></i></button>
                         </td>
 
                     </tr>

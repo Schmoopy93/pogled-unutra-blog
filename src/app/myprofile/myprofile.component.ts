@@ -5,11 +5,13 @@ import { TokenStorageService } from '../services/token-storage.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ServiceblogService } from '../services/blog-service';
 import { User } from '../models/user';
-import { base64ToFile, ImageCroppedEvent } from 'ngx-image-cropper';
+import { base64ToFile, ImageCroppedEvent, ImageCropperComponent } from 'ngx-image-cropper';
 import { PhotoGallery } from '../models/photogallery';
 import { HttpEventType, HttpResponse } from '@angular/common/http';
 import { Followers } from '../models/followers';
 import { NgForm } from '@angular/forms';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { SocketService } from '../services/socket-service';
 
 @Component({
   selector: 'app-myprofile',
@@ -18,7 +20,6 @@ import { NgForm } from '@angular/forms';
 })
 
 export class MyprofileComponent implements OnInit {
-  @ViewChild('galleryForm') public galleryForm:NgForm;
   form: any = {
     text: null,
   }
@@ -87,8 +88,15 @@ export class MyprofileComponent implements OnInit {
   countFriends = 0;
   pageSizeFriends = 6;
   pageSizesFriends = [6, 12, 18];
-  
-  constructor(private router: Router, private route: ActivatedRoute, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService, private blogService: ServiceblogService) {}
+  hasImage: boolean = false;
+  notificationsInitialized: boolean = false;
+  historyNotifications: any;
+  viewModeBackToPreviousPage: string;
+  historyNotificationsLength: any;
+  groupedLikes: { [key: string]: any[] } = {}; 
+  currentTimelineId: number | null = null;
+
+  constructor(private router: Router, private route: ActivatedRoute, private socketService: SocketService, private modalService: NgbModal, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService, private blogService: ServiceblogService) {}
 
   ngOnInit(): void {
     this.currentUser = this.token.getUser();
@@ -96,7 +104,7 @@ export class MyprofileComponent implements OnInit {
     this.getUserById(this.currentUser.id);
     this.userId = JSON.parse(window.sessionStorage.getItem('auth-user')).id;
     if(this.currentUser.id === this.userId){
-      this.getTimeline();
+      //this.getTimeline();
       this.getTimelinePage();
       this.retrievePhotoGallery();
     }
@@ -110,6 +118,20 @@ export class MyprofileComponent implements OnInit {
     this.role_user = JSON.parse(window.sessionStorage.getItem('auth-user')).roles;
     this.getCurrentUser();
     this.getNotifications();
+    this.getNotificationHistory();
+    this.socketService.notificationsUpdated.subscribe(() => {
+      if (this.socketService.notificationSent == true) {
+        this.ngOnInit();
+        this.notificationsInitialized == true;
+      }
+    });
+    const storedViewMode = localStorage.getItem('selectedTab');
+    this.viewMode = storedViewMode || 'tab1';
+  }
+
+  selectTab(tab: string): void {
+    this.viewMode = tab;
+    localStorage.setItem('selectedTab', tab);
   }
 
   @ViewChild('closeModal') private closeModal: ElementRef;
@@ -190,76 +212,75 @@ export class MyprofileComponent implements OnInit {
         });
   }
 
-  getTimeline(): void {
-    const params = this.getRequestParams(this.text, this.page, this.pageSize, this.userId);
-    this.blogService.getAllTimelines(params)
-    .subscribe(
-      response => {
-        const { timelines, totalItems, userId } = response;
-        this.timelines = timelines;
-        this.count = totalItems;
-        this.userId = userId;
-        // this.timelines.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-        //this.timeline_Id = this.timelines.map(e => e.id);
-        //console.log(response, 'res')
-        // for (let index = 0; index < timelines.length; index++) {
-        //   this.timelineId = timelines[index].id;
-        //   this.retrieveLikesTimeline();
-        //   //console.log(timelines, 'timelines u foru')
-        // }
-        
-      },
-      error => {
-        console.log(error);
-      });
-  }
-
   getTimelinePage(): void {
     const params = this.getRequestParams(this.text, this.page, this.pageSize, this.userId);
-    this.blogService.getAllTimelines(params)
-    .subscribe(
-      response => {
+    this.blogService.getAllTimelines(params).subscribe(
+      (response) => {
         const { timelines, totalItems, userId } = response;
         this.timelines = timelines;
         this.count = totalItems;
         this.userId = userId;
-        this.timelines.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+        this.timelines.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+        this.checkValidLikes();
       },
-      error => {
+      (error) => {
         console.log(error);
-      });
+      }
+    );
   }
 
   retrieveLikesTimeline(): void {
-    this.blogService.getLikesByTimelineId()
-      .subscribe({
-        next: (data) => {
-          this.likes = data;
-        },
-        error: (e) => console.error(e)
-      });
+    this.blogService.getLikesByTimelineId().subscribe({
+      next: (data) => {
+        this.likes = data;
+        this.groupedLikes = this.groupLikesByTimelineId(this.likes);
+        this.checkValidLikes();     
+      },
+      error: (e) => console.error(e),
+    });
   }
   
-  // retrieveLikesTimeline(): void {
-  //     this.blogService.getLikesByTimelineId()
-  //     .subscribe(
-  //       response => {
-  //         const { likes } = response;
-  //         this.likes = likes;
-  //         console.log(likes);
-  //         // this.likeArrayByTimeline.push(...likes);
-  //         // console.log(this.likeArrayByTimeline, 'arr')
-  //         //console.log(likes, "likes")
-  //         // this.getLikes = likes.forEach(element => {
-  //         //     this.getEachLike = element
-  //         //     console.log(element);
-  //         //     //this.likeArrayByTimeline.push(this.getEachLike);
-  //         //   });
-  //       },
-  //       error => {
-  //         console.log(error);
-  //       });
-  //   }
+
+  checkValidLikes(): void {
+    this.timelines.forEach((timeline) => {
+      const validLikesForTimeline = this.groupedLikes[timeline.id] || [];
+      
+      validLikesForTimeline.forEach((like) => {
+        if (this.isTimelineLikeValid(like, timeline)) {
+          // Do something with valid likes and timeline
+        }
+      });
+    });
+  }
+
+  isTimelineLikeValid(like: any, timeline: any): boolean {   
+    return like?.timelineId === timeline.id && like?.userId === like?.user.id;
+  }
+
+  groupLikesByTimelineId(likes: any[]): { [key: string]: any[] } {
+    const grouped: { [key: string]: any[] } = {};
+
+    likes.forEach((like) => {
+      if (!grouped[like.timelineId]) {
+        grouped[like.timelineId] = [];
+      }
+      grouped[like.timelineId].push(like);
+    });
+
+    return grouped;
+  }
+
+openLikesModal(timelineId: number): void {
+  this.currentTimelineId = timelineId;
+  if (!this.groupedLikes[timelineId]) {
+    this.blogService.getLikesByTimelineIds(timelineId).subscribe({
+      next: (data) => {
+        this.groupedLikes[timelineId] = data;
+      },
+      error: (e) => console.error(e),
+    });
+  }
+}
 
     getRequestParamsLikesTimeline(pageLikes: number, pageSizeLikes: number): any {
       let params: any = {};
@@ -315,6 +336,13 @@ export class MyprofileComponent implements OnInit {
     return params;
   }
 
+  @ViewChild('timelineForm', { static: false }) timelineForm: NgForm;
+  resetModalFormTimeline() {
+    if (this.timelineForm) {
+      this.timelineForm.resetForm();
+    }
+  }
+
   onSubmit(): void {
     const { text } = this.form;
     this.blogService.addTimeline(text, this.currentUser.id).subscribe(
@@ -323,7 +351,9 @@ export class MyprofileComponent implements OnInit {
         this.errorMessage = err.error.message;
       }
     );
-    window.location.reload();
+    this.resetModalFormTimeline();
+    this.ngOnInit();
+ 
 
   }
 
@@ -357,17 +387,39 @@ export class MyprofileComponent implements OnInit {
       });
   }
 
+
   unfollow(id) {
     this.blogService.unfollow(id).subscribe(res => {
       this.ngOnInit();
     });
   }
 
-
   acceptFriendShip(id) {
-    this.authService.acceptFriendship(id).subscribe();
-    window.location.reload();
+    this.authService.acceptFriendship(id).subscribe((data) => {
+    });
+    this.socketService.emitFriendshipAccepted();
+    this.ngOnInit();
   }
+
+  getNotificationHistory(){
+    const params = this.currentUserId;
+    this.blogService.getNotificationsHistory(params)
+    .subscribe(
+      response => {
+        this.historyNotifications = response.rows
+        this.historyNotificationsLength = this.historyNotifications.length;
+      },
+      error => {
+        console.log(error);
+      });
+  }
+
+  deleteHistoryNotificationById(id) {
+    this.blogService.deleteHistoryNotificationById(id).subscribe(res => {
+      this.ngOnInit();
+    });
+  }
+
   
   getRequestParamsForGallery(pageGallery: number, pageSizeGallery: number, userId: any): any {
     let params: any = {};
@@ -402,75 +454,6 @@ export class MyprofileComponent implements OnInit {
       });
   }
 
-  // fileChangeEvent(event: any): void {
-  //   this.imageChangedEvent = event;
-  // }
-
-  // imageCropped(event: ImageCroppedEvent) {
-  //   this.croppedImage = event.base64;
-  //   let File = base64ToFile(this.croppedImage);
-  //   this.fileToReturn = this.convertBase64ToFile(event.base64, this.imageChangedEvent.target.files[0].name)
-    
-  //   var reader = new FileReader();
-  //   reader.onload = (event: any) => {
-  //     this.croppedImage = this.fileToReturn;
-  //   };
-
-  //   reader.onerror = (event: any) => {
-  //     console.log("File could not be read: " + event.target.error.code);
-  //   };
-
-  //   reader.readAsDataURL(this.fileToReturn);
-
-  //   return this.fileToReturn;
-  // }
-
-  // imageLoaded() {
-  // }
-
-  // cropperReady() {
-  // }
-
-  // loadImageFailed() {
-  // }
-
-  // convertBase64ToFile(data, filename) {
-  //   const arr = data.split(',');
-  //   const mime = arr[0].match(/:(.*?);/)[1];
-  //   const bstr = atob(arr[1]);
-  //   let n = bstr.length;
-  //   let u8arr = new Uint8Array(n);
-
-  //   while (n--) {
-  //     u8arr[n] = bstr.charCodeAt(n);
-  //   }
-
-  //   return new File([u8arr], filename, { type: mime });
-  // }
-
-    
-  // addGallery(): void {
-  //   this.progress.percentage = 0;
-  //   const { title } = this.formGallery;
-  //   const userId = JSON.parse(sessionStorage.getItem('auth-user')).id;
-  //     if (this.imageChangedEvent) {
-  //       this.blogService.addGallery(this.croppedImage, title, userId).subscribe(
-  //         (event: any) => {
-  //           if (event.type === HttpEventType.UploadProgress) {
-  //             this.progress.percentage = Math.round(100 * event.loaded / event.total);
-  //           } else if (event instanceof HttpResponse) {
-  //             this.errMsg = event.body.message;
-  //             this.router.navigate(['/my-profile'], { relativeTo: this.route }).then(()=> this.ngOnInit());
-  //           }
-  //         },
-  //         (err: any) => {
-  //           this.errMsg = err.error.message;
-  //           this.croppedImage = undefined;
-  //         });
-  //     this.imageChangedEvent = undefined;
-  //   }
-  // }
-
   selectFile(event) {
     this.selectedFiles = event.target.files;
   }
@@ -484,13 +467,25 @@ export class MyprofileComponent implements OnInit {
       if (event.type === HttpEventType.UploadProgress) {
         this.progress.percentage = Math.round(100 * event.loaded / event.total);
       } else if (event instanceof HttpResponse) {
-        this.router.navigate(['/my-profile'], { relativeTo: this.route }).then(()=> this.ngOnInit());
-        
+        this.ngOnInit();
+        this.resetModalFormGallery();
+        this.fileInput.nativeElement.value = ''; 
       }
     });
     this.selectedFiles = undefined;
-    
   }
+
+  @ViewChild('fileInput') fileInput: ElementRef;
+  @ViewChild('fileInputChangePhoto') fileInputChangePhoto: ElementRef;
+  @ViewChild('fileInputChangePhotoCropped')
+  fileInputChangePhotoCropped: ImageCropperComponent;
+  @ViewChild('galleryForm', { static: false }) galleryForm: NgForm;
+  resetModalFormGallery() {
+    if (this.galleryForm) {
+      this.galleryForm.resetForm();
+    }
+  }
+  
 
   deletePhoto(id) {
     this.blogService.deletePhoto(id).subscribe(res => {
@@ -534,5 +529,87 @@ export class MyprofileComponent implements OnInit {
         console.log(error);
       });
 
+  }
+
+  fileChangeEvent(event: any): void {
+    this.imageChangedEvent = event;
+  }
+
+  imageCropped(event: ImageCroppedEvent) {
+    this.croppedImage = event.base64;
+    this.hasImage = true;
+    let File = base64ToFile(this.croppedImage);
+    this.fileToReturn = this.convertBase64ToFile(event.base64, this.imageChangedEvent.target.files[0].name)
+    
+    var reader = new FileReader();
+    reader.onload = (event: any) => {
+      this.croppedImage = this.fileToReturn;
+    };
+
+    reader.onerror = (event: any) => {
+      console.log("File could not be read: " + event.target.error.code);
+    };
+
+    reader.readAsDataURL(this.fileToReturn);
+
+    return this.fileToReturn;
+  }
+
+  imageLoaded() {
+  }
+
+  cropperReady() {
+  }
+
+  loadImageFailed() {
+  }
+
+  convertBase64ToFile(data, filename) {
+    const arr = data.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    let u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new File([u8arr], filename, { type: mime });
+  }
+
+  @ViewChild('hideModalChangePicture') private hideModalChangePicture: ElementRef;
+  public hideModalChangePictureFunc() {
+    this.hideModalChangePicture.nativeElement.click();
+  }
+
+  public clearFileInputChangePhoto(){
+    this.fileInputChangePhoto.nativeElement.value = ''; 
+    this.imageChangedEvent = null;
+  }
+
+  changeProfilePicture(): void {
+    this.progress.percentage = 0;
+    const userId = JSON.parse(sessionStorage.getItem('auth-user')).id;
+    if (this.imageChangedEvent) {
+      this.blogService.changeProfilePicture(this.croppedImage, userId).subscribe(
+        (response: any) => {
+          if (response && response.type === HttpEventType.UploadProgress) {
+            this.progress.percentage = Math.round(100 * response.loaded / response.total);
+          } else if (response instanceof HttpResponse) {
+            this.errorMessage = response.body.message;
+            this.hideModalChangePictureFunc();
+            this.fileInputChangePhoto.nativeElement.value = ''; 
+            this.ngOnInit();
+          }
+        },
+        (err: any) => {
+          this.errorMessage = err.error.error;
+          this.croppedImage = undefined;
+          this.fileInputChangePhoto.nativeElement.value = ''; 
+        }
+      );
+      this.imageChangedEvent = undefined;
+    }
   }
 }

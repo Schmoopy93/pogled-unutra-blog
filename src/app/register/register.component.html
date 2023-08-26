@@ -56,11 +56,21 @@
                                     <input type="password" id="form3Example4cg" class="form-control form-control-lg" name="password" [(ngModel)]="form.password" required minlength="6" #password="ngModel" placeholder="Password" />
                                 </div>
 
-                                <div class="alert-danger" *ngIf="!croppedImage && f.submitted">
+                                <div class="form-outline mb-4">
+                                    <input type="password" id="form3Example4cg" class="form-control form-control-lg" name="repeatPassword" [(ngModel)]="form.repeatPassword" required minlength="6" #repeatPassword="ngModel" placeholder="Repeat Password" />
+                                </div>
+                                <div class="alert-danger" *ngIf="repeatPassword.errors && f.submitted">
+                                    <div *ngIf="repeatPassword.errors.required">Password is required</div>
+                                    <div *ngIf="repeatPassword.errors.minlength">
+                                        Password must be at least 6 characters
+                                    </div>
+                                </div>
+
+                                <div class="alert-danger" *ngIf="f.submitted">
                                     <div>Photo is required</div>
                                 </div>
                                 <div class="form-outline mb-4t">
-                                    <input type="file" class="form-control" id="customFile" (change)="fileChangeEvent($event)" style="height: auto;" />
+                                    <input type="file" class="form-control" id="customFile" #fileInput (change)="fileChangeEvent($event)" #photo name="photo" style="height: auto;" />
                                     <label class="form-label" for="form3Example3cg">Your profile photo</label>
                                 </div>
                                 <div class="col-md-8" style="margin: auto;">
@@ -69,7 +79,7 @@
                                 </div>
                                 <br>
                                 <div class="alert alert-warning" *ngIf="f.submitted && isSignUpFailed">
-                                    Signup failed!<br />{{ message }}
+                                    Signup failed!<br />{{ errorMessage || erroMessagePswd }}
                                 </div>
                                 <div class="d-flex justify-content-center">
                                     <button type="submit" class="btn btn-success btn-block btn-lg gradient-custom-4 text-body" style="width: 50%;margin: auto; padding: 10px;">Register</button>

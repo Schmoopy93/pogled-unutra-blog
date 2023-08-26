@@ -9,6 +9,9 @@ import { ServiceblogService } from '../services/blog-service';
 import { TokenStorageService } from '../services/token-storage.service';
 import Swal from 'sweetalert2';
 import { PhotoGallery } from '../models/photogallery';
+import { SocketService } from '../services/socket-service';
+import { debounceTime, take, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 @Component({
   selector: 'app-view-profile',
   templateUrl: './view-profile.component.html',
@@ -71,8 +74,12 @@ export class ViewProfileComponent implements OnInit{
   firstname = '';
   followers: any;
   currentFollower:any;
+  notificationsInitialized: boolean = false;
+  private unsubscribe$ = new Subject<void>();
+  requestAccepted: any;
+
   
-  constructor(private blogService: ServiceblogService, private router: Router, private route : ActivatedRoute, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService) { }
+  constructor(private blogService: ServiceblogService, private socketService: SocketService, private router: Router, private route : ActivatedRoute, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService) { }
 
   ngOnInit(): void {
     this.currentUser = this.token.getUser();
@@ -98,6 +105,40 @@ export class ViewProfileComponent implements OnInit{
         };
       });
     });
+    const storedViewMode = localStorage.getItem('selectedTabViewProfile');
+    this.viewMode = storedViewMode || 'tab1';
+  }
+
+  ngAfterViewInit(): void {
+    this.socketService.friendshipAccepted$
+      .pipe(
+        debounceTime(500),
+        takeUntil(this.unsubscribe$)
+      )
+      .subscribe(() => {
+        this.requestAccepted = this.socketService.socketMsg.message;
+        this.getFollowing();
+        if(this.currentUser){
+          this.blogService.createMessageFromSocket(this.requestAccepted, this.currentUserId).subscribe(
+            data => {
+              console.log(data);
+            },
+            err => {
+              this.errorMessage = err.error.message;
+            }
+          );
+        }
+      });
+  }
+  
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  selectTab(tab: string): void {
+    this.viewMode = tab;
+    localStorage.setItem('selectedTabViewProfile', tab);
   }
 
   @ViewChild('closeModal') private closeModal: ElementRef;
@@ -110,6 +151,8 @@ export class ViewProfileComponent implements OnInit{
   }
   
   getFollowing(): void {
+    this.followerId = this.route.snapshot.params.id;
+    this.currentUserId = this.token.getUser().id;
     const params = this.getRequestParamsForFollow(this.followerId,  this.currentUserId);
     this.blogService.getFollows(params)
     .subscribe(
@@ -129,6 +172,8 @@ export class ViewProfileComponent implements OnInit{
           this.followRequest = false;
           
         }
+        this.socketService.emitFriendshipAccepted(); // Trigger emitFriendshipAccepted(
+        
       },
       error => {
         console.log(error);
@@ -309,7 +354,8 @@ export class ViewProfileComponent implements OnInit{
         }
       }
     );
-    this.reloadCurrentRoute();
+    this.ngOnInit()
+    //this.reloadCurrentRoute();
   }
 
 
@@ -323,7 +369,6 @@ export class ViewProfileComponent implements OnInit{
       .subscribe({
         next: (data) => {
           this.likes = data;
-          console.log(data);
         },
         error: (e) => console.error(e)
       });
@@ -424,7 +469,8 @@ export class ViewProfileComponent implements OnInit{
     this.userId = this.currentUser.id;
     this.followerId = this.route.snapshot.params.id;
     this.currentUserName = this.token.getUser().firstname + ' ' + this.token.getUser().lastname;
-    this.message = this.currentUserName + " sent you a friend request !"
+    this.message = this.currentUserName + ' sent you a friend request!';
+    this.socketService.sendNotification(this.followerId, this.message);
     this.blogService.follow(this.userId, this.followerId, this.message).subscribe(
       data => {
       },
@@ -432,9 +478,9 @@ export class ViewProfileComponent implements OnInit{
         this.errorMessage = err.error.message;
       }
     );
-    window.location.reload();
+    this.ngOnInit();
   }
-
+  
   getRequestParamsForGallery(pageGallery: number, pageSizeGallery: number, userId: any): any {
     let params: any = {};
 

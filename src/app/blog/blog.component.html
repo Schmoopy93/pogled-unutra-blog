@@ -31,7 +31,7 @@
 <section id="profiles" class="page">
     <div class="container" style="width: 100%;">
         <div class="content text-center" style="padding-top:80px;"></div>
-        <h4 class="font-weight-bold text-center my-4" style="text-align: center; padding-bottom: 80px;">OUR SERVICE</h4>
+        <h4 class="font-weight-bold text-center my-4" style="text-align: center; padding-bottom: 80px; font-family: cursive;">OUR SERVICE</h4>
         <div class="container-fluid">
             <div class="row" id="profile-grid">
                 <div class="col-sm-4 col-xs-12 profile">
@@ -153,19 +153,21 @@
 <div>
     <section id="gallery" style="width: 100%;">
         <div class="container" style="padding-top:50px;">
-            <h4 class="font-weight-bold text-center my-4" style="text-align: center; padding-bottom: 30px;">LATEST BLOG POSTS</h4>
+            <h4 class="font-weight-bold text-center my-4" style="text-align: center; padding-bottom: 30px; font-family: cursive;">LATEST BLOG POSTS</h4>
             <div class="row">
                 <div class="col-md-4 lg-4 animation" *ngFor="let post of posts  | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActivePost(post, i)">
                     <div class="card" routerLink="/blogDetail/{{ post.id }}">
-                        <img src="http://localhost:6868/uploads/{{post?.name}}" alt=" " class="card-img-top ">
+                        <span class="border border-secondary rounded-top rounded-bottom shadow-background">
+                        <img src="http://localhost:4000/uploads/{{post?.name}}" alt=" " class="card-img-top ">
                         <div class="card-body ">
-                            <h5 class="card-title ">{{post.title}}</h5>
+                            <h5 class="card-title" title="{{post.title}}" style=" white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{post.title}}</h5>
                             <p class="card-text" style=" white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{post.content}}</p>
                             <br>
                             <a routerLink="/blogDetail/{{ post.id }}" class="btn btn-outline-success btn-sm "> Read More </a>
                             <hr>
                             <p class="card-text"> Published: {{post.createdAt | date: "MMMM d, y"}}</p>
                         </div>
+                    </span>
                     </div>
                 </div>
             </div>
@@ -181,45 +183,28 @@
     </div>
 </div>
 <section class="contactform mb-4 animation" style="width: 50%;">
-    <h2 class="h1-responsive font-weight-bold text-center my-4">Contact us</h2>
+    <h2 class="h1-responsive font-weight-bold text-center my-4" style="font-family: cursive;">Contact us</h2>
     <p class="text-center w-responsive mx-auto mb-5">Do you have any questions? Please do not hesitate to contact us directly. Our team will come back to you within a matter of hours to help you.</p>
     <div class="row">
         <div class="col-md-9 mb-md-0 mb-5">
-            <form id="contact-form" name="contact-form" action="mail.php" method="POST">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="md-form mb-0">
-                            <input type="text" id="name" name="name" class="form-control">
-                            <label for="name" class="">Your name</label>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="md-form mb-0">
-                            <input type="text" id="email" name="email" class="form-control">
-                            <label for="email" class="">Your email</label>
-                        </div>
-                    </div>
+            <form (ngSubmit)="onSubmit()" #contactForm="ngForm">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" class="form-control" id="name" name="name" [(ngModel)]="formData.name" required>
                 </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="md-form mb-0">
-                            <input type="text" id="subject" name="subject" class="form-control">
-                            <label for="subject" class="">Subject</label>
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" class="form-control" id="email" name="email" [(ngModel)]="formData.email" required>
                 </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="md-form">
-                            <textarea type="text" id="message" name="message" rows="2" class="form-control md-textarea"></textarea>
-                            <label for="message">Your message</label>
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label for="message">Message:</label>
+                    <textarea class="form-control" id="message" name="message" [(ngModel)]="formData.message" required></textarea>
+                </div>
+
+                <div class="text-center text-md-left">
+                    <button type="submit" class="btn btn-info btn-sm ml-0">Submit<i class="far fa-paper-plane ml-2"></i></button>
                 </div>
             </form>
-            <div class="text-center text-md-left">
-                <button type="submit" class="btn btn-info btn-sm ml-0">Submit<i class="far fa-paper-plane ml-2"></i></button>
-            </div>
             <div class="status"></div>
         </div>
         <div class="col-md-3 text-center">

@@ -129,3 +129,51 @@ a {
     justify-content: center;
     margin-top: 20px;
 }
+
+.card {
+    border: none;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+.card:hover {
+    transform: translateY(-0.25rem);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+}
+
+.card::before,
+.card::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    transition: opacity 0.3s ease;
+}
+
+.card::before {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+    opacity: 0;
+}
+
+.card:hover::before {
+    opacity: 1;
+}
+
+.card::after {
+    top: 0.25rem;
+    left: 0.25rem;
+    right: 0.25rem;
+    bottom: 0.25rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    opacity: 0;
+}
+
+.card:hover::after {
+    opacity: 1;
+}

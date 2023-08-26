@@ -11,6 +11,7 @@ import { AuthService } from '../services/auth.service';
 export class NewPasswordComponent implements OnInit {
   form: any = {
     password: null,
+    repeatPassword: null
   };
   errorMessage = '';
   token: string;
@@ -24,8 +25,8 @@ export class NewPasswordComponent implements OnInit {
     if(!this.token){
     return;
     }
-    const { password } = this.form;
-    this.authService.setNewPassword(password, this.token).subscribe(
+    const { password, repeatPassword } = this.form;
+    this.authService.setNewPassword(password, repeatPassword, this.token).subscribe(
       data => {
         console.log(data);
       },

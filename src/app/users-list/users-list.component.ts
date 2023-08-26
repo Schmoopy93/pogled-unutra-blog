@@ -4,6 +4,9 @@ import { User } from '../models/user';
 import { AuthService } from '../services/auth.service';
 import { TokenStorageService } from '../services/token-storage.service';
 import {jsPDF} from 'jspdf';
+import { HttpClient, HttpEventType } from '@angular/common/http';
+import { saveAs } from 'file-saver';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-users-list',
@@ -30,26 +33,34 @@ export class UsersListComponent implements OnInit {
   currentUser_id: any;
   res: any;
   roles:any;
-  constructor(private authService: AuthService, private token: TokenStorageService , private route: ActivatedRoute, private router: Router) { }
+  exportPdf: any;
+  myCheck:any;
+  constructor(private authService: AuthService, private token: TokenStorageService , private route: ActivatedRoute, private router: Router, private http: HttpClient) { }
 
   ngOnInit(): void {
     this.retrieveUsers();
     this.retrieveRoles();
     this.currentUser_id = this.token.getUser().id;
+    this.myCheck = environment.myCheck;
   }
 
- 
-  public onExport() {
-    const doc = new jsPDF("l", "pt", "a3");
-    const source = document.getElementById("content");
-    doc.setFontSize(6)
-    doc.html(source, {
-      callback: function(pdf) {
-        doc.output("dataurlnewwindow"); // preview pdf file when exported
+  generatePDF() {
+    const url = 'http://localhost:4000/generate-pdf';
+    const req = this.http.get(url, { responseType: 'arraybuffer', reportProgress: true, observe: 'events' });
+    req.subscribe((event) => {
+      if (event.type === HttpEventType.DownloadProgress) { 
+        console.log(`Downloaded ${event.loaded} bytes`);
+      } else if (event.type === HttpEventType.Response) {
+        const arrayBuffer = event.body as ArrayBuffer;
+        const uint8Array = new Uint8Array(arrayBuffer);
+        const blob = new Blob([uint8Array], { type: 'application/pdf' });
+        const filename = `users.pdf`;
+        saveAs(blob, filename);
       }
     });
   }
-
+  
+  
   retrieveRoles(): void {
     this.authService.getRoles().subscribe(
       data => {

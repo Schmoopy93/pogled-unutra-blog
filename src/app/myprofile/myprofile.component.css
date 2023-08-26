@@ -715,6 +715,7 @@ select.form-control:not([size]):not([multiple]) {
     color: #424242;
     padding: 20px;
     font-weight: 400;
+    transition: all 0.3s ease;
 }
 
 .profile-page .profile-header1 {
@@ -804,4 +805,200 @@ select.form-control:not([size]):not([multiple]) {
         width: 95%;
         margin: 0 auto;
     }
+}
+
+.shadow-background {
+    background-color: #ffffff;
+    /* box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5); */
+    border-radius: 10px;
+    padding: 20px;
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.shadow-background:hover {
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.7);
+}
+
+.profile-photo-container {
+    position: relative;
+}
+
+.edit-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.edit-button button {
+    padding: 5px 10px;
+    font-size: 14px;
+    background-color: transparent;
+    border: none;
+    color: black;
+    /* Change the color of the button text if needed */
+}
+
+.cardFollowers {
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+.cardFollowers:hover {
+    transform: translateY(-0.25rem);
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
+}
+
+.cardFollowers::after {
+    content: "";
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    right: 0.5rem;
+    bottom: 0.5rem;
+    z-index: -1;
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.cardFollowers:hover::after {
+    opacity: 1;
+}
+
+.commenting-form {
+    margin-bottom: 20px;
+}
+
+.notification {
+    border: 1px solid #ccc;
+    background-color: #f5ffba;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.notification .form-group {
+    margin-bottom: 10px;
+}
+
+.notification strong {
+    font-weight: bold;
+    color: #000;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: medium;
+}
+
+.form-group.col-md-12 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.delete-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.delete-button i {
+    color: red;
+}
+
+.custom-card-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -15px;
+    /* Adjust to match the padding on .custom-card-col */
+}
+
+.custom-card-col {
+    flex: 0 0 calc(33.333% - 30px);
+    /* Adjust to match the margin on .custom-card-col */
+    max-width: calc(33.333% - 30px);
+    padding: 15px;
+    transition: transform 0.2s ease-in-out;
+    box-sizing: border-box;
+    /* Ensure padding doesn't affect width */
+}
+
+@media (max-width: 768px) {
+    .custom-card-col {
+        flex: 0 0 calc(50% - 30px);
+        /* Adjust for smaller screens */
+        max-width: calc(50% - 30px);
+    }
+}
+
+@media (max-width: 576px) {
+    .custom-card-col {
+        flex: 0 0 100%;
+        /* Adjust for even smaller screens */
+        max-width: 100%;
+    }
+}
+
+.custom-card-col:hover {
+    transform: translateY(-5px);
+}
+
+.custom-card {
+    background-color: #fff;
+    border: 1px solid rgb(199, 199, 199);
+    border-radius: 8px;
+    box-shadow: 5px 10px #888888;
+    overflow: hidden;
+}
+
+.custom-card-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.custom-card-body {
+    padding: 15px;
+    position: relative;
+}
+
+.custom-card-title {
+    font-size: 1.45rem;
+    font-weight: bold;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.custom-card-date {
+    font-size: 0.9rem;
+    color: #3b3b3b;
+    margin-bottom: 10px;
+    margin-top: 70px;
+    font-family: cursive;
+}
+
+.custom-btn-outline-danger {
+    color: #dc3545;
+    border-color: #dc3545;
+}
+
+.custom-btn-outline-danger:hover {
+    background-color: #7e7e7e;
+    color: #fff;
+}
+
+.like-row {
+    margin-bottom: 20px;
+}
+
+.like-hr {
+    margin: 15px 0;
+    /* Add the desired margin for the horizontal rule */
+    border: none;
+    border-top: 1px solid #ccc;
+    /* Customize the style of the horizontal rule */
 }
