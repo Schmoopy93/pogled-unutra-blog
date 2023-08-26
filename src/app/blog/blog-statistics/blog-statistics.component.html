@@ -1,0 +1,24 @@
+<br>
+<div class="choose-year-label" style="font-family: cursive; color: black;">Choose a year</div>
+<select class="custom-select" style="font-family: cursive; color: black;" [(ngModel)]="selectedYear" (change)="onYearChange(selectedYear)">
+    <option *ngFor="let year of availableYears" [value]="year">{{ year }}</option>
+  </select>
+
+<div class="text-center">
+    <button class="btn btn-link" style="font-family: cursive;" type="button" (click)="toggleYearlyPostsCollapse()" data-toggle="collapse" data-target="#yearlyPostsCollapse" aria-expanded="false" aria-controls="yearlyPostsCollapse">
+     {{ yearlyPostsCollapseOpen ? 'Hide' : 'Show' }} total posts by year
+    </button>
+</div>
+
+<div class="yearly-posts-container" [ngClass]="{ 'show': yearlyPostsCollapseOpen }">
+    <div id="yearlyPostsCollapse" class="collapse">
+        <div *ngFor="let entry of yearlyPostCounts | keyvalue" class="yearly-post-entry">
+            <p><strong>Year: {{ entry.key }}, Number of posts: {{ entry.value }}</strong></p>
+        </div>
+    </div>
+</div>
+
+<div style="display: block">
+    <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [colors]="barChartColors" [legend]="barChartLegend" [chartType]="barChartType">
+    </canvas>
+</div>

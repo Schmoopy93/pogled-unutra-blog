@@ -34,6 +34,10 @@ export class ServiceblogService {
     return this.http.get<any>(this.commURL + 'postsHomePage', { params });
   }
 
+  getAllPostsWithoutParams(): Observable<any> {
+    return this.http.get<any>(this.postsURL);
+  }
+
   getAllComments(params: any): Observable<any> {
     return this.http.get<any>(this.commURL + 'showAllPaginatedComments', { params });
   }

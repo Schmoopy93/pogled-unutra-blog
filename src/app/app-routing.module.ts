@@ -22,6 +22,7 @@ import { AuthGuard } from './services/auth.guard';
 import { UpdateUserComponent } from './update-user/update-user.component';
 import { UsersListComponent } from './users-list/users-list.component';
 import { ViewProfileComponent } from './view-profile/view-profile.component';
+import { BlogStatisticsComponent } from './blog/blog-statistics/blog-statistics.component';
 
 
 const routes: Routes = [
@@ -59,7 +60,9 @@ const routes: Routes = [
         path: 'about', component: AboutMeComponent
       },
       {
-        path: 'appointments', component: AppointmentComponent
+        path: 'appointments', component: AppointmentComponent, canActivate: [AuthGuard], data: {
+          roles: '[ROLE_ADMIN]'
+        }
       },
       {
         path: 'view-profile/:id', component: ViewProfileComponent
@@ -79,7 +82,11 @@ const routes: Routes = [
       {
         path: 'edit-comment/:id', component: EditCommentsComponent
       },
-
+      {
+        path: 'blog-statistic-chart', component: BlogStatisticsComponent, canActivate: [AuthGuard], data: {
+          roles: '[ROLE_ADMIN]'
+        }
+      },
     ]
   }];
 
