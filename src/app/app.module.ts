@@ -41,6 +41,8 @@ import { FollowersListComponent } from './followers-list/followers-list.componen
 import { EditTimelineComponent } from './edit-timeline/edit-timeline.component';
 import { EditCommentsComponent } from './edit-comments/edit-comments.component';
 import { SearchPipe } from './services/search.pipe';
+import { ChartsModule } from 'ng2-charts';
+import { BlogStatisticsComponent } from './blog/blog-statistics/blog-statistics.component';
 
 
 FullCalendarModule.registerPlugins([
@@ -75,6 +77,7 @@ FullCalendarModule.registerPlugins([
     EditTimelineComponent,
     EditCommentsComponent,
     SearchPipe,
+    BlogStatisticsComponent,
   ],
   imports: [
     BrowserModule,
@@ -97,6 +100,7 @@ FullCalendarModule.registerPlugins([
       useFactory: adapterFactory,
     }),
     FullCalendarModule,
+    ChartsModule
   ],
   providers: [DatePipe],
   bootstrap: [AppComponent]

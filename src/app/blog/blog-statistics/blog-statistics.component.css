@@ -1,0 +1,57 @@
+.custom-select {
+    display: block;
+    margin: 0 auto;
+    width: fit-content;
+    padding: 8px;
+    border: 1px solid #26C490;
+    background-color: #F0FFF4;
+    color: #333;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 150px;
+}
+
+.custom-select:hover {
+    background-color: #C8F7D7;
+}
+
+.choose-year-label {
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+
+/* .yearly-posts-container {
+    width: 30%;
+    margin: 0 auto;
+    background-color: rgba(46, 204, 113, 0.5);
+    display: none;
+} */
+
+.yearly-posts-container.show {
+    display: block;
+}
+
+.yearly-posts-container {
+    width: 30%;
+    margin: 0 auto;
+    background-color: rgba(46, 204, 113, 0.5);
+    display: none;
+    border-radius: 50%;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+    margin-top: 20px;
+    margin-bottom: 20px;
+    /* Add shadow */
+}
+
+.yearly-posts-container.show {
+    display: block;
+}
+
+.yearly-post-entry {
+    text-align: center;
+    font-family: cursive;
+    color: black;
+    padding: 10px;
+}

@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CalendarOptions } from '@fullcalendar/angular';
-import { HttpClient } from '@angular/common/http';
 import Swal from 'sweetalert2';
 import { Appointment } from '../models/appointment';
 import { ServiceblogService } from '../services/blog-service';
@@ -11,89 +10,165 @@ import { TokenStorageService } from '../services/token-storage.service';
   templateUrl: './appointment.component.html',
   styleUrls: ['./appointment.component.css']
 })
-
 export class AppointmentComponent implements OnInit {
 
   calendarOptions: CalendarOptions;
-  error: any;
-  events: Appointment;
-  appointments = []
+  events: Appointment[];
   event = {
     title: '',
     userId: '',
     start: '',
   };
-  constructor(public http: HttpClient, private blogService: ServiceblogService, private token: TokenStorageService, private Http: HttpClient) {}
-  
-  
+  completedTasks: any;
+  inProgressTasks: any;
+
+  constructor(private blogService: ServiceblogService, private token: TokenStorageService) {}
+
   ngOnInit() {
     this.getAllEvents();
     this.getCurrentUser();
- }
-
-  handleDateClick(arg) {
-
   }
 
-  onSelectx(event) {
-
+  handleDateClick(arg) {
   }
 
   getCurrentUser(){
-    this.event.userId = this.token.getUser().id 
+    this.event.userId = this.token.getUser().id;
   }
   
   saveEvent() {
-    const event = {
+    const newEvent = {
       title: this.event.title,
       userId: this.event.userId,
-      start: this.event.start
+      start: this.event.start,
+      completed: false
     };
-    this.blogService.addAppointment(event)
-      .subscribe();
-        window.location.reload();
-  }
+    this.blogService.addAppointment(newEvent)
+      .subscribe((data) => {
+      });
+      this.hideModel();
+      window.location.reload();
 
-  deleteEvent(id) {
-    this.blogService.deleteAppointment(id).subscribe((data: any) => {});
   }
-
+  
+  @ViewChild('closeModal') private closeModal: ElementRef;
+  public hideModel() {
+    this.closeModal.nativeElement.click();
+  }
+  
   getAllEvents() {
     this.blogService.getAllAppointments().subscribe((data: any) => {
       const self = this;
+      const events = data.map((eventData: any) => ({
+        id: eventData.id,
+        title: eventData.title,
+        userId: eventData.userId,
+        start: eventData.start,
+        completed: eventData.completed,
+        backgroundColor: eventData.completed ? 'green' : 'blue'
+      }));
+      const completedTasks = events.filter(e => e.completed == true);
+      this.completedTasks = completedTasks.length;
+      const inProgressTasks = events.filter(e => e.completed == false);
+      this.inProgressTasks = inProgressTasks.length;
+      this.events = events;
       this.calendarOptions = {
         initialView: 'dayGridMonth',
         selectable: false,
         editable: false,
         select: this.handleDateClick.bind(this),
-        events: data,
-        eventClick(evetData) {
-          const event_id = evetData.event.id;
+        events: events,
+        eventClick(eventData) {
+          const event_id = eventData.event.id;
           Swal.fire({
-            title: evetData.event.title,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Delete this event!',
-            timer: 30000,
-          })    
-          .then((result) => {
-            if (result.value) {
-              self.deleteEvent(event_id);
-              Swal.fire(
-                'Deleted!',
-                'Your file has been deleted.',
-                'success'
-              );
-              self.getAllEvents();
+            title: eventData.event.title,
+            showCancelButton: false,
+            showConfirmButton: false,
+            html: `
+            ${
+              eventData.event.backgroundColor !== 'green'
+                ? '<button id="markCompletedBtn" class="btn btn-success"><span class="fa fa-check"></span> Mark as Completed</button>'
+                : ''
             }
-          }
-          ).catch(() => {
-            Swal.fire('Failed!', 'There was something went wrong.');
+            <button id="deleteBtn" class="btn btn-danger">
+              <span class="fa fa-trash"></span> Delete Event
+            </button>
+          `,
+            timer: 30000,
+            didOpen: () => {
+              const markCompletedBtn = document.getElementById('markCompletedBtn');
+              if (markCompletedBtn) {
+                markCompletedBtn.addEventListener('click', () => {
+                  self.markEventAsCompleted(eventData.event.id);
+                  Swal.fire(
+                    'Completed!',
+                    'The event has been marked as completed.',
+                    'success'
+                  ).then(() => {
+                    self.getAllEvents();
+                    self.refreshEventsAfterCompletion();
+                  });
+                });
+              }
+          
+              const deleteBtn = document.getElementById('deleteBtn');
+              deleteBtn.addEventListener('click', () => {
+                self.deleteEvent(event_id);
+                Swal.fire(
+                  'Completed!',
+                  'The event has been deleted.',
+                  'success'
+                );
+              });
+            },
           });
+          
+          
         }
       };
     });
   }
+
+  deleteEvent(id) {
+    this.blogService.deleteAppointment(id).subscribe(() => {
+      this.getAllEvents();
+    });
+  }
+
+  markEventAsCompleted(eventId: any) {
+    for (let i = 0; i < this.events.length; i++) {
+      if (this.events[i].id == eventId) {
+        const completedEvent = this.events[i];
+        completedEvent.completed = true;
+        completedEvent.backgroundColor = 'green';
+        this.blogService.updateAppointment(completedEvent).subscribe(() => {
+          this.getAllEvents();
+        });
+        break;
+      }
+    }
+  }
+  
+  refreshEventsAfterCompletion() {
+    const updatedEvents = this.events.map((event: any) => ({
+      ...event,
+      title: event.title,
+      start: event.start,
+      backgroundColor: event.completed ? 'green' : 'blue'
+    }));
+    
+    this.calendarOptions.events = updatedEvents;
+  }
+  
+
+  refreshEvents() {
+    const convertedEvents = this.events.map(appointment => ({
+      id: appointment.id.toString(),
+      title: appointment.title,
+      start: appointment.start,
+    }));
+  
+    this.calendarOptions.events = convertedEvents;
+  }
+  
 }

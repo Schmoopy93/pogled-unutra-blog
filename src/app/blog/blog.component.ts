@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Post } from '../models/post';
 import { ServiceblogService } from '../services/blog-service';
-import counterUp from 'counterup2';
 import { User } from '../models/user';
-import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-blog',
@@ -30,6 +29,12 @@ export class BlogComponent implements OnInit {
   public popoverMessage: string = 'Are you sure you want to delete this post???'
   public cancelClicked: boolean = false;
 
+  formData = {
+    name: '',
+    email: '',
+    message: ''
+  };
+  errorMessage = '';
   constructor(private blogService: ServiceblogService, private authService: AuthService, private route: ActivatedRoute, private router: Router) {
   }
 
@@ -97,6 +102,25 @@ export class BlogComponent implements OnInit {
 
     return params;
   }
-
+  onSubmit() {
+    const { name, email, message } = this.formData;
+    this.authService.sendEmailContractForm(name, email, message).subscribe(
+      () => {
+        console.log('Email sent successfully');
+        Swal.fire('Success!', 'Email sent successfully', 'success');
+        this.router.navigateByUrl('/');
+      },
+      error => {
+        this.errorMessage = error.error.error;
+        console.log(this.errorMessage, 'err')
+      },
+      () => {
+        
+        console.log('Complete');
+        this.formData = { name: '', email: '', message: '' };
+      }
+    );
+  }
+  
   
 }

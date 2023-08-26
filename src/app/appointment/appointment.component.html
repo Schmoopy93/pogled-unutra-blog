@@ -28,13 +28,25 @@
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-outline-success btn-sm " (click)="saveEvent()">Save</button>
-                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+                <button #closeModal type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
 
             </div>
         </div>
     </div>
 </div>
+
 <div style="padding-bottom: 70px; color: black; font-weight: bold;">
+    <div class="legend">
+        <div class="legend-item">
+            <div class="legend-color completed"></div>
+            <div class="legend-label">Completed ({{completedTasks}}) </div>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color in-progress"></div>
+            <div class="legend-label">In Progress ({{inProgressTasks}})</div>
+        </div>
+    </div>
+    <br>
     <div style="background-color:#fcf6f6; width: 80%; height: 100%; margin: auto;">
         <full-calendar [options]="calendarOptions"></full-calendar>
     </div>

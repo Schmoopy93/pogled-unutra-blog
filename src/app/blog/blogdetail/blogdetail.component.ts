@@ -9,6 +9,9 @@ import { AuthService } from 'src/app/services/auth.service';
 import { Likes } from 'src/app/models/likes';
 import Swal from 'sweetalert2';
 import { NgForm } from '@angular/forms';
+import { HttpClient, HttpEventType, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { saveAs } from 'file-saver';
+
 
 @Component({
   selector: 'app-blogdetail',
@@ -16,7 +19,6 @@ import { NgForm } from '@angular/forms';
   styleUrls: ['./blogdetail.component.css']
 })
 export class BlogdetailComponent implements OnInit  {
-  @ViewChild('commentForm') public commentForm:NgForm;
   form: any = {
     content: null,
   }
@@ -57,7 +59,7 @@ export class BlogdetailComponent implements OnInit  {
   data: string;
   currUser: any;
 
-  constructor(private blogService: ServiceblogService, private router: Router, private authService: AuthService, public sanitizer: DomSanitizer, private route: ActivatedRoute, private token: TokenStorageService) {}
+  constructor(private blogService: ServiceblogService, private http: HttpClient,  private router: Router, private authService: AuthService, public sanitizer: DomSanitizer, private route: ActivatedRoute, private token: TokenStorageService) {}
   
   ngOnInit(): void {
     this.currUser = this.token.getUser().id;
@@ -80,6 +82,11 @@ export class BlogdetailComponent implements OnInit  {
   @ViewChild('closeModal') private closeModal: ElementRef;
   public hideModel() {
     this.closeModal.nativeElement.click();
+  }
+
+  @ViewChild('hideModalComment') private hideModalComment: ElementRef;
+  public hideModalCommentFunc() {
+    this.hideModalComment.nativeElement.click();
   }
 
   getCurrentUser(){
@@ -174,9 +181,19 @@ export class BlogdetailComponent implements OnInit  {
         });
   }
 
+  @ViewChild('commentForm', { static: false }) commentForm: NgForm;
+  resetModalFormPostComment() {
+    if (this.commentForm) {
+      this.commentForm.resetForm();
+    }
+  }
 
   onSubmit(): void {
     const { content } = this.form;
+    if (content == undefined || content == null || content == "") {
+      Swal.fire("Comment is required!") 
+      return;
+    }
     this.blogService.addComment(content, this.currentPost.id, this.currentUser).subscribe(
       data => {
         console.log(data);
@@ -185,9 +202,9 @@ export class BlogdetailComponent implements OnInit  {
         this.errorMessage = err.error.message;
       }
     );
-    this.hideModel();
-    this.commentForm.form.reset();
-    location.reload();
+    this.hideModalCommentFunc();
+    this.resetModalFormPostComment();
+    this.ngOnInit();
   }
 
   // likePost(): void {
@@ -266,4 +283,30 @@ export class BlogdetailComponent implements OnInit  {
     this.comments.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
   }
 
+  generatePDF(postId) {
+    postId = this.route.snapshot.params.id;
+    const url = 'http://localhost:4000/posts/pdf/' + postId + '?timestamp=' + Date.now();
+    const req = this.http.get(url, { responseType: 'arraybuffer', reportProgress: true, observe: 'events' });
+    req.subscribe((event) => {
+      if (event.type === HttpEventType.DownloadProgress) { 
+      } else if (event.type === HttpEventType.Response) {
+        const arrayBuffer = event.body as ArrayBuffer;
+        const uint8Array = new Uint8Array(arrayBuffer);
+        const blob = new Blob([uint8Array], { type: 'application/pdf' });
+        const randomString = this.generateRandomString(10);
+        const filename = `${postId + randomString + Date.now()}.pdf`;
+        saveAs(blob, filename);
+      }
+    });
+  }
+
+  generateRandomString(length: number) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      result += characters.charAt(randomIndex);
+    }
+    return result;
+  }
 }

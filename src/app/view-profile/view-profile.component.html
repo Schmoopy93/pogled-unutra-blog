@@ -86,8 +86,8 @@
                         <form action="#" class="commenting-form" *ngFor="let like of likes">
                             <div class="row" *ngIf="toDisplayGroup['id'] === like?.timelineId && like?.userId === like?.user.id">
                                 <div class="form-group col-md-12">
-                                    <a *ngIf="currentUserLike !== like?.userId" routerLink="/view-profile/{{like?.userId}}" (click)="hideModel();" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:6868/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong></a>
-                                    <a *ngIf="currentUserLike === like?.userId" routerLink="/my-profile" (click)="hideModel();" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:6868/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong></a>
+                                    <a *ngIf="currentUserLike !== like?.userId" routerLink="/view-profile/{{like?.userId}}" (click)="hideModel();" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong></a>
+                                    <a *ngIf="currentUserLike === like?.userId" routerLink="/my-profile" (click)="hideModel();" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong></a>
                                     <hr>
                                 </div>
                             </div>
@@ -110,7 +110,7 @@
                         <div class="profile-header-cover"></div>
                         <div class="profile-header-content">
                             <div class="profile-header-img">
-                                <img src="http://localhost:6868/uploads/userphoto/{{user?.photoName}}" alt="">
+                                <img src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="">
                             </div>
                             <div class="profile-header-info">
                                 <h4 class="m-t-10 m-b-5">{{ user?.firstname }} {{ user?.lastname }}</h4>
@@ -121,19 +121,13 @@
                                     <button *ngIf="!followRequest && requestedFollowing == 1" class="btn btn-outline-success btn-sm" style="margin-right:3px;">Requested</button>
                                     <button *ngIf="followRequest" class="btn btn-outline-success btn-sm" style="margin-right:3px;" (click)="unfollow(resId)">Unfollow {{user?.firstname}} {{user?.lastname}}</button>
                                     <button *ngIf="followRequest" class="btn btn-outline-success btn-sm" style="margin-right:3px;" data-toggle="modal" data-target="#exampleModal">About {{ user?.firstname }} {{ user?.lastname }}</button>
-                                    <button *ngIf="followRequest" class="btn btn-outline-success btn-sm dropdown-toggle" style="margin-right: 10px;" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">          Sort Timelines By Date
-                                </button>
-                                </div>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" (click)="compareAlphabeticallyAsc()">Asc <i class="fas fa-arrow-up"></i></a>
-                                    <a class="dropdown-item" (click)="compareAlphabeticallyDesc()">Desc <i class="fas fa-arrow-down"></i></a>
                                 </div>
                             </div>
                         </div>
                         <ul class="profile-header-tab nav nav-tabs">
-                            <li class="tab-slider--trigger" [class.active]="viewMode == 'tab1'" rel="tab1" (click)="viewMode ='tab1'"><a data-toggle="tab" href="#timeline">TIMELINE</a></li>
-                            <li class="tab-slider--trigger" [class.active]="viewMode == 'tab2'" rel="tab2" (click)="viewMode ='tab2'"><a data-toggle="tab" href="#photos">PHOTOS</a></li>
-                            <li class="tab-slider--trigger" [class.active]="viewMode == 'tab3'" rel="tab3" (click)="viewMode ='tab3'"><a data-toggle="tab" href="#friends">FRIENDS</a></li>
+                            <li class="tab-slider--trigger" [class.active]="viewMode == 'tab1'" (click)="selectTab('tab1')"><a data-toggle="tab" href="#timeline">TIMELINE</a></li>
+                            <li class="tab-slider--trigger" [class.active]="viewMode == 'tab2'" (click)="selectTab('tab2')"><a data-toggle="tab" href="#photos">PHOTOS</a></li>
+                            <li class="tab-slider--trigger" [class.active]="viewMode == 'tab3'" (click)="selectTab('tab3')"><a data-toggle="tab" href="#friends">FRIENDS</a></li>
                         </ul>
                     </div>
                 </div>
@@ -142,14 +136,23 @@
                         <div id="tab1" class="tab-slider--body" *ngSwitchCase="'tab1'">
                             <section>
                                 <div class="container my-5 py-5">
+                                    <div class="center">
+                                        <button class="btn btn-outline-success btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Sort Timelines By Date
+                                          </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" (click)="compareAlphabeticallyAsc()">Asc <i class="fas fa-arrow-up"></i></a>
+                                            <a class="dropdown-item" (click)="compareAlphabeticallyDesc()">Desc <i class="fas fa-arrow-down"></i></a>
+                                        </div>
+                                    </div>
                                     <hr>
                                     <h3 style="text-align: center; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif">{{ user?.firstname }}'s TIMELINE</h3>
                                     <div class="row d-flex justify-content-center">
                                         <div class="col-md-12 col-lg-10" *ngFor="let timeline of timelines | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" style="margin-top: 10px;">
-                                            <div class="card text-dark">
+                                            <div class="card text-dark shadow-background">
                                                 <div class="card-body p-4">
                                                     <div class="d-flex flex-start">
-                                                        <img class="rounded-circle shadow-1-strong me-3" src="http://localhost:6868/uploads/userphoto/{{user?.photoName}}" alt="avatar" width="60" height="60" />
+                                                        <img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="avatar" width="60" height="60" />
                                                         <div>
                                                             <h6 class="fw-bold mb-1"><strong>{{ user?.firstname }} {{ user?.lastname }}</strong></h6>
                                                             <div class="d-flex align-items-center mb-3">
@@ -165,13 +168,13 @@
                                                                         <button (click)="likeTimeline(timeline?.id);" class="dropdown-item" style="margin-top:10px; margin-right:3px;"><i class="far fa-thumbs-up "></i>Like</button>
                                                                         <button style="margin-top:10px;" (click)="toDisplayGroup = timeline" class="dropdown-item" data-toggle="modal" data-target="#exampleModalTimeline"><i class="far fa-user "></i>Who liked</button>
                                                                     </div>
-                                                                    <button type="button" title="Edit profile" style="margin-left: 10px;" *ngIf="currentUser.id === user?.id" class="btn btn-outline-secondary btn-sm" routerLink="/edit-timeline/{{ timeline.id }}"><i class="fas fa-edit"></i></button>
+                                                                    <button type="button" title="Edit profile" style="margin-left: 10px;" *ngIf="currentUser.id === user?.id" class="btn btn-outline-warning btn-sm" routerLink="/edit-timeline/{{ timeline.id }}"><i class="fas fa-edit"></i></button>
                                                                     <a class="btn btn-outline-danger btn-sm " style="margin-left: 10px;" *ngIf="currentUser.id === user?.id" mwlConfirmationPopover placement="top-up" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteTimelineById(timeline.id)"
                                                                         (cancel)="cancelClicked = true"><i class="fas fa-trash ms-2"></i></a>
                                                                 </div>
 
                                                             </div>
-                                                            <p class="mb-0" style="padding-top: 20px;">
+                                                            <p class="mb-0" style="padding-top: 20px; font-size: 16px; color: #e7a457; font-weight: bold; font-style: italic; font-family:cursive">
                                                                 {{timeline?.text}}
                                                             </p>
                                                         </div>
@@ -206,16 +209,15 @@
                                         <p class="paginate" style="margin-top: 10px;"><strong>Total photos: {{countGallery}}</strong></p>
                                         <hr>
                                         <h3 style="text-align: center; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif">{{ user?.firstname }}'s PHOTOS</h3>
-                                        <div class="row">
-                                            <div class="col-md-4 lg-4 animation" *ngFor="let p of photoGallery | paginate : {itemsPerPage: pageSizeGallery,currentPage: pageGallery,totalItems: countGallery}; let i = index" [class.active]="i == currentIndex" style="margin-top: 10px;">
-                                                <div class="card" style="border: 1px solid rgb(199, 199, 199); box-shadow: 5px 10px #888888;">
-                                                    <img src="http://localhost:6868/uploads/{{p?.name}}" alt=" " class="card-img-top ">
-                                                    <div class="card-body ">
-                                                        <h5 class="card-title "></h5>
-                                                        <h4 class="card-text" style=" white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><strong>{{p.title}}</strong></h4>
-                                                        <p class="card-text">Publish date: {{p.createdAt | date: "MMM d, y" }}</p>
-                                                        <!-- <a class="btn btn-outline-danger btn-sm " style="float: right;">
-                                                            <span mwlConfirmationPopover [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessageGallery" (confirm)="deletePhoto(p.id)" (cancel)="cancelClicked = true"><i class="fa fa-trash" aria-hidden="true"></i></span></a> -->
+                                        <div class="custom-card-row">
+                                            <div class="custom-card-col animation" *ngFor="let p of photoGallery | paginate : {itemsPerPage: pageSizeGallery, currentPage: pageGallery, totalItems: countGallery}; let i = index" [class.active]="i == currentIndex" style="margin-top: 10px;">
+                                                <div class="custom-card" style="border: 1px solid rgb(199, 199, 199); box-shadow: 5px 10px #888888; position: relative;">
+                                                    <img src="http://localhost:4000/uploads/{{p?.name}}" alt=" " class="custom-card-img">
+                                                    <div class="custom-card-content">
+                                                        <div class="custom-card-body">
+                                                            <h4 class="custom-card-title">{{p.title}}</h4>
+                                                            <p class="custom-card-date">Publish date: {{p.createdAt | date: "MMM d, y" }}</p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -248,11 +250,11 @@
                                 <div class="row">
                                     <ng-container *ngFor="let follower of followers | search:searchText | paginate : {itemsPerPage: pageSizeFriends,currentPage: pageFriends,totalItems: countFriends}; let i = index" [class.active]="i == currentIndex">
                                         <div class="col-xl-6 col-lg-7 col-md-12" *ngIf="follower.status === 'Following'">
-                                            <div class="card profile-header1" style="border-radius: 15px; border: 1px solid rgb(199, 199, 199);">
+                                            <div class="card profile-header1 cardFollowers" style="border-radius: 15px; border: 1px solid rgb(199, 199, 199);">
                                                 <div class="body1">
                                                     <div class="row">
                                                         <div class="col-lg-4 col-md-4 col-12">
-                                                            <div class="profile-image1 float-md-right"> <img src="http://localhost:6868/uploads/userphoto/{{follower?.user.photoName}}" alt=""> </div>
+                                                            <div class="profile-image1 float-md-right"> <img src="http://localhost:4000/uploads/userphoto/{{follower?.user.photoName}}" alt=""> </div>
                                                         </div>
                                                         <div class="col-lg-8 col-md-8 col-12">
                                                             <h4 class="m-t-0 m-b-0"><strong>{{follower?.user.firstname}} {{follower?.user.lastname}}</strong></h4>

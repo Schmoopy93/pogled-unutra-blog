@@ -1,3 +1,28 @@
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Create a category</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body">
+                <form action="#" class="commenting-form" (ngSubmit)="onSubmitCategory()" #f1="ngForm">
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <input name="text" id="text" placeholder="Add new category to list..." class="form-control" [(ngModel)]="formCategory.text" #text="ngModel">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-outline-success btn-sm " (click)="onSubmitCategory(); hideModel()">Add</button>
+                <button #closeModal type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <section class="vh-150 bg-image">
     <div class="mask d-flex align-items-center h-150" style="padding-top:50px">
         <div class="container h-150">
@@ -6,6 +31,8 @@
                     <div class="card" style="border-radius: 15px; border: 1px solid rgb(199, 199, 199);">
                         <div class="card-body p-5">
                             <h2 class="text-uppercase text-center mb-5">Create a post</h2>
+                            <button title="Create a category" class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus"></i> Add new category</button>
+                            <hr>
                             <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate id="signup-form" class="signup-form">
                                 <div class="form-outline mb-4" data-validate="Title is required">
                                     <input type="text" class="form-control form-control-lg" name="title" [(ngModel)]="form.title" required minlength="3" #title="ngModel" placeholder="Type your title">
@@ -25,6 +52,10 @@
                                         Text must be a valid
                                     </div>
                                 </div>
+                                <select class="custom-option form-outline mb-4t" style="width: 100%;" #mySelect (change)="onOptionSelect(mySelect.value)">
+                                    <option value="" selected disabled>Choose a category</option>
+                                    <option *ngFor="let category of categories" [value]="category.id">{{category.text}}</option>
+                                  </select>
                                 <div class="form-outline mb-4t">
                                     <input type="file" class="form-control" id="customFile" (change)="selectFile($event)" style="height: auto;" />
                                     <label class="form-label" for="form3Example3cg">Blog photo</label>

@@ -4,8 +4,9 @@ import { Observable, of, Subject } from 'rxjs';
 import { Post } from '../models/post';
 import { TokenStorageService } from './token-storage.service';
 import { ActivatedRoute } from '@angular/router';
+import { Appointment } from '../models/appointment';
 
-const AUTH_API = 'http://localhost:6868/api/auth/';
+const AUTH_API = 'http://localhost:4000/api/auth/';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -20,9 +21,9 @@ export class ServiceblogService {
   commURL: string;
 
   constructor(private http: HttpClient, private token: TokenStorageService, private route: ActivatedRoute) {
-    this.postsURL = 'http://localhost:6868/api/auth/posts';
-    this.commentURL = 'http://localhost:6868/api/auth/showComments'
-    this.commURL = 'http://localhost:6868/api/auth/'
+    this.postsURL = 'http://localhost:4000/api/auth/posts';
+    this.commentURL = 'http://localhost:4000/api/auth/showComments'
+    this.commURL = 'http://localhost:4000/api/auth/'
    
   }
   getAllPosts(params: any): Observable<any> {
@@ -33,6 +34,10 @@ export class ServiceblogService {
     return this.http.get<any>(this.commURL + 'postsHomePage', { params });
   }
 
+  getAllPostsWithoutParams(): Observable<any> {
+    return this.http.get<any>(this.postsURL);
+  }
+
   getAllComments(params: any): Observable<any> {
     return this.http.get<any>(this.commURL + 'showAllPaginatedComments', { params });
   }
@@ -41,6 +46,9 @@ export class ServiceblogService {
     return this.http.get<any>(`${AUTH_API}findAllAppointments`);
   }
 
+  updateAppointment(appointment: Appointment): Observable<Appointment> {
+    return this.http.put<Appointment>(`${AUTH_API}updateAppointment/${appointment.id}`, appointment);
+  }
   getAllTimelines(params: any): Observable<any> {
     return this.http.get<any>(this.commURL + 'showAllPaginatedTimelines', { params });
   }
@@ -56,15 +64,16 @@ export class ServiceblogService {
     return null;
   }
 
-  addPost(file: File, title: string, content: string, userId: string): Observable<HttpEvent<{}>> {
+  addPost(file: File, title: string, content: string, userId: string, categoryId: any): Observable<HttpEvent<{}>> {
     const formdata: FormData = new FormData();
 
     formdata.append('file', file);
     formdata.append('title', title);
     formdata.append('content', content);
     formdata.append('userId', userId);
+    formdata.append('categoryId', categoryId);
 
-    const req = new HttpRequest('POST', 'http://localhost:6868/api/auth/posts/upload', formdata, {
+    const req = new HttpRequest('POST', 'http://localhost:4000/api/auth/posts/upload', formdata, {
       reportProgress: true,
       responseType: 'text',
     });
@@ -79,11 +88,12 @@ export class ServiceblogService {
       .get(`${this.postsURL}/${id}`);
   }
 
-  updatePost(title, content, id) {
+  updatePost(title, content, categoryId, id) {
 
     const obj = {
       title: title,
       content: content,
+      categoryId: categoryId,
     };
     this
       .http
@@ -94,6 +104,11 @@ export class ServiceblogService {
   deletePost(id: number): Observable<any> {
     return this.http.delete(`${this.postsURL}/${id}`, { responseType: 'text' });
   }
+
+  deleteHistoryNotificationById(id: number): Observable<any> {
+    return this.http.delete(`${AUTH_API}notificationsHistory/${id}`, { responseType: 'text' });
+  }
+
 
   addComment(content: string, postId: number, userId:number): Observable<any> {
     return this.http.post(AUTH_API + 'comments', {
@@ -119,6 +134,9 @@ export class ServiceblogService {
     
   }
 
+  getLikesByTimelineIds(id: number): Observable<any> {
+    return this.http.get(`${AUTH_API}showTimelines/${id}`, { responseType: 'text' });
+  }
 
   addTimeline(text: string, userId:number): Observable<any> {
     return this.http.post(AUTH_API + 'timelines', {
@@ -212,7 +230,21 @@ export class ServiceblogService {
     formdata.append('title', title);
     formdata.append('userId', userId);
 
-    const req = new HttpRequest('POST', 'http://localhost:6868/api/auth/photogallery/upload', formdata, {
+    const req = new HttpRequest('POST', 'http://localhost:4000/api/auth/photogallery/upload', formdata, {
+      reportProgress: true,
+      responseType: 'text',
+    });
+
+    return this.http.request(req);
+  }
+
+  changeProfilePicture(file: File, userId: string): Observable<HttpEvent<{}>> {
+    const formdata: FormData = new FormData();
+
+    formdata.append('file', file);
+    formdata.append('userId', userId);
+
+    const req = new HttpRequest('PUT', 'http://localhost:4000/api/auth/changeProfilePicture/upload', formdata, {
       reportProgress: true,
       responseType: 'text',
     });
@@ -233,4 +265,33 @@ export class ServiceblogService {
   deletePhoto(id: number): Observable<any> {
     return this.http.delete(`${this.commURL}gallery/${id}`, { responseType: 'text' });
   }
+
+  getAllCategories(): Observable<any> {
+    return this.http.get<any>(this.commURL + 'findAllCategories');
+  }
+
+  addCategory(text: string): Observable<any> {
+    return this.http.post(AUTH_API + 'posts/createCategory', {
+      text
+    }, httpOptions);
+  }
+
+  createMessageFromSocket(text: string, userId: string): Observable<any> {
+    return this.http.post(AUTH_API + 'createMessageFromSocket', {
+      text,
+      userId
+    }, httpOptions);
+  }
+
+  // getNotificationsHistory(params: any): Observable<any> {
+  //   console.log(params, 'params')
+  //   return this.http.get<any>(AUTH_API + 'notificationsHistory', { params });
+  // }
+
+  getNotificationsHistory(userId: string): Observable<any> {
+    const params = { userId: userId }; // Create the params object with userId
+  
+    return this.http.get<any>(AUTH_API + 'notificationsHistory', { params });
+  }
+  
 }
