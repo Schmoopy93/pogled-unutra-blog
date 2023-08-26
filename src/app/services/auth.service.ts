@@ -161,6 +161,11 @@ export class AuthService {
     return this.http.get<any>(`${USER_API}`, { params });
   }
   
+  
+  getAllFilteredUsers(params: any): Observable<any> {
+    return this.http.get<any>(`${AUTH_API}followedUsers`, { params });
+  }
+
   forgotPassword(email: any): Observable<any> {
     return this.http.post(USER_API + '/retrieve-password', {
       email,

@@ -67,17 +67,14 @@ export class SearchFriendComponent implements OnInit {
 
   retrieveUsers(): void {
     const params = this.getRequestParams(this.firstname, this.page, this.pageSize, this.currUser);
-    this.authService.getAllUsersForSearch(params)
+    this.authService.getAllFilteredUsers(params)
     .subscribe(
       response => {
         const { users, totalItems } = response;
+        console.log(response,"RESPONSE")
         this.users = users;
         this.count = totalItems;
         this.users.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-        //console.log(users, 'users')
-        // this.res = users;
-        // const currentUserFollowers = users.filter(user => user.id === this.currUser)[0].followers.map(el => el.followerId);
-        // this.res = users.filter(user => (!currentUserFollowers.includes(user.id) && user.id !==this.currUser));
         },
         error => {
           console.log(error);
