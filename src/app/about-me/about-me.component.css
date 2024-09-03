@@ -1,21 +1,22 @@
 body {
     font-family: 'Times New Roman', Times, serif;
+    background-color: #e0f2f1;
+    /* Mint zelena boja */
+    color: #333;
+    margin: 0;
+    padding: 0;
 }
 
-section {
-    max-width: 800px;
-    margin: 0 auto;
+header.masthead {
     text-align: center;
-    padding: 50px 0;
-}
-
-.masthead {
-    text-align: center;
-    padding: 50px 0;
+    padding: 80px 20px;
+    background-image: url('https://images.pexels.com/photos/3791567/pexels-photo-3791567.jpeg');
     background-position: center;
     background-size: cover;
-    color: #005bab;
+    color: #fff;
     font-family: 'Helvetica Neue', sans-serif;
+    background-color: #00796b;
+    /* Tamnija nijansa zelene boje */
 }
 
 .masthead-intro {
@@ -23,7 +24,7 @@ section {
     font-weight: 400;
     letter-spacing: 2px;
     text-transform: uppercase;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .masthead-heading {
@@ -31,97 +32,76 @@ section {
     font-weight: 700;
     letter-spacing: 3px;
     text-transform: uppercase;
-    margin-bottom: 0;
+    margin: 0;
+    color: #fff;
 }
 
-.introduction-section h1 {
-    font-size: 36px;
-    font-weight: bold;
+section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 30px 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
     margin-bottom: 30px;
 }
 
-.introduction-section p {
-    font-size: 24px;
-    line-height: 1.5;
-    margin-bottom: 20px;
-    color: #005bab;
-}
-
-.location-section h1 {
-    font-size: 36px;
-    font-weight: bold;
-    margin-bottom: 30px;
-}
-
-.location-section p {
-    font-size: 24px;
-    line-height: 1.5;
-    margin-bottom: 20px;
-}
-
-.questions-section h1 {
-    font-size: 36px;
-    font-weight: bold;
-    margin-bottom: 30px;
-}
-
-.questions-section h2 {
+section h1 {
     font-size: 30px;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+    color: #00796b;
+    /* Tamnija nijansa zelene boje */
 }
 
-.questions-section p {
-    font-size: 24px;
-    line-height: 1.5;
+section p {
+    font-size: 16px;
+    line-height: 1.6;
     margin-bottom: 20px;
+    color: #555;
+    /* Nežna boja za tekst */
 }
 
-.branches-section {
-    width: 80%;
-    margin: 0 auto;
+.image-section {
     text-align: center;
-    font-family: Arial, sans-serif;
-    font-size: 18px;
-    color: black;
+    margin: 20px auto;
 }
 
-.branches-section h1 {
-    font-size: 32px;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
-
-.branches-section p {
-    margin-bottom: 20px;
+.image-section img {
+    max-width: 70%;
+    /* Smanjenje veličine slike */
+    height: auto;
+    border-radius: 8px;
 }
 
 .branches-section ul {
     list-style: none;
     padding: 0;
-    margin-bottom: 20px;
+    margin: 0;
 }
 
 .branches-section li {
-    text-align: left;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    font-size: 16px;
 }
 
 .branches-section li strong {
     font-weight: bold;
-    color: #005bab;
+    color: #00796b;
+    /* Tamnija nijansa zelene boje */
 }
 
 .footer {
-    color: #005bab;
     padding: 20px;
     text-align: center;
+    background-color: #004d40;
+    /* Tamna boja za footer */
+    color: #fff;
     font-size: 0.8rem;
-    margin-top: 50px;
 }
 
 .footer a {
-    color: #005bab;
+    color: #fff;
     text-decoration: none;
 }
 
@@ -129,7 +109,29 @@ section {
     text-decoration: underline;
 }
 
-.responsive-image {
-    max-width: 100%;
-    height: auto;
+@media only screen and (max-width: 768px) {
+    .masthead-heading {
+        font-size: 36px;
+    }
+    section h1 {
+        font-size: 28px;
+    }
+    section p {
+        font-size: 14px;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .masthead-heading {
+        font-size: 28px;
+    }
+    section h1 {
+        font-size: 24px;
+    }
+    section p {
+        font-size: 12px;
+    }
+    .image-section img {
+        max-width: 80%;
+    }
 }
