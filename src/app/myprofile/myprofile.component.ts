@@ -234,16 +234,26 @@ export class MyprofileComponent implements OnInit {
       next: (data) => {
         this.likes = data;
         this.groupedLikes = this.groupLikesByTimelineId(this.likes);
-        this.checkValidLikes();     
+        if(this.likes){
+          this.checkValidLikes();
+        }
+             
       },
       error: (e) => console.error(e),
     });
   }
-  
 
   checkValidLikes(): void {
     this.timelines.forEach((timeline) => {
+      console.log('Current timeline:', timeline);
+      
+      if (!timeline || !timeline.id) {
+        console.error('Invalid timeline or timeline ID is missing:', timeline);
+        return;
+      }
+  
       const validLikesForTimeline = this.groupedLikes[timeline.id] || [];
+      console.log('Valid likes for timeline:', validLikesForTimeline);
       
       validLikesForTimeline.forEach((like) => {
         if (this.isTimelineLikeValid(like, timeline)) {
@@ -252,7 +262,7 @@ export class MyprofileComponent implements OnInit {
       });
     });
   }
-
+  
   isTimelineLikeValid(like: any, timeline: any): boolean {   
     return like?.timelineId === timeline.id && like?.userId === like?.user.id;
   }
