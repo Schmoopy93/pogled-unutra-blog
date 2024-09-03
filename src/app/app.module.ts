@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { SpinnerInterceptor } from '../app/services/spinner.interceptor';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { ConfirmationPopoverModule} from 'angular-confirmation-popover'
 import { HttpClientModule } from '@angular/common/http';
@@ -43,6 +45,10 @@ import { EditCommentsComponent } from './edit-comments/edit-comments.component';
 import { SearchPipe } from './services/search.pipe';
 import { ChartsModule } from 'ng2-charts';
 import { BlogStatisticsComponent } from './blog/blog-statistics/blog-statistics.component';
+// import { ChatComponent } from './chat/chat.component';
+import { SocketService } from './services/socket-service';
+import { SpinnerComponent } from './spinner/spinner.component';
+
 
 
 FullCalendarModule.registerPlugins([
@@ -78,6 +84,8 @@ FullCalendarModule.registerPlugins([
     EditCommentsComponent,
     SearchPipe,
     BlogStatisticsComponent,
+    // ChatComponent,
+    SpinnerComponent,
   ],
   imports: [
     BrowserModule,
@@ -102,7 +110,11 @@ FullCalendarModule.registerPlugins([
     FullCalendarModule,
     ChartsModule
   ],
-  providers: [DatePipe],
+  providers: [DatePipe, SocketService,,     {
+    provide: HTTP_INTERCEPTORS,
+    useClass: SpinnerInterceptor,
+    multi: true
+  } ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
