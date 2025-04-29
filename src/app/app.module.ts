@@ -45,7 +45,7 @@ import { EditCommentsComponent } from './edit-comments/edit-comments.component';
 import { SearchPipe } from './services/search.pipe';
 import { ChartsModule } from 'ng2-charts';
 import { BlogStatisticsComponent } from './blog/blog-statistics/blog-statistics.component';
-// import { ChatComponent } from './chat/chat.component';
+import { ChatComponent } from './chat/chat.component';
 import { SocketService } from './services/socket-service';
 import { SpinnerComponent } from './spinner/spinner.component';
 
@@ -84,7 +84,7 @@ FullCalendarModule.registerPlugins([
     EditCommentsComponent,
     SearchPipe,
     BlogStatisticsComponent,
-    // ChatComponent,
+    ChatComponent,
     SpinnerComponent,
   ],
   imports: [

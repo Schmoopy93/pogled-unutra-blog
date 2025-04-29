@@ -175,4 +175,8 @@ export class AuthService {
   getMyFollowers(params: any): Observable<any> {
     return this.http.get<any>(`${AUTH_API}getFollowers`, { params });
   }
+
+  getMessages(params: any): Observable<any> {
+    return this.http.get<any>(`${AUTH_API}messages`, { params });
+  }
 }
