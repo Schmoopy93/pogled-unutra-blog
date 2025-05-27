@@ -12,6 +12,7 @@ import { Followers } from '../models/followers';
 import { NgForm } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SocketService } from '../services/socket-service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-myprofile',
@@ -20,6 +21,7 @@ import { SocketService } from '../services/socket-service';
 })
 
 export class MyprofileComponent implements OnInit {
+  apiUrl = environment.apiUrl;
   form: any = {
     text: null,
   }

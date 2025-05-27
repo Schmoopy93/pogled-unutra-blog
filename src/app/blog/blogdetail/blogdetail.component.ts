@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
 import { NgForm } from '@angular/forms';
 import { HttpClient, HttpEventType, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { saveAs } from 'file-saver';
+import { environment } from '../../../environments/environment';
 
 
 @Component({
@@ -19,6 +20,7 @@ import { saveAs } from 'file-saver';
   styleUrls: ['./blogdetail.component.css']
 })
 export class BlogdetailComponent implements OnInit  {
+  apiUrl = environment.apiUrl;
   form: any = {
     content: null,
   }
@@ -285,7 +287,7 @@ export class BlogdetailComponent implements OnInit  {
 
   generatePDF(postId) {
     postId = this.route.snapshot.params.id;
-    const url = 'http://localhost:4000/posts/pdf/' + postId + '?timestamp=' + Date.now();
+    const url = this.apiUrl.replace('api/auth/', '') + 'posts/pdf/' + postId + '?timestamp=' + Date.now();
     const req = this.http.get(url, { responseType: 'arraybuffer', reportProgress: true, observe: 'events' });
     req.subscribe((event) => {
       if (event.type === HttpEventType.DownloadProgress) { 

@@ -9,10 +9,10 @@ export class SpinnerService {
   public loading$ = this.loadingSubject.asObservable();
 
   show() {
-    this.loadingSubject.next(true);
+    setTimeout(() => this.loadingSubject.next(true));
   }
 
   hide() {
-    this.loadingSubject.next(false);
+    setTimeout(() => this.loadingSubject.next(false));
   }
 }

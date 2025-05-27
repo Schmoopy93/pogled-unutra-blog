@@ -12,12 +12,15 @@ import { PhotoGallery } from '../models/photogallery';
 import { SocketService } from '../services/socket-service';
 import { debounceTime, take, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { environment } from '../../environments/environment';
+
 @Component({
   selector: 'app-view-profile',
   templateUrl: './view-profile.component.html',
   styleUrls: ['./view-profile.component.css'],
 })
 export class ViewProfileComponent implements OnInit{
+  apiUrl = environment.apiUrl;
   currentUser: any;
   currentUserId: any;
   user: any;

@@ -4,6 +4,7 @@ import { EventEmitter } from '@angular/core';
 import { TokenStorageService } from './token-storage.service';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,7 @@ export class SocketService {
   userStatus$ = this.userStatusSubject.asObservable();
 
   constructor(private token: TokenStorageService) {
-    this.socket = io('http://localhost:4000');
+    this.socket = io(environment.apiUrl.replace('api/auth/', ''));
 
     this.socket.on('connect', () => {
       console.log('Connected to the server');

@@ -11,7 +11,7 @@
                 <div class="followers-list p-3">
                     <div *ngFor="let follower of followers" class="follower-item" (click)="selectUser(follower.user.id)">
                         <span [ngStyle]="{'color': getStatusColor(follower.user.id)}">●</span>
-                        <img [src]="'http://localhost:4000/uploads/userphoto/' + follower.user.photoName" alt="avatar" class="avatar"> {{ follower.user.firstname }} {{ follower.user.lastname }}
+                        <img [src]="apiUrl.replace('api/auth/', '') + 'uploads/userphoto/' + follower.user.photoName" alt="avatar" class="avatar"> {{ follower.user.firstname }} {{ follower.user.lastname }}
                     </div>
                 </div>
             </div>
@@ -23,7 +23,7 @@
                     <div *ngFor="let message of messages" class="message-item">
                         <div class="message-header">
                             <span [ngStyle]="{'color': getStatusColor(message.sender?.id)}">●</span>
-                            <img [src]="'http://localhost:4000/uploads/userphoto/' + message.sender?.photoName" alt="avatar" class="avatar">
+                            <img [src]="apiUrl.replace('api/auth/', '') + 'uploads/userphoto/' + message.sender?.photoName" alt="avatar" class="avatar">
                             <span class="message-sender">{{ message.sender?.firstname }} {{ message.sender?.lastname }}</span>
                         </div>
                         <div class="message-text">{{ message.text }}</div>

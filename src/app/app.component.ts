@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { SpinnerService } from '../app/services/spinner.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -7,7 +8,6 @@ import { SpinnerService } from '../app/services/spinner.service';
 })
 export class AppComponent {
   title = 'pogled-unutra-blog';
-
   loading$ = this.spinnerService.loading$;
 
   constructor(private spinnerService: SpinnerService) {}

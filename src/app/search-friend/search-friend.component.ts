@@ -3,14 +3,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../models/user';
 import { AuthService } from '../services/auth.service';
 import { TokenStorageService } from '../services/token-storage.service';
-import { map } from 'rxjs/operators';
-import { LeadingComment } from '@angular/compiler';
+import { environment } from '../../environments/environment';
+
 @Component({
   selector: 'app-search-friend',
   templateUrl: './search-friend.component.html',
   styleUrls: ['./search-friend.component.css']
 })
 export class SearchFriendComponent implements OnInit {
+  apiUrl = environment.apiUrl;
   users: User[] = [];
   currentUser:any;
   user: any = {};

@@ -4,6 +4,7 @@ import { SocketService } from '../services/socket-service';
 import { Socket } from 'socket.io-client';
 import { distinctUntilChanged, take  } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-chat',
@@ -12,7 +13,7 @@ import { Subscription } from 'rxjs';
 })
 export class ChatComponent implements OnInit {
   @ViewChild('chatMessagesContainer') private chatMessagesContainer!: ElementRef;
-  
+  apiUrl = environment.apiUrl;
   followers: any[] = []; 
   messages: any[] = []; 
   messageText: string = '';
