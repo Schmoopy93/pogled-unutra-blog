@@ -92,7 +92,7 @@ export class ViewProfileComponent implements OnInit{
     this.currentUserId = this.token.getUser().id;
     this.userId = id;
     if(id === this.userId){
-      this.getTimeline();
+      //this.getTimeline();
       this.getTimelinePage();
       this.retrievePhotoGallery();
     }
@@ -165,6 +165,7 @@ export class ViewProfileComponent implements OnInit{
         this.currentUserId = currentUserId;
         this.res = response;
         this.requestedFollowing = this.res.map(e => e.indicator);
+        
         if(this.res){
           this.res = this.res.find(i => i.id);
           this.resId = this.res?.id;
@@ -252,6 +253,15 @@ export class ViewProfileComponent implements OnInit{
     }
   }
 
+getStyle(): { [key: string]: any } {
+  if (!this.followRequest) {
+    return { 'padding-bottom': '30%' };
+  }
+  else{
+    return { 'padding-bottom': '8%' };
+  }
+}
+
   getRequestParamsForFriends(searchTitle: string, pageFriends: number, pageSizeFriends: number, userId: any): any {
     let params: any = {};
 
@@ -315,29 +325,6 @@ export class ViewProfileComponent implements OnInit{
       });
   }
 
-  getTimeline(): void {
-    const params = this.getRequestParams(this.text, this.page, this.pageSize, this.userId);
-    this.blogService.getAllTimelines(params)
-    .subscribe(
-      response => {
-        const { timelines, totalItems, userId } = response;
-        this.timelines = timelines;
-        this.count = totalItems;
-        this.userId = userId;
-        this.timelines.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-        this.timeline_Id = this.timelines.map(e => e.id);
-        // for (let index = 0; index < timelines.length; index++) {
-        //   this.timelineId = timelines[index].id;
-        //   // this.retrieveLikesTimeline();
-        // }
-        // return this.timelineId;
-      },
-      error => {
-        console.log(error);
-      });
-
-  }
-
   reloadCurrentRoute() {
     const currentUrl = this.router.url;
     this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
@@ -348,7 +335,9 @@ export class ViewProfileComponent implements OnInit{
   likeTimeline(id): void {
     this.blogService.likeTimeline(this.currentUserLike, id).subscribe(
       data => {
-        console.log(data);
+        this.userId = this.route.snapshot.params.id;
+        this.getTimelinePage();
+        this.retrieveLikesTimeline();
       },
       err => {
         this.errorMessage = err.error.message;
@@ -357,9 +346,23 @@ export class ViewProfileComponent implements OnInit{
         }
       }
     );
-    this.ngOnInit()
-    //this.reloadCurrentRoute();
   }
+
+  getTimelinePageByUser(userId: number): void {
+  const params = this.getRequestParams(this.text, this.page, this.pageSize, userId);
+  this.blogService.getAllTimelines(params)
+    .subscribe(
+      response => {
+        const { timelines, totalItems, userId } = response;
+        this.timelines = timelines;
+        this.count = totalItems;
+        this.userId = userId;
+        this.timelines.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+      },
+      error => {
+        console.log(error);
+      });
+}
 
 
   setActiveLikes(like: Likes, index: number): void {
@@ -377,44 +380,6 @@ export class ViewProfileComponent implements OnInit{
       });
   }
 
-
-  // retrieveLikesTimeline(): void {
-  //   const params = this.getRequestParamsLikesTimeline(this.pageLikes, this.pageSizeLikes, this.timelineId);
-  //     this.blogService.getLikesByTimelineId(params)
-  //     .subscribe(
-  //       response => {
-  //         const { likes, totalItems } = response;
-  //         this.likes = likes;
-  //         this.countLikes = totalItems;
-  //         this.likeArrayByTimeline.push(...likes)[0];
-  //         // this.getLikes = likes.forEach(element => {
-  //         //     this.getEachLike = element
-  //         //     this.likeArrayByTimeline.push(this.getEachLike);
-  //         //   });
-  //       },
-  //       error => {
-  //         console.log(error);
-  //       });
-  //   }
-
-
-  // getRequestParamsLikesTimeline(pageLikes: number, pageSizeLikes: number, timelineId: number): any {
-  //   let params: any = {};
-
-  //   if (pageLikes) {
-  //     params[`pageLikes`] = pageLikes - 1;
-  //   }
-
-  //   if (pageSizeLikes) {
-  //     params[`pageSizeLikes`] = pageSizeLikes;
-  //   }
-
-  //   if (timelineId) {
-  //     params[`timelineId`] = timelineId;
-  //   }
-  //   return params;
-    
-  // }
 
   getRequestParams(searchTitle: string, page: number, pageSize: number, userId: number): any {
     let params: any = {};
@@ -476,12 +441,12 @@ export class ViewProfileComponent implements OnInit{
     this.socketService.sendNotification(this.followerId, this.message);
     this.blogService.follow(this.userId, this.followerId, this.message).subscribe(
       data => {
+        this.getFollowing();
       },
       err => {
         this.errorMessage = err.error.message;
       }
     );
-    this.ngOnInit();
   }
   
   getRequestParamsForGallery(pageGallery: number, pageSizeGallery: number, userId: any): any {

@@ -107,7 +107,7 @@
         </div>
     </div>
 </div>
-<div class="container" style="padding-bottom: 530px;">
+<div class="container" [ngStyle]="getStyle()">
     <div class="row">
         <div class="col-md-12">
             <div id="content" class="content content-full-width">
@@ -190,7 +190,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div style="position:relative; top:365px;">
+                                <div style="position:relative; top:150px;">
                                     <div class="paginate">
                                         <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event, 'timelines')"></pagination-controls>
                                     </div>
@@ -209,29 +209,27 @@
                             </section>
                         </div>
                         <div id="tab2" class="tab-slider--body" *ngSwitchCase="'tab2'">
-                            <div>
-                                <section id="gallery" style="width: 100%;">
-                                    <div class="container" style="padding-top:50px;">
-                                        <p class="paginate" style="margin-top: 10px;"><strong>Total photos: {{countGallery}}</strong></p>
-                                        <hr>
-                                        <h3 style="text-align: center; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif">{{ user?.firstname }}'s PHOTOS</h3>
-                                        <div class="custom-card-row">
-                                            <div class="custom-card-col animation" *ngFor="let p of photoGallery | paginate : {itemsPerPage: pageSizeGallery, currentPage: pageGallery, totalItems: countGallery}; let i = index" [class.active]="i == currentIndex" style="margin-top: 10px;">
-                                                <div class="custom-card" style="border: 1px solid rgb(199, 199, 199); box-shadow: 5px 10px #888888; position: relative;">
-                                                    <img [src]="apiUrl.replace('api/auth/', '') + 'uploads/' + p?.name" alt=" " class="custom-card-img">
-                                                    <div class="custom-card-content">
-                                                        <div class="custom-card-body">
-                                                            <h4 class="custom-card-title">{{p.title}}</h4>
-                                                            <p class="custom-card-date">Publish date: {{p.createdAt | date: "MMM d, y" }}</p>
-                                                        </div>
+                            <section id="gallery" style="width: 100%;">
+                                <div class="container profile-page" style="padding-top:30px; padding-bottom: 250px;">
+                                    <p class="paginate" style="margin-top: 10px;"><strong>Total photos: {{countGallery}}</strong></p>
+                                    <hr>
+                                    <h3 style="text-align: center; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif">{{ user?.firstname }}'s PHOTOS</h3>
+                                    <div class="custom-card-row">
+                                        <div class="custom-card-col animation" *ngFor="let p of photoGallery | paginate : {itemsPerPage: pageSizeGallery, currentPage: pageGallery, totalItems: countGallery}; let i = index" [class.active]="i == currentIndex" style="margin-top: 10px;">
+                                            <div class="custom-card" style="border: 1px solid rgb(199, 199, 199); box-shadow: 5px 10px #888888; position: relative;">
+                                                <img [src]="apiUrl.replace('api/auth/', '') + 'uploads/' + p?.name" alt=" " class="custom-card-img">
+                                                <div class="custom-card-content">
+                                                    <div class="custom-card-body">
+                                                        <h4 class="custom-card-title">{{p.title}}</h4>
+                                                        <p class="custom-card-date">Publish date: {{p.createdAt | date: "MMM d, y" }}</p>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </section>
-                            </div>
-                            <div style="position:relative; top:365px;">
+                                </div>
+                            </section>
+                            <div style="position:relative; top:150px;">
                                 <div class="paginate">
                                     <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event, 'photos')"></pagination-controls>
                                 </div>
@@ -254,32 +252,39 @@
                                 <hr>
                                 <h3 style="text-align: center; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; padding-bottom: 20px;">{{ user?.firstname }}'s FRIENDS</h3>
                                 <div class="row">
-                                    <ng-container *ngFor="let follower of followers | search:searchText | paginate : {itemsPerPage: pageSizeFriends,currentPage: pageFriends,totalItems: countFriends}; let i = index" [class.active]="i == currentIndex">
-                                        <div class="col-xl-6 col-lg-7 col-md-12" *ngIf="follower.status === 'Following'">
-                                            <div class="card profile-header1 cardFollowers" style="border-radius: 15px; border: 1px solid rgb(199, 199, 199);">
-                                                <div class="body1">
-                                                    <div class="row">
-                                                        <div class="col-lg-4 col-md-4 col-12">
-                                                            <div class="profile-image1 float-md-right"> <img [src]="apiUrl.replace('api/auth/', '') + 'uploads/userphoto/' + follower?.user.photoName" alt=""> </div>
-                                                        </div>
-                                                        <div class="col-lg-8 col-md-8 col-12">
-                                                            <h4 class="m-t-0 m-b-0"><strong>{{follower?.user.firstname}} {{follower?.user.lastname}}</strong></h4>
-                                                            <span class="job_post">Friends since: {{ follower?.createdAt | date: "MMM, y" }}</span>
-                                                            <br>
-                                                            <br>
-                                                            <div>
-                                                                <button *ngIf="currentUserLike !== follower?.followerId" class="btn btn-outline-success btn-sm" style="margin-right:10px;" routerLink="/view-profile/{{ follower?.user.id }}">View Profile</button>
-                                                                <button *ngIf="currentUserLike === follower?.followerId" class="btn btn-outline-success btn-sm" style="margin-right:10px;" routerLink="/my-profile">View Profile</button>
+                                    <ng-container *ngIf="(followers | search:searchText | paginate : {itemsPerPage: pageSizeFriends, currentPage: pageFriends, totalItems: countFriends}) as filteredFollowers">
+                                        <ng-container *ngFor="let follower of filteredFollowers; let i = index" [class.active]="i == currentIndex">
+                                            <div class="col-xl-6 col-lg-7 col-md-12" *ngIf="follower.status === 'Following'">
+                                                <div class="card profile-header1 cardFollowers" style="border-radius: 15px; border: 1px solid rgb(199, 199, 199);">
+                                                    <div class="body1">
+                                                        <div class="row">
+                                                            <div class="col-lg-4 col-md-4 col-12">
+                                                                <div class="profile-image1 float-md-right">
+                                                                    <img [src]="apiUrl.replace('api/auth/', '') + 'uploads/userphoto/' + follower?.user.photoName" alt="">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-8 col-md-8 col-12">
+                                                                <h4 class="m-t-0 m-b-0"><strong>{{follower?.user.firstname}} {{follower?.user.lastname}}</strong></h4>
+                                                                <span class="job_post">Friends since: {{ follower?.createdAt | date: "MMM, y" }}</span>
+                                                                <br>
+                                                                <br>
+                                                                <div>
+                                                                    <button *ngIf="currentUserLike !== follower?.followerId" class="btn btn-outline-success btn-sm" style="margin-right:10px;" routerLink="/view-profile/{{ follower?.user.id }}">View Profile</button>
+                                                                    <button *ngIf="currentUserLike === follower?.followerId" class="btn btn-outline-success btn-sm" style="margin-right:10px;" routerLink="/my-profile">View Profile</button>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                        </ng-container>
+                                        <div *ngIf="filteredFollowers.length === 0" class="w-100 text-center" style="min-height: 200px; display: flex; align-items: center; justify-content: center;">
+                                            No friends found.
                                         </div>
                                     </ng-container>
                                 </div>
                             </div>
-                            <div style="position:relative; top:365px;">
+                            <div style="position:relative; top:150px;">
                                 <div class="paginate">
                                     <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event, 'friends')"></pagination-controls>
                                 </div>

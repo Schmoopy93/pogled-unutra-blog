@@ -72,7 +72,6 @@ export class SearchFriendComponent implements OnInit {
     .subscribe(
       response => {
         const { users, totalItems } = response;
-        console.log(response,"RESPONSE")
         this.users = users;
         this.count = totalItems;
         this.users.sort((a, b) => b.createdAt.localeCompare(a.createdAt))

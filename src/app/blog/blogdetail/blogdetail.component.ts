@@ -190,7 +190,7 @@ export class BlogdetailComponent implements OnInit  {
     }
   }
 
-  onSubmit(): void {
+onSubmit(): void {
     const { content } = this.form;
     if (content == undefined || content == null || content == "") {
       Swal.fire("Comment is required!") 
@@ -199,30 +199,17 @@ export class BlogdetailComponent implements OnInit  {
     this.blogService.addComment(content, this.currentPost.id, this.currentUser).subscribe(
       data => {
         console.log(data);
+        this.retrieveComments();
+        setTimeout(() => {
+          this.hideModalCommentFunc();
+          this.resetModalFormPostComment();
+        }, 300); // 300ms timeout, po potrebi promeni trajanje
       },
       err => {
         this.errorMessage = err.error.message;
       }
     );
-    this.hideModalCommentFunc();
-    this.resetModalFormPostComment();
-    this.ngOnInit();
-  }
-
-  // likePost(): void {
-  //   this.blogService.likePost(this.currentUser, this.postId).subscribe(
-  //     data => {
-  //       console.log(data);
-  //     },
-  //     err => {
-  //       this.errorMessage = err.error.message;
-  //     }
-  //   );
-  //   if(this.errorMessage){
-  //     Swal.fire(this.errorMessage);
-  //   }
-    
-  // }
+}
 
   retrieveLikes(): void {
     const params = this.getRequestParamsLikes(this.pageLikes, this.pageSizeLikes, this.postId);
@@ -243,12 +230,11 @@ export class BlogdetailComponent implements OnInit  {
     this.blogService.likePost(this.currentUser, this.postId)
       .subscribe({
         next: (res) => {
-          console.log(res);
+            this.retrieveLikes();
         },
         error: (err) =>  Swal.fire(err.error.message)
       });
-      this.retrieveLikes();
-      this.ngOnInit();
+
   }
 
 
@@ -273,7 +259,7 @@ export class BlogdetailComponent implements OnInit  {
   
   deleteComment(id) {
     this.blogService.deleteComment(id).subscribe(res => {
-      this.ngOnInit();
+      this.retrieveComments();
     });
   }
 

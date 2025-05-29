@@ -20,6 +20,9 @@
                     <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
                         <a class="nav-link" routerLink="/recent-blogs"><i class="fa fa-edit" aria-hidden="true"></i> Blog</a>
                     </li>
+                    <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show" *ngIf="currentUser?.roles != 'ROLE_ADMIN' && isLoggedIn">
+                        <a class="nav-link" routerLink="/appointments"><i class="fa fa-calendar" aria-hidden="true"></i> Appointments</a>
+                    </li>
                     <li class="nav-item dropdown" *ngIf="currentUser?.roles == 'ROLE_ADMIN'">
                         <div class="dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAdminLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

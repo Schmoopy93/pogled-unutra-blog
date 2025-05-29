@@ -30,47 +30,96 @@ a {
     font-weight: 400;
 }
 
-.profile-page .profile-header {
-    position: relative
+
+/* Profile page wrapper zauzima celu visinu ekrana */
+
+.profile-page {
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
 }
+
+
+/* Header ostaje na vrhu */
+
+.profile-page .profile-header {
+    position: relative;
+}
+
+
+/* Slika korisnika */
 
 .profile-page .profile-header .profile-image img {
     border-radius: 50%;
     width: 140px;
     border: 3px solid #fff;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23)
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
 
+
+/* Ikonice */
+
 .profile-page .profile-header .social-icon a {
-    margin: 0 5px
+    margin: 0 5px;
 }
+
+
+/* Sub-header */
 
 .profile-page .profile-sub-header {
     min-height: 60px;
-    width: 100%
+    width: 100%;
 }
+
+
+/* Box-list tabovi */
 
 .profile-page .profile-sub-header ul.box-list {
     display: inline-table;
     table-layout: fixed;
     width: 100%;
-    background: #eee
+    background: #eee;
+    margin-bottom: 0;
 }
+
+
+/* Tabovi */
 
 .profile-page .profile-sub-header ul.box-list li {
     border-right: 1px solid #e0e0e0;
     display: table-cell;
-    list-style: none
+    list-style: none;
 }
 
 .profile-page .profile-sub-header ul.box-list li:last-child {
-    border-right: none
+    border-right: none;
 }
 
 .profile-page .profile-sub-header ul.box-list li a {
     display: block;
     padding: 15px 0;
-    color: #424242
+    color: #424242;
+}
+
+
+/* Sadržaj raste da popuni prostor, paginacija/footeri na dnu */
+
+.profile-page .profile-content {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: 300px;
+    /* ili po potrebi */
+}
+
+
+/* Responsive fix */
+
+@media (max-width: 768px) {
+    .profile-page .profile-header .profile-image img {
+        width: 90px;
+    }
 }
 
 .col-md-12 {

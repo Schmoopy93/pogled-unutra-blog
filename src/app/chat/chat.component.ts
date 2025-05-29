@@ -28,7 +28,8 @@ export class ChatComponent implements OnInit {
   userId: any;
   socket: Socket;
   userStatus: { [userId: string]: string } = {};
-  userStatusSubscription: Subscription;
+  private messageSub: Subscription;
+  private userStatusSub: Subscription;
   currentUser:any;
 
   constructor(private authService: AuthService, private socketService: SocketService, private cdr: ChangeDetectorRef) {
@@ -39,25 +40,20 @@ export class ChatComponent implements OnInit {
     this.userId = JSON.parse(sessionStorage.getItem('auth-user')).id;
     this.currentUser =JSON.parse(sessionStorage.getItem('auth-user'));
     this.getFollowers();
-    this.subscribeToUserStatus();
-    this.socketService.receiveNewMessage().subscribe(
+    this.messageSub = this.socketService.receiveNewMessage().subscribe(
       (message) => {
         this.messages.push(message);
-        this.getMessages();
       },
       (error) => {
         console.error('Error receiving message:', error);
       }
     );
-  this.socketService.subscribeToUserStatus();
-  }
-
-  subscribeToUserStatus(): void {
-    this.socketService.userStatus$
+    this.userStatusSub = this.socketService.userStatus$
     .pipe(distinctUntilChanged())
     .subscribe((userStatus) => {
       this.userStatus = userStatus;
     });
+    this.socketService.subscribeToUserStatus();
   }
 
   ngAfterViewChecked() {
@@ -66,6 +62,8 @@ export class ChatComponent implements OnInit {
   
   ngOnDestroy() {
     this.socketService.socket.emit('userDisconnected', this.userId);
+    if (this.messageSub) this.messageSub.unsubscribe();
+    if (this.userStatusSub) this.userStatusSub.unsubscribe();
   }
 
   scrollToBottom(): void {
@@ -107,8 +105,8 @@ export class ChatComponent implements OnInit {
     .subscribe(
       response => {
         const { followers, totalItems } = response;
-        this.followers = followers;
-        
+        console.log(followers);
+        this.followers = followers.filter(f => f.status === 'Following');
         this.countFriends = totalItems;
       },
       error => {
