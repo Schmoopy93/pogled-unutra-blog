@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
+import { SpinnerService } from '../app/services/spinner.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'pogled-unutra-blog';
+  loading$ = this.spinnerService.loading$;
+
+  constructor(private spinnerService: SpinnerService) {}
 }

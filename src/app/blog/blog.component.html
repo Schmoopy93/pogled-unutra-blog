@@ -27,10 +27,11 @@
         </div>
     </ng-template>
 </ngb-carousel>
-
+<br>
+<br>
 <section id="profiles" class="page">
     <div class="container" style="width: 100%;">
-        <div class="content text-center" style="padding-top:80px;"></div>
+        <div class="content text-center" style="padding-top:30px;"></div>
         <h4 class="font-weight-bold text-center my-4" style="text-align: center; padding-bottom: 80px; font-family: cursive;">OUR SERVICE</h4>
         <div class="container-fluid">
             <div class="row" id="profile-grid">
@@ -158,7 +159,7 @@
                 <div class="col-md-4 lg-4 animation" *ngFor="let post of posts  | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" (click)="setActivePost(post, i)">
                     <div class="card" routerLink="/blogDetail/{{ post.id }}">
                         <span class="border border-secondary rounded-top rounded-bottom shadow-background">
-                        <img src="http://localhost:4000/uploads/{{post?.name}}" alt=" " class="card-img-top ">
+                            <img [src]="apiUrl.replace('api/auth/', '') + 'uploads/' + post?.name" alt=" " class="card-img-top ">
                         <div class="card-body ">
                             <h5 class="card-title" title="{{post.title}}" style=" white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{post.title}}</h5>
                             <p class="card-text" style=" white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{post.content}}</p>

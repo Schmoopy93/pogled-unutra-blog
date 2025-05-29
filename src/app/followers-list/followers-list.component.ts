@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AnonymousSubject } from 'rxjs/internal/Subject';
 import { Followers } from '../models/followers';
 import { AuthService } from '../services/auth.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-followers-list',
@@ -9,7 +10,7 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./followers-list.component.css']
 })
 export class FollowersListComponent implements OnInit {
-
+  apiUrl = environment.apiUrl;
   users :any;
   currUser :string;
   currentIndex = -1;

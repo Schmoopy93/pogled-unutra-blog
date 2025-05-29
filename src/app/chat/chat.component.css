@@ -1,0 +1,263 @@
+/* General Styles */
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #e9f7e2;
+    /* Svetlo zelena pozadina */
+}
+
+
+/* Container */
+
+.container {
+    padding: 20px;
+}
+
+
+/* Chat App */
+
+.chat-app {
+    width: 600px;
+    /* Povećano za širu dimenziju */
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    /* Bela pozadina za chat prozor */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Card Shadow */
+
+.card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Followers Sidebar */
+
+.followers-sidebar {
+    width: 250px;
+    /* Prošireno za veći sidebar */
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    background-color: #f1f1f1;
+    /* Siva pozadina sidebar-a */
+}
+
+.followers-header {
+    background-color: #d8e9d0;
+    /* Svetlo zelena nijansa za header sidebar-a */
+    padding: 15px;
+}
+
+.followers-list {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.follower-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.follower-item:hover {
+    background-color: #d0e9d0;
+    /* Svi hover efekti u svetloj zelenoj nijansi */
+}
+
+.follower-item span {
+    margin-right: 5px;
+}
+
+.avatar {
+    width: 35px;
+    /* Povećanje avatar slike */
+    height: 35px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+
+/* Chat Content */
+
+.chat-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    /* Bela pozadina za chat prozor */
+    flex-grow: 1;
+    /* Osigurava da zauzme preostali prostor */
+}
+
+.chat-header {
+    background-color: #d8e9d0;
+    /* Svetlo zelena pozadina za header */
+    padding: 15px;
+}
+
+.chat-messages {
+    overflow-y: auto;
+    flex-grow: 1;
+    padding: 15px;
+}
+
+.message-item {
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #f0f8f0;
+    /* Svetlo zelena nijansa pozadine za poruke */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.message-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.message-header .avatar {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
+.message-header .message-sender {
+    font-weight: bold;
+}
+
+.message-text {
+    margin-bottom: 5px;
+    font-size: 16px;
+}
+
+.message-date {
+    font-style: italic;
+    color: #888;
+    font-size: 12px;
+}
+
+.message-input .form-control {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.message-input button {
+    margin-left: 10px;
+}
+
+
+/* Send Button */
+
+.message-input button {
+    background-color: #28a745;
+    /* Zelena boja */
+    color: #fff;
+    border-color: #28a745;
+    font-size: 14px;
+    padding: 6px 12px;
+    border-radius: 5px;
+}
+
+.message-input button:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+
+/* Message Item */
+
+.message-item {
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #e1f7d5;
+    /* Svetla zelena boja za pozadinu poruka */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Responsive Design */
+
+@media (max-width: 768px) {
+    /* Chat app will take full width and height */
+    .chat-app {
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+        /* Uklanjanje zaobljenih ivica za bolje prilagođavanje */
+    }
+    /* Sidebar will be hidden on mobile devices */
+    .followers-sidebar {
+        display: none;
+    }
+    /* Chat content will take full width */
+    .chat-content {
+        width: 100%;
+    }
+    /* Modify avatar size for smaller devices */
+    .avatar {
+        width: 30px;
+        height: 30px;
+    }
+    /* Message input field and button adjustments */
+    .message-input .form-control {
+        font-size: 14px;
+        /* Veći font za lakše kucanje */
+    }
+    .message-input button {
+        font-size: 14px;
+        padding: 5px 10px;
+    }
+    /* Adjust message item padding for mobile */
+    .message-item {
+        padding: 8px;
+    }
+}
+
+@media (max-width: 576px) {
+    /* Small screens adjustments */
+    .chat-app {
+        width: 100%;
+        height: 100%;
+    }
+    .followers-sidebar {
+        display: none;
+        /* Hide sidebar completely on very small screens */
+    }
+    .message-input .form-control {
+        font-size: 12px;
+        /* Font size smaller for mobile */
+    }
+    .message-input button {
+        font-size: 12px;
+        padding: 5px 8px;
+        /* Reduce button size */
+    }
+    .message-header .avatar {
+        width: 30px;
+        height: 30px;
+    }
+    .message-item {
+        padding: 5px;
+    }
+    .message-text {
+        font-size: 14px;
+        /* Reduce text size */
+    }
+    /* Make the chat window taller */
+    .chat-app {
+        height: 90vh;
+        /* Higher height for smaller screens */
+    }
+}

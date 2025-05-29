@@ -38,11 +38,13 @@ export class NavbarComponent implements OnInit {
 
   logout(): void {
     this.tokenStorage.signOut();
-    this.router.navigate(['/'])
-      .then(() => {
-        window.location.reload();
-      });
-  }
+    this.router.navigate(['/']).then(() => {
+        sessionStorage.clear();
+        window.location.href = window.location.href;
+    });
+}
+
+
 
   onChangeToggle() {
     const theme = JSON.parse(localStorage.getItem("theme"));

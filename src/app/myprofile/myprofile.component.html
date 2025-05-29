@@ -114,28 +114,17 @@
                         <div *ngIf="currentTimelineId !== null">
                             <div *ngFor="let like of groupedLikes[currentTimelineId]" class="like-row">
                                 <a *ngIf="currentUserLike !== like?.userId" routerLink="/view-profile/{{like?.userId}}" (click)="hideModel();" style="font-size: 30px; font-weight: bold;">
-                                    <img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" />
+                                    <img class="rounded-circle shadow-1-strong me-3" [src]="apiUrl.replace('api/auth/', '') + 'uploads/userphoto/' + like?.user.photoName" alt="avatar" width="60" height="60" />
                                     <strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong>
                                 </a>
                                 <br>
                                 <a *ngIf="currentUserLike === like?.userId" routerLink="/my-profile" (click)="hideModel();" style="font-size: 30px; font-weight: bold;">
-                                    <img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" />
+                                    <img class="rounded-circle shadow-1-strong me-3" [src]="apiUrl.replace('api/auth/', '') + 'uploads/userphoto/' + like?.user.photoName" alt="avatar" width="60" height="60" />
                                     <strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong>
                                 </a>
                                 <hr class="like-hr">
                             </div>
                         </div>
-                        <!-- <form action="#" class="commenting-form" *ngFor="let like of likes;">
-                            <div class="row" *ngIf="isTimelineLikeValid(like, toDisplayGroup)">
-                                <div class="form-group col-md-12">
-                                    <div>
-                                        <a *ngIf="currentUserLike !== like?.userId" routerLink="/view-profile/{{like?.userId}}" (click)="hideModel();" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong></a>
-                                        <a *ngIf="currentUserLike === like?.userId" routerLink="/my-profile" (click)="hideModel();" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong></a>
-                                        <hr>
-                                    </div>
-                                </div>
-                            </div>
-                        </form> -->
                     </div>
                     <div class="modal-footer">
                         <button #closeModal type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
@@ -293,7 +282,7 @@
                                     <button title="Change your profile photo" data-toggle="modal" data-target="#exampleModalChangeProfilePicture"><i class="fa fa-camera" aria-hidden="true"></i>
                                     </button> 
                                   </span>
-                                <img src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="">
+                                <img [src]="apiUrl.replace('api/auth/', '') + 'uploads/userphoto/' + user?.photoName" alt="">
                             </div>
                             <div class="profile-header-info">
                                 <h4 class="m-t-10 m-b-5">{{ user?.firstname }} {{ user?.lastname }}</h4>
@@ -339,7 +328,7 @@
                                             <div class="card text-dark shadow-background">
                                                 <div class="card-body p-4">
                                                     <div class="d-flex flex-start">
-                                                        <img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="avatar" width="60" height="60" />
+                                                        <img class="rounded-circle shadow-1-strong me-3" [src]="apiUrl.replace('api/auth/', '') + 'uploads/userphoto/' + user?.photoName" alt="avatar" width="60" height="60" />
                                                         <div>
                                                             <h6 class="fw-bold mb-1"><strong>{{ user?.firstname }} {{ user?.lastname }}</strong></h6>
                                                             <div class="d-flex align-items-center mb-3">
@@ -394,7 +383,7 @@
                         <div id="tab2" class="tab-slider--body" *ngSwitchCase="'tab2'">
                             <div>
                                 <section id="gallery" style="width: 100%;">
-                                    <div class="container" style="padding-top:50px;">
+                                    <div class="container" style="padding-top:30px; padding-bottom: 90px;">
                                         <div class="paginate">
                                             <button class="btn btn-outline-success btn-sm a" style="margin-right:3px;" data-toggle="modal" data-target="#exampleModalLabelTimelinePhotos">Upload a photo</button>
                                         </div>
@@ -405,7 +394,7 @@
                                         <div class="custom-card-row">
                                             <div class="custom-card-col animation" *ngFor="let p of photoGallery | paginate : {itemsPerPage: pageSizeGallery, currentPage: pageGallery, totalItems: countGallery}; let i = index" [class.active]="i == currentIndex" style="margin-top: 10px;">
                                                 <div class="custom-card" style="border: 1px solid rgb(199, 199, 199); box-shadow: 5px 10px #888888; position: relative;">
-                                                    <img src="http://localhost:4000/uploads/{{p?.name}}" alt=" " class="custom-card-img">
+                                                    <img [src]="apiUrl.replace('api/auth/', '') + 'uploads/' + p?.name" alt=" " class="custom-card-img" style="cursor: pointer;" (click)="openPhotoModal(apiUrl.replace('api/auth/', '') + 'uploads/' + p?.name)">
                                                     <div class="custom-card-content">
                                                         <div class="custom-card-body">
                                                             <h4 class="custom-card-title">{{p.title}}</h4>
@@ -450,7 +439,7 @@
                                                 <div class="body1">
                                                     <div class="row">
                                                         <div class="col-lg-4 col-md-4 col-12">
-                                                            <div class="profile-image1 float-md-right"> <img src="http://localhost:4000/uploads/userphoto/{{follower?.user.photoName}}" alt=""> </div>
+                                                            <div class="profile-image1 float-md-right"> <img [src]="apiUrl.replace('api/auth/', '') + 'uploads/userphoto/' + follower?.user.photoName" alt=""> </div>
                                                         </div>
                                                         <div class="col-lg-8 col-md-8 col-12">
                                                             <h4 class="m-t-0 m-b-0"><strong>{{follower?.user.firstname}} {{follower?.user.lastname}}</strong></h4>
@@ -486,5 +475,11 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div *ngIf="selectedPhotoUrl" class="photo-modal-overlay" (click)="closePhotoModal()">
+        <div class="photo-modal-content" (click)="$event.stopPropagation()" style="position:relative;">
+            <span class="photo-modal-close" (click)="closePhotoModal()">&times;</span>
+            <img [src]="selectedPhotoUrl" alt="Full Size" style="max-width: 90vw; max-height: 80vh; border-radius: 8px;">
         </div>
     </div>

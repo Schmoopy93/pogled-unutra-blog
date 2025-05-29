@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpEvent, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-const AUTH_API = 'http://localhost:4000/api/auth/';
-const USER_API = `http://localhost:4000/api/auth/users`;
+import { environment } from '../../environments/environment';
 
+const AUTH_API = environment.apiUrl;
+const USER_API = environment.apiUrl + 'users';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -34,10 +35,9 @@ export class AuthService {
     formdata.append('firstname', firstname);
     formdata.append('lastname', lastname);
 
-    const req = new HttpRequest('POST', 'http://localhost:4000/api/auth/signup/upload', formdata, {
+    const req = new HttpRequest('POST', AUTH_API + 'signup/upload', formdata, {
       reportProgress: true,
       responseType: 'json',
-      
     });
     return this.http.request(req);
   }
@@ -174,5 +174,9 @@ export class AuthService {
 
   getMyFollowers(params: any): Observable<any> {
     return this.http.get<any>(`${AUTH_API}getFollowers`, { params });
+  }
+
+  getMessages(params: any): Observable<any> {
+    return this.http.get<any>(`${AUTH_API}messages`, { params });
   }
 }

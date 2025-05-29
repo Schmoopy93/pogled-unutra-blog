@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Post } from 'src/app/models/post';
 import { ServiceblogService } from 'src/app/services/blog-service';
 import { TokenStorageService } from 'src/app/services/token-storage.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-viewblog',
@@ -12,7 +13,7 @@ import { TokenStorageService } from 'src/app/services/token-storage.service';
   styleUrls: ['./viewblog.component.css']
 })
 export class ViewblogComponent implements OnInit {
-
+  apiUrl = environment.apiUrl;
   posts: Post[] = [];
   currentPost = null;
   posts$: Observable<Post[]>;

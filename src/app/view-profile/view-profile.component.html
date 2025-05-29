@@ -86,8 +86,14 @@
                         <form action="#" class="commenting-form" *ngFor="let like of likes">
                             <div class="row" *ngIf="toDisplayGroup['id'] === like?.timelineId && like?.userId === like?.user.id">
                                 <div class="form-group col-md-12">
-                                    <a *ngIf="currentUserLike !== like?.userId" routerLink="/view-profile/{{like?.userId}}" (click)="hideModel();" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong></a>
-                                    <a *ngIf="currentUserLike === like?.userId" routerLink="/my-profile" (click)="hideModel();" style="font-size: 30px; font-weight: bold;"><img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{like?.user.photoName}}" alt="avatar" width="60" height="60" /><strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong></a>
+                                    <a *ngIf="currentUserLike !== like?.userId" routerLink="/view-profile/{{like?.userId}}" (click)="hideModel();" style="font-size: 30px; font-weight: bold;">
+                                        <img class="rounded-circle shadow-1-strong me-3" [src]="apiUrl.replace('api/auth/', '') + 'uploads/userphoto/' + like?.user.photoName" alt="avatar" width="60" height="60" />
+                                        <strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong>
+                                    </a>
+                                    <a *ngIf="currentUserLike === like?.userId" routerLink="/my-profile" (click)="hideModel();" style="font-size: 30px; font-weight: bold;">
+                                        <img class="rounded-circle shadow-1-strong me-3" [src]="apiUrl.replace('api/auth/', '') + 'uploads/userphoto/' + like?.user.photoName" alt="avatar" width="60" height="60" />
+                                        <strong> {{like?.user.firstname}} {{like?.user.lastname}} </strong>
+                                    </a>
                                     <hr>
                                 </div>
                             </div>
@@ -101,7 +107,13 @@
         </div>
     </div>
 </div>
-<div class="container" style="padding-bottom: 400px;">
+<div *ngIf="selectedPhotoUrl" class="photo-modal-overlay" (click)="closePhotoModal()" (document:keydown.escape)="closePhotoModal()">
+    <div class="photo-modal-content" (click)="$event.stopPropagation()" style="position:relative;">
+        <span class="photo-modal-close" (click)="closePhotoModal()">&times;</span>
+        <img [src]="selectedPhotoUrl" alt="Full Size" style="max-width: 90vw; max-height: 80vh; border-radius: 8px;">
+    </div>
+</div>
+<div class="container" [ngStyle]="getStyle()">
     <div class="row">
         <div class="col-md-12">
             <div id="content" class="content content-full-width">
@@ -110,7 +122,7 @@
                         <div class="profile-header-cover"></div>
                         <div class="profile-header-content">
                             <div class="profile-header-img">
-                                <img src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="">
+                                <img [src]="apiUrl.replace('api/auth/', '') + 'uploads/userphoto/' + user?.photoName" alt="">
                             </div>
                             <div class="profile-header-info">
                                 <h4 class="m-t-10 m-b-5">{{ user?.firstname }} {{ user?.lastname }}</h4>
@@ -135,7 +147,7 @@
                     <div class="tab-slider--container" [ngSwitch]="viewMode">
                         <div id="tab1" class="tab-slider--body" *ngSwitchCase="'tab1'">
                             <section>
-                                <div class="container my-5 py-5">
+                                <div class="container my-2 py-3">
                                     <div class="center">
                                         <button class="btn btn-outline-success btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             Sort Timelines By Date
@@ -148,43 +160,48 @@
                                     <hr>
                                     <h3 style="text-align: center; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif">{{ user?.firstname }}'s TIMELINE</h3>
                                     <div class="row d-flex justify-content-center">
-                                        <div class="col-md-12 col-lg-10" *ngFor="let timeline of timelines | paginate : {itemsPerPage: pageSize,currentPage: page,totalItems: count}; let i = index" [class.active]="i == currentIndex" style="margin-top: 10px;">
-                                            <div class="card text-dark shadow-background">
-                                                <div class="card-body p-4">
-                                                    <div class="d-flex flex-start">
-                                                        <img class="rounded-circle shadow-1-strong me-3" src="http://localhost:4000/uploads/userphoto/{{user?.photoName}}" alt="avatar" width="60" height="60" />
-                                                        <div>
-                                                            <h6 class="fw-bold mb-1"><strong>{{ user?.firstname }} {{ user?.lastname }}</strong></h6>
-                                                            <div class="d-flex align-items-center mb-3">
-                                                                <p class="mb-0" style="font-style: italic;">
-                                                                    {{ timeline?.createdAt | date: "MMM d, y h:mm a" }}
+                                        <ng-container *ngIf="(timelines | paginate : {itemsPerPage: pageSize, currentPage: page, totalItems: count}) as filteredTimelines">
+                                            <div class="col-md-12 col-lg-10" *ngFor="let timeline of filteredTimelines; let i = index" [class.active]="i == currentIndex" style="margin-top: 10px;">
+                                                <div class="card text-dark shadow-background">
+                                                    <div class="card-body p-4">
+                                                        <div class="d-flex flex-start">
+                                                            <img class="rounded-circle shadow-1-strong me-3" [src]="apiUrl.replace('api/auth/', '') + 'uploads/userphoto/' + user?.photoName" alt="avatar" width="60" height="60" />
+                                                            <div>
+                                                                <h6 class="fw-bold mb-1"><strong>{{ user?.firstname }} {{ user?.lastname }}</strong></h6>
+                                                                <div class="d-flex align-items-center mb-3">
+                                                                    <p class="mb-0" style="font-style: italic;">
+                                                                        {{ timeline?.createdAt | date: "MMM d, y h:mm a" }}
+                                                                    </p>
+                                                                </div>
+                                                                <div>
+                                                                    <div>
+                                                                        <button class="btn btn-outline-success dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                            <i class="far fa-thumbs-up "></i><strong>{{ timeline.likesTimeline.length }}</strong>
+                                                                        </button>
+                                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                            <button (click)="likeTimeline(timeline?.id);" class="dropdown-item" style="margin-top:10px; margin-right:3px;"><i class="far fa-thumbs-up "></i>Like</button>
+                                                                            <button style="margin-top:10px;" (click)="toDisplayGroup = timeline" class="dropdown-item" data-toggle="modal" data-target="#exampleModalTimeline"><i class="far fa-user "></i>Who liked</button>
+                                                                        </div>
+                                                                        <button type="button" title="Edit profile" style="margin-left: 10px;" *ngIf="currentUser.id === user?.id" class="btn btn-outline-warning btn-sm" routerLink="/edit-timeline/{{ timeline.id }}"><i class="fas fa-edit"></i></button>
+                                                                        <a class="btn btn-outline-danger btn-sm " style="margin-left: 10px;" *ngIf="currentUser.id === user?.id" mwlConfirmationPopover placement="top-up" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteTimelineById(timeline.id)"
+                                                                            (cancel)="cancelClicked = true"><i class="fas fa-trash ms-2"></i></a>
+                                                                    </div>
+                                                                </div>
+                                                                <p class="mb-0" style="padding-top: 20px; font-size: 16px; color: #e7a457; font-weight: bold; font-style: italic; font-family:cursive">
+                                                                    {{timeline?.text}}
                                                                 </p>
                                                             </div>
-                                                            <div>
-                                                                <div>
-                                                                    <button class="btn btn-outline-success dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            <i class="far fa-thumbs-up "></i><strong>{{ timeline.likesTimeline.length }}</strong></button>
-                                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                        <button (click)="likeTimeline(timeline?.id);" class="dropdown-item" style="margin-top:10px; margin-right:3px;"><i class="far fa-thumbs-up "></i>Like</button>
-                                                                        <button style="margin-top:10px;" (click)="toDisplayGroup = timeline" class="dropdown-item" data-toggle="modal" data-target="#exampleModalTimeline"><i class="far fa-user "></i>Who liked</button>
-                                                                    </div>
-                                                                    <button type="button" title="Edit profile" style="margin-left: 10px;" *ngIf="currentUser.id === user?.id" class="btn btn-outline-warning btn-sm" routerLink="/edit-timeline/{{ timeline.id }}"><i class="fas fa-edit"></i></button>
-                                                                    <a class="btn btn-outline-danger btn-sm " style="margin-left: 10px;" *ngIf="currentUser.id === user?.id" mwlConfirmationPopover placement="top-up" [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" (confirm)="deleteTimelineById(timeline.id)"
-                                                                        (cancel)="cancelClicked = true"><i class="fas fa-trash ms-2"></i></a>
-                                                                </div>
-
-                                                            </div>
-                                                            <p class="mb-0" style="padding-top: 20px; font-size: 16px; color: #e7a457; font-weight: bold; font-style: italic; font-family:cursive">
-                                                                {{timeline?.text}}
-                                                            </p>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                            <div *ngIf="filteredTimelines.length === 0" class="w-100 text-center" style="min-height: 200px; display: flex; align-items: center; justify-content: center;">
+                                                No timelines found.
+                                            </div>
+                                        </ng-container>
                                     </div>
                                 </div>
-                                <div style="position:relative; top:365px;">
+                                <div style="position:relative; top:150px;">
                                     <div class="paginate">
                                         <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event, 'timelines')"></pagination-controls>
                                     </div>
@@ -203,16 +220,16 @@
                             </section>
                         </div>
                         <div id="tab2" class="tab-slider--body" *ngSwitchCase="'tab2'">
-                            <div>
-                                <section id="gallery" style="width: 100%;">
-                                    <div class="container" style="padding-top:50px;">
-                                        <p class="paginate" style="margin-top: 10px;"><strong>Total photos: {{countGallery}}</strong></p>
-                                        <hr>
-                                        <h3 style="text-align: center; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif">{{ user?.firstname }}'s PHOTOS</h3>
-                                        <div class="custom-card-row">
-                                            <div class="custom-card-col animation" *ngFor="let p of photoGallery | paginate : {itemsPerPage: pageSizeGallery, currentPage: pageGallery, totalItems: countGallery}; let i = index" [class.active]="i == currentIndex" style="margin-top: 10px;">
+                            <section id="gallery" style="width: 100%;">
+                                <div class="container profile-page" style="padding-top:30px; padding-bottom: 250px;">
+                                    <p class="paginate" style="margin-top: 10px;"><strong>Total photos: {{countGallery}}</strong></p>
+                                    <hr>
+                                    <h3 style="text-align: center; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif">{{ user?.firstname }}'s PHOTOS</h3>
+                                    <div class="custom-card-row">
+                                        <ng-container *ngIf="(photoGallery | paginate : {itemsPerPage: pageSizeGallery, currentPage: pageGallery, totalItems: countGallery}) as filteredPhotos">
+                                            <div class="custom-card-col animation" *ngFor="let p of filteredPhotos; let i = index" [class.active]="i == currentIndex" style="margin-top: 10px;">
                                                 <div class="custom-card" style="border: 1px solid rgb(199, 199, 199); box-shadow: 5px 10px #888888; position: relative;">
-                                                    <img src="http://localhost:4000/uploads/{{p?.name}}" alt=" " class="custom-card-img">
+                                                    <img [src]="apiUrl.replace('api/auth/', '') + 'uploads/' + p?.name" alt=" " class="custom-card-img" style="cursor: pointer;" (click)="openPhotoModal(apiUrl.replace('api/auth/', '') + 'uploads/' + p?.name)">
                                                     <div class="custom-card-content">
                                                         <div class="custom-card-body">
                                                             <h4 class="custom-card-title">{{p.title}}</h4>
@@ -221,11 +238,14 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                            <div *ngIf="filteredPhotos.length === 0" class="w-100 text-center" style="min-height: 200px; display: flex; align-items: center; justify-content: center;">
+                                                No photos found.
+                                            </div>
+                                        </ng-container>
                                     </div>
-                                </section>
-                            </div>
-                            <div style="position:relative; top:365px;">
+                                </div>
+                            </section>
+                            <div style="position:relative; top:150px;">
                                 <div class="paginate">
                                     <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event, 'photos')"></pagination-controls>
                                 </div>
@@ -239,6 +259,7 @@
                                     </h2>
                                 </div>
                             </div>
+
                         </div>
                         <div id="tab3" class="tab-slider--body" *ngSwitchCase="'tab3'">
                             <div class="container profile-page" style="padding-top:30px; padding-bottom: 90px;">
@@ -248,32 +269,39 @@
                                 <hr>
                                 <h3 style="text-align: center; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; padding-bottom: 20px;">{{ user?.firstname }}'s FRIENDS</h3>
                                 <div class="row">
-                                    <ng-container *ngFor="let follower of followers | search:searchText | paginate : {itemsPerPage: pageSizeFriends,currentPage: pageFriends,totalItems: countFriends}; let i = index" [class.active]="i == currentIndex">
-                                        <div class="col-xl-6 col-lg-7 col-md-12" *ngIf="follower.status === 'Following'">
-                                            <div class="card profile-header1 cardFollowers" style="border-radius: 15px; border: 1px solid rgb(199, 199, 199);">
-                                                <div class="body1">
-                                                    <div class="row">
-                                                        <div class="col-lg-4 col-md-4 col-12">
-                                                            <div class="profile-image1 float-md-right"> <img src="http://localhost:4000/uploads/userphoto/{{follower?.user.photoName}}" alt=""> </div>
-                                                        </div>
-                                                        <div class="col-lg-8 col-md-8 col-12">
-                                                            <h4 class="m-t-0 m-b-0"><strong>{{follower?.user.firstname}} {{follower?.user.lastname}}</strong></h4>
-                                                            <span class="job_post">Friends since: {{ follower?.createdAt | date: "MMM, y" }}</span>
-                                                            <br>
-                                                            <br>
-                                                            <div>
-                                                                <button *ngIf="currentUserLike !== follower?.followerId" class="btn btn-outline-success btn-sm" style="margin-right:10px;" routerLink="/view-profile/{{ follower?.user.id }}">View Profile</button>
-                                                                <button *ngIf="currentUserLike === follower?.followerId" class="btn btn-outline-success btn-sm" style="margin-right:10px;" routerLink="/my-profile">View Profile</button>
+                                    <ng-container *ngIf="(followers | search:searchText | paginate : {itemsPerPage: pageSizeFriends, currentPage: pageFriends, totalItems: countFriends}) as filteredFollowers">
+                                        <ng-container *ngFor="let follower of filteredFollowers; let i = index" [class.active]="i == currentIndex">
+                                            <div class="col-xl-6 col-lg-7 col-md-12" *ngIf="follower.status === 'Following'">
+                                                <div class="card profile-header1 cardFollowers" style="border-radius: 15px; border: 1px solid rgb(199, 199, 199);">
+                                                    <div class="body1">
+                                                        <div class="row">
+                                                            <div class="col-lg-4 col-md-4 col-12">
+                                                                <div class="profile-image1 float-md-right">
+                                                                    <img [src]="apiUrl.replace('api/auth/', '') + 'uploads/userphoto/' + follower?.user.photoName" alt="">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-8 col-md-8 col-12">
+                                                                <h4 class="m-t-0 m-b-0"><strong>{{follower?.user.firstname}} {{follower?.user.lastname}}</strong></h4>
+                                                                <span class="job_post">Friends since: {{ follower?.createdAt | date: "MMM, y" }}</span>
+                                                                <br>
+                                                                <br>
+                                                                <div>
+                                                                    <button *ngIf="currentUserLike !== follower?.followerId" class="btn btn-outline-success btn-sm" style="margin-right:10px;" routerLink="/view-profile/{{ follower?.user.id }}">View Profile</button>
+                                                                    <button *ngIf="currentUserLike === follower?.followerId" class="btn btn-outline-success btn-sm" style="margin-right:10px;" routerLink="/my-profile">View Profile</button>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                        </ng-container>
+                                        <div *ngIf="filteredFollowers.length === 0" class="w-100 text-center" style="min-height: 200px; display: flex; align-items: center; justify-content: center;">
+                                            No friends found.
                                         </div>
                                     </ng-container>
                                 </div>
                             </div>
-                            <div style="position:relative; top:365px;">
+                            <div style="position:relative; top:150px;">
                                 <div class="paginate">
                                     <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true" (pageChange)="handlePageChange($event, 'friends')"></pagination-controls>
                                 </div>

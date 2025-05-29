@@ -8,12 +8,14 @@ import { HttpClient, HttpEventType } from '@angular/common/http';
 import { saveAs } from 'file-saver';
 import { environment } from '../../environments/environment';
 
+
 @Component({
   selector: 'app-users-list',
   templateUrl: './users-list.component.html',
   styleUrls: ['./users-list.component.css']
 })
 export class UsersListComponent implements OnInit {
+  apiUrl = environment.apiUrl;
   @ViewChild('content', {static: false}) content: ElementRef;
   public popoverTitle: string = 'WARNING';
   public popoverMessage: string = 'Are you sure you want to delete this user???'
@@ -45,7 +47,7 @@ export class UsersListComponent implements OnInit {
   }
 
   generatePDF() {
-    const url = 'http://localhost:4000/generate-pdf';
+    const url = this.apiUrl.replace('api/auth/', '') + 'generate-pdf';
     const req = this.http.get(url, { responseType: 'arraybuffer', reportProgress: true, observe: 'events' });
     req.subscribe((event) => {
       if (event.type === HttpEventType.DownloadProgress) { 
