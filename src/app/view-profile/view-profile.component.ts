@@ -80,6 +80,7 @@ export class ViewProfileComponent implements OnInit{
   notificationsInitialized: boolean = false;
   private unsubscribe$ = new Subject<void>();
   requestAccepted: any;
+  selectedPhotoUrl: string | null = null;
 
   
   constructor(private blogService: ServiceblogService, private socketService: SocketService, private router: Router, private route : ActivatedRoute, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService) { }
@@ -137,6 +138,14 @@ export class ViewProfileComponent implements OnInit{
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+  openPhotoModal(photoUrl: string) {
+  this.selectedPhotoUrl = photoUrl;
+  }
+
+  closePhotoModal() {
+  this.selectedPhotoUrl = null;
   }
 
   selectTab(tab: string): void {

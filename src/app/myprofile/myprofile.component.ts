@@ -97,6 +97,8 @@ export class MyprofileComponent implements OnInit {
   historyNotificationsLength: any;
   groupedLikes: { [key: string]: any[] } = {}; 
   currentTimelineId: number | null = null;
+  selectedPhotoUrl: string | null = null;
+
 
   constructor(private router: Router, private route: ActivatedRoute, private socketService: SocketService, private modalService: NgbModal, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService, private blogService: ServiceblogService) {}
 
@@ -129,6 +131,15 @@ export class MyprofileComponent implements OnInit {
     });
     const storedViewMode = localStorage.getItem('selectedTab');
     this.viewMode = storedViewMode || 'tab1';
+    
+  }
+
+  openPhotoModal(photoUrl: string) {
+  this.selectedPhotoUrl = photoUrl;
+  }
+
+  closePhotoModal() {
+  this.selectedPhotoUrl = null;
   }
 
   selectTab(tab: string): void {

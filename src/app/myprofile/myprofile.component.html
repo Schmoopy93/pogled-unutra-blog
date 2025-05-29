@@ -394,7 +394,7 @@
                                         <div class="custom-card-row">
                                             <div class="custom-card-col animation" *ngFor="let p of photoGallery | paginate : {itemsPerPage: pageSizeGallery, currentPage: pageGallery, totalItems: countGallery}; let i = index" [class.active]="i == currentIndex" style="margin-top: 10px;">
                                                 <div class="custom-card" style="border: 1px solid rgb(199, 199, 199); box-shadow: 5px 10px #888888; position: relative;">
-                                                    <img [src]="apiUrl.replace('api/auth/', '') + 'uploads/' + p?.name" alt=" " class="custom-card-img">
+                                                    <img [src]="apiUrl.replace('api/auth/', '') + 'uploads/' + p?.name" alt=" " class="custom-card-img" style="cursor: pointer;" (click)="openPhotoModal(apiUrl.replace('api/auth/', '') + 'uploads/' + p?.name)">
                                                     <div class="custom-card-content">
                                                         <div class="custom-card-body">
                                                             <h4 class="custom-card-title">{{p.title}}</h4>
@@ -475,5 +475,11 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div *ngIf="selectedPhotoUrl" class="photo-modal-overlay" (click)="closePhotoModal()">
+        <div class="photo-modal-content" (click)="$event.stopPropagation()" style="position:relative;">
+            <span class="photo-modal-close" (click)="closePhotoModal()">&times;</span>
+            <img [src]="selectedPhotoUrl" alt="Full Size" style="max-width: 90vw; max-height: 80vh; border-radius: 8px;">
         </div>
     </div>
