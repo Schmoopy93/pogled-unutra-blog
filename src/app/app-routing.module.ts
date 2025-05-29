@@ -23,6 +23,7 @@ import { UpdateUserComponent } from './update-user/update-user.component';
 import { UsersListComponent } from './users-list/users-list.component';
 import { ViewProfileComponent } from './view-profile/view-profile.component';
 import { BlogStatisticsComponent } from './blog/blog-statistics/blog-statistics.component';
+import { ChatComponent } from './chat/chat.component';
 
 
 const routes: Routes = [
@@ -34,7 +35,9 @@ const routes: Routes = [
       { path: 'register', component: RegisterComponent },
       { path: 'confirm/:confirmationCode', component: BlogComponent },
       { path: 'login', component: LoginComponent },
-      { path: 'my-profile', component: MyprofileComponent },
+      { path: 'my-profile', component: MyprofileComponent , canActivate: [AuthGuard]
+
+      },
       {
         path: 'add-blog', component: AddblogComponent, canActivate: [AuthGuard], data: {
           roles: '[ROLE_ADMIN, ROLE_MODERATOR]'
@@ -45,16 +48,22 @@ const routes: Routes = [
           roles: '[ROLE_ADMIN]'
         }
       },
-      { path: 'followers', component: FollowersListComponent },
-      { path: 'recent-blogs', component: ViewblogComponent },
-      { path: 'blogDetail/:id', component: BlogdetailComponent },
+      { path: 'followers', component: FollowersListComponent , canActivate: [AuthGuard]
+
+       },
+      { path: 'recent-blogs', component: ViewblogComponent
+
+      },
+      { path: 'blogDetail/:id', component: BlogdetailComponent 
+
+      },
       {
         path: 'edit-post/:id', component: EditblogComponent, canActivate: [AuthGuard], data: {
           roles: '[ROLE_ADMIN, ROLE_MODERATOR]'
         }
       },
       {
-        path: 'edit-user/:id', component: UpdateUserComponent
+        path: 'edit-user/:id', component: UpdateUserComponent , canActivate: [AuthGuard]
       },
       {
         path: 'about', component: AboutMeComponent
@@ -65,27 +74,30 @@ const routes: Routes = [
         }
       },
       {
-        path: 'view-profile/:id', component: ViewProfileComponent
+        path: 'view-profile/:id', component: ViewProfileComponent , canActivate: [AuthGuard]
       },
       {
         path: 'forgot-password', component: ForgotPasswordComponent
       },
       {
-        path: 'reset-password/:token', component: NewPasswordComponent
+        path: 'reset-password/:token', component: NewPasswordComponent , canActivate: [AuthGuard]
       },
       {
-        path: 'search-friends', component: SearchFriendComponent
+        path: 'search-friends', component: SearchFriendComponent , canActivate: [AuthGuard]
       },
       {
-        path: 'edit-timeline/:id', component: EditTimelineComponent
+        path: 'edit-timeline/:id', component: EditTimelineComponent , canActivate: [AuthGuard]
       },
       {
-        path: 'edit-comment/:id', component: EditCommentsComponent
+        path: 'edit-comment/:id', component: EditCommentsComponent , canActivate: [AuthGuard]
       },
       {
         path: 'blog-statistic-chart', component: BlogStatisticsComponent, canActivate: [AuthGuard], data: {
           roles: '[ROLE_ADMIN]'
         }
+      },
+      {
+        path: 'chat', component: ChatComponent, canActivate: [AuthGuard]
       },
     ]
   }];

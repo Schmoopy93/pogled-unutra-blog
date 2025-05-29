@@ -5,6 +5,7 @@ import { User } from '../models/user';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import Swal from 'sweetalert2';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-blog',
@@ -12,7 +13,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./blog.component.css']
 })
 export class BlogComponent implements OnInit {
-
+  apiUrl = environment.apiUrl;
   posts: Post[];
   currentPost = null;
   user: User;

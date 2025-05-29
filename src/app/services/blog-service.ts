@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpEvent, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
-import { Observable, of, Subject } from 'rxjs';
+import { HttpClient, HttpEvent, HttpHeaders, HttpRequest } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { Post } from '../models/post';
 import { TokenStorageService } from './token-storage.service';
 import { ActivatedRoute } from '@angular/router';
 import { Appointment } from '../models/appointment';
+import { environment } from '../../environments/environment';
 
-const AUTH_API = 'http://localhost:4000/api/auth/';
+const API_URL = environment.apiUrl;
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -16,64 +17,61 @@ const httpOptions = {
 })
 export class ServiceblogService {
   Posts: Post[];
-  postsURL: string;
-  commentURL: string;
-  commURL: string;
 
-  constructor(private http: HttpClient, private token: TokenStorageService, private route: ActivatedRoute) {
-    this.postsURL = 'http://localhost:4000/api/auth/posts';
-    this.commentURL = 'http://localhost:4000/api/auth/showComments'
-    this.commURL = 'http://localhost:4000/api/auth/'
-   
-  }
+  constructor(
+    private http: HttpClient,
+    private token: TokenStorageService,
+    private route: ActivatedRoute
+  ) {}
+
   getAllPosts(params: any): Observable<any> {
-    return this.http.get<any>(this.postsURL, { params });
+    return this.http.get<any>(API_URL + 'posts', { params });
   }
 
   getAllPostsForHomePage(params: any): Observable<any> {
-    return this.http.get<any>(this.commURL + 'postsHomePage', { params });
+    return this.http.get<any>(API_URL + 'postsHomePage', { params });
   }
 
   getAllPostsWithoutParams(): Observable<any> {
-    return this.http.get<any>(this.postsURL);
+    return this.http.get<any>(API_URL + 'posts');
   }
 
   getAllComments(params: any): Observable<any> {
-    return this.http.get<any>(this.commURL + 'showAllPaginatedComments', { params });
+    return this.http.get<any>(API_URL + 'showAllPaginatedComments', { params });
   }
 
   getAllAppointments(): Observable<any> {
-    return this.http.get<any>(`${AUTH_API}findAllAppointments`);
+    return this.http.get<any>(API_URL + 'findAllAppointments');
   }
 
   updateAppointment(appointment: Appointment): Observable<Appointment> {
-    return this.http.put<Appointment>(`${AUTH_API}updateAppointment/${appointment.id}`, appointment);
+    return this.http.put<Appointment>(API_URL + `updateAppointment/${appointment.id}`, appointment);
   }
+
   getAllTimelines(params: any): Observable<any> {
-    return this.http.get<any>(this.commURL + 'showAllPaginatedTimelines', { params });
+    return this.http.get<any>(API_URL + 'showAllPaginatedTimelines', { params });
   }
 
   findByTitle(title: any): Observable<Post[]> {
-    return this.http.get<Post[]>(`${(this.postsURL)}?title=${title}`);
+    return this.http.get<Post[]>(API_URL + `posts?title=${title}`);
   }
 
   public getPostById(id: number) {
     if (id) {
-      return this.http.get(`${this.postsURL}/${id}`);
+      return this.http.get(API_URL + `posts/${id}`);
     }
     return null;
   }
 
   addPost(file: File, title: string, content: string, userId: string, categoryId: any): Observable<HttpEvent<{}>> {
     const formdata: FormData = new FormData();
-
     formdata.append('file', file);
     formdata.append('title', title);
     formdata.append('content', content);
     formdata.append('userId', userId);
     formdata.append('categoryId', categoryId);
 
-    const req = new HttpRequest('POST', 'http://localhost:4000/api/auth/posts/upload', formdata, {
+    const req = new HttpRequest('POST', API_URL + 'posts/upload', formdata, {
       reportProgress: true,
       responseType: 'text',
     });
@@ -81,130 +79,112 @@ export class ServiceblogService {
     return this.http.request(req);
   }
 
-
   editPost(id) {
-    return this
-      .http
-      .get(`${this.postsURL}/${id}`);
+    return this.http.get(API_URL + `posts/${id}`);
   }
 
   updatePost(title, content, categoryId, id) {
-
     const obj = {
       title: title,
       content: content,
       categoryId: categoryId,
     };
-    this
-      .http
-      .put(`${this.postsURL}/${id}`, obj)
-      .subscribe();
+    this.http.put(API_URL + `posts/${id}`, obj).subscribe();
   }
 
   deletePost(id: number): Observable<any> {
-    return this.http.delete(`${this.postsURL}/${id}`, { responseType: 'text' });
+    return this.http.delete(API_URL + `posts/${id}`, { responseType: 'text' });
   }
 
   deleteHistoryNotificationById(id: number): Observable<any> {
-    return this.http.delete(`${AUTH_API}notificationsHistory/${id}`, { responseType: 'text' });
+    return this.http.delete(API_URL + `notificationsHistory/${id}`, { responseType: 'text' });
   }
 
-
-  addComment(content: string, postId: number, userId:number): Observable<any> {
-    return this.http.post(AUTH_API + 'comments', {
+  addComment(content: string, postId: number, userId: number): Observable<any> {
+    return this.http.post(API_URL + 'comments', {
       postId,
       content,
       userId
     }, httpOptions);
   }
 
-  likePost(userId: number, postId:number): Observable<any> {
-    return this.http.post(this.postsURL + '/likes', {
+  likePost(userId: number, postId: number): Observable<any> {
+    return this.http.post(API_URL + 'posts/likes', {
       userId,
       postId,
     }, httpOptions);
   }
 
   getLikesByPostId(params: any): Observable<any> {
-    return this.http.get<any>(`${AUTH_API}showLikesByPost`, { params });
+    return this.http.get<any>(API_URL + 'showLikesByPost', { params });
   }
 
   getLikesByTimelineId(): Observable<any> {
-    return this.http.get<any>(`${AUTH_API}showLikesByTimeline`);
-    
+    return this.http.get<any>(API_URL + 'showLikesByTimeline');
   }
 
   getLikesByTimelineIds(id: number): Observable<any> {
-    return this.http.get(`${AUTH_API}showTimelines/${id}`, { responseType: 'text' });
+    return this.http.get(API_URL + `showTimelines/${id}`, { responseType: 'text' });
   }
 
-  addTimeline(text: string, userId:number): Observable<any> {
-    return this.http.post(AUTH_API + 'timelines', {
+  addTimeline(text: string, userId: number): Observable<any> {
+    return this.http.post(API_URL + 'timelines', {
       text,
       userId
     }, httpOptions);
   }
-  
+
   deleteTimeline(id: number): Observable<any> {
-    return this.http.delete(`${AUTH_API}deleteTimelines/${id}`, { responseType: 'text' });
+    return this.http.delete(API_URL + `deleteTimelines/${id}`, { responseType: 'text' });
   }
 
-  likeTimeline(userId: number, timelineId:number): Observable<any> {
-    return this.http.post(AUTH_API + 'timeline/likesTimeline', {
+  likeTimeline(userId: number, timelineId: number): Observable<any> {
+    return this.http.post(API_URL + 'timeline/likesTimeline', {
       userId,
       timelineId,
     }, httpOptions);
   }
 
   getTimelineById(id) {
-    return this
-      .http
-      .get(`${AUTH_API}showTimelines/${id}`);
+    return this.http.get(API_URL + `showTimelines/${id}`);
   }
 
   editTimeline(id) {
-    return this.http.get(`${AUTH_API}showTimelines/${id}`);
+    return this.http.get(API_URL + `showTimelines/${id}`);
   }
-  updateTimeline(timelineText, id) {
 
+  updateTimeline(timelineText, id) {
     const obj = {
       text: timelineText
     };
-    this
-      .http
-      .put(`${AUTH_API}editTimelines/${id}`, obj)
-      .subscribe();
+    this.http.put(API_URL + `editTimelines/${id}`, obj).subscribe();
   }
 
   deleteComment(id: number): Observable<any> {
-    return this.http.delete(`${this.commentURL}/${id}`, { responseType: 'text' });
+    return this.http.delete(API_URL + `showComments/${id}`, { responseType: 'text' });
   }
 
   editComment(id) {
-    return this.http.get(`${AUTH_API}showComments/${id}`);
+    return this.http.get(API_URL + `showComments/${id}`);
   }
 
   updateCommentById(content, id) {
-
     const obj = {
       content: content
     };
-    this
-      .http
-      .put(`${AUTH_API}editComment/${id}`, obj)
-      .subscribe();
+    this.http.put(API_URL + `editComment/${id}`, obj).subscribe();
   }
 
   addAppointment(event) {
-    return this.http.post(AUTH_API + 'createAppointments', event);
+    return this.http.post(API_URL + 'createAppointments', event);
   }
 
   deleteAppointment(id: number): Observable<any> {
-    return this.http.delete(`${AUTH_API + 'findAllAppointments'}/${id}`, { responseType: 'text' });
+    return this.http.delete(API_URL + `findAllAppointments/${id}`, { responseType: 'text' });
   }
 
-  follow(userId: number, followerId:number, message: string): Observable<any> {
-    return this.http.post(AUTH_API + 'following', {
+  follow(userId: number, followerId: number, message: string): Observable<any> {
+    return this.http.post(API_URL + 'following', {
       userId,
       followerId,
       message
@@ -212,25 +192,24 @@ export class ServiceblogService {
   }
 
   getFollows(params: any): Observable<any> {
-    return this.http.get<any>(AUTH_API + 'followRequest', { params });
+    return this.http.get<any>(API_URL + 'followRequest', { params });
   }
 
   getNotifications(params: any): Observable<any> {
-    return this.http.get<any>(AUTH_API + 'notifications', { params });
+    return this.http.get<any>(API_URL + 'notifications', { params });
   }
 
   unfollow(id: number): Observable<any> {
-    return this.http.delete(`${AUTH_API + 'unfollow'}/${id}`, { responseType: 'text' });
+    return this.http.delete(API_URL + `unfollow/${id}`, { responseType: 'text' });
   }
 
   addGallery(file: File, title: string, userId: string): Observable<HttpEvent<{}>> {
     const formdata: FormData = new FormData();
-
     formdata.append('file', file);
     formdata.append('title', title);
     formdata.append('userId', userId);
 
-    const req = new HttpRequest('POST', 'http://localhost:4000/api/auth/photogallery/upload', formdata, {
+    const req = new HttpRequest('POST', API_URL + 'photogallery/upload', formdata, {
       reportProgress: true,
       responseType: 'text',
     });
@@ -240,11 +219,10 @@ export class ServiceblogService {
 
   changeProfilePicture(file: File, userId: string): Observable<HttpEvent<{}>> {
     const formdata: FormData = new FormData();
-
     formdata.append('file', file);
     formdata.append('userId', userId);
 
-    const req = new HttpRequest('PUT', 'http://localhost:4000/api/auth/changeProfilePicture/upload', formdata, {
+    const req = new HttpRequest('PUT', API_URL + 'changeProfilePicture/upload', formdata, {
       reportProgress: true,
       responseType: 'text',
     });
@@ -253,45 +231,36 @@ export class ServiceblogService {
   }
 
   getAllGallery(params: any): Observable<any> {
-    return this.http.get<any>(this.commURL + 'gallery', { params });
+    return this.http.get<any>(API_URL + 'gallery', { params });
   }
 
   getPhotoById(id) {
-    return this
-      .http
-      .get(`${this.commURL}gallery/${id}`);
+    return this.http.get(API_URL + `gallery/${id}`);
   }
 
   deletePhoto(id: number): Observable<any> {
-    return this.http.delete(`${this.commURL}gallery/${id}`, { responseType: 'text' });
+    return this.http.delete(API_URL + `gallery/${id}`, { responseType: 'text' });
   }
 
   getAllCategories(): Observable<any> {
-    return this.http.get<any>(this.commURL + 'findAllCategories');
+    return this.http.get<any>(API_URL + 'findAllCategories');
   }
 
   addCategory(text: string): Observable<any> {
-    return this.http.post(AUTH_API + 'posts/createCategory', {
+    return this.http.post(API_URL + 'posts/createCategory', {
       text
     }, httpOptions);
   }
 
   createMessageFromSocket(text: string, userId: string): Observable<any> {
-    return this.http.post(AUTH_API + 'createMessageFromSocket', {
+    return this.http.post(API_URL + 'createMessageFromSocket', {
       text,
       userId
     }, httpOptions);
   }
 
-  // getNotificationsHistory(params: any): Observable<any> {
-  //   console.log(params, 'params')
-  //   return this.http.get<any>(AUTH_API + 'notificationsHistory', { params });
-  // }
-
   getNotificationsHistory(userId: string): Observable<any> {
-    const params = { userId: userId }; // Create the params object with userId
-  
-    return this.http.get<any>(AUTH_API + 'notificationsHistory', { params });
+    const params = { userId: userId };
+    return this.http.get<any>(API_URL + 'notificationsHistory', { params });
   }
-  
 }

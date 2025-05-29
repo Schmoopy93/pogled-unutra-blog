@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
 import { NgForm } from '@angular/forms';
 import { HttpClient, HttpEventType, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { saveAs } from 'file-saver';
+import { environment } from '../../../environments/environment';
 
 
 @Component({
@@ -19,6 +20,7 @@ import { saveAs } from 'file-saver';
   styleUrls: ['./blogdetail.component.css']
 })
 export class BlogdetailComponent implements OnInit  {
+  apiUrl = environment.apiUrl;
   form: any = {
     content: null,
   }
@@ -188,7 +190,7 @@ export class BlogdetailComponent implements OnInit  {
     }
   }
 
-  onSubmit(): void {
+onSubmit(): void {
     const { content } = this.form;
     if (content == undefined || content == null || content == "") {
       Swal.fire("Comment is required!") 
@@ -197,30 +199,17 @@ export class BlogdetailComponent implements OnInit  {
     this.blogService.addComment(content, this.currentPost.id, this.currentUser).subscribe(
       data => {
         console.log(data);
+        this.retrieveComments();
+        setTimeout(() => {
+          this.hideModalCommentFunc();
+          this.resetModalFormPostComment();
+        }, 300); // 300ms timeout, po potrebi promeni trajanje
       },
       err => {
         this.errorMessage = err.error.message;
       }
     );
-    this.hideModalCommentFunc();
-    this.resetModalFormPostComment();
-    this.ngOnInit();
-  }
-
-  // likePost(): void {
-  //   this.blogService.likePost(this.currentUser, this.postId).subscribe(
-  //     data => {
-  //       console.log(data);
-  //     },
-  //     err => {
-  //       this.errorMessage = err.error.message;
-  //     }
-  //   );
-  //   if(this.errorMessage){
-  //     Swal.fire(this.errorMessage);
-  //   }
-    
-  // }
+}
 
   retrieveLikes(): void {
     const params = this.getRequestParamsLikes(this.pageLikes, this.pageSizeLikes, this.postId);
@@ -241,12 +230,11 @@ export class BlogdetailComponent implements OnInit  {
     this.blogService.likePost(this.currentUser, this.postId)
       .subscribe({
         next: (res) => {
-          console.log(res);
+            this.retrieveLikes();
         },
         error: (err) =>  Swal.fire(err.error.message)
       });
-      this.retrieveLikes();
-      this.ngOnInit();
+
   }
 
 
@@ -271,7 +259,7 @@ export class BlogdetailComponent implements OnInit  {
   
   deleteComment(id) {
     this.blogService.deleteComment(id).subscribe(res => {
-      this.ngOnInit();
+      this.retrieveComments();
     });
   }
 
@@ -285,7 +273,7 @@ export class BlogdetailComponent implements OnInit  {
 
   generatePDF(postId) {
     postId = this.route.snapshot.params.id;
-    const url = 'http://localhost:4000/posts/pdf/' + postId + '?timestamp=' + Date.now();
+    const url = this.apiUrl.replace('api/auth/', '') + 'posts/pdf/' + postId + '?timestamp=' + Date.now();
     const req = this.http.get(url, { responseType: 'arraybuffer', reportProgress: true, observe: 'events' });
     req.subscribe((event) => {
       if (event.type === HttpEventType.DownloadProgress) { 

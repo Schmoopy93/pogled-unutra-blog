@@ -1,0 +1,42 @@
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="chat-app card shadow-lg">
+        <div class="card-header">
+            <h3 class="h5 mb-0">Chat room</h3>
+        </div>
+        <div class="card-body d-flex p-0">
+            <div class="followers-sidebar" [class.d-none]="currentChatUser">
+                <div class="followers-header p-3 border-bottom">
+                    <h5>Followers</h5>
+                </div>
+                <div class="followers-list p-3">
+                    <div *ngFor="let follower of followers" class="follower-item" (click)="selectUser(follower.user.id)">
+                        <span [ngStyle]="{'color': getStatusColor(follower.user.id)}">●</span>
+                        <img [src]="apiUrl.replace('api/auth/', '') + 'uploads/userphoto/' + follower.user.photoName" alt="avatar" class="avatar"> {{ follower.user.firstname }} {{ follower.user.lastname }}
+                    </div>
+                </div>
+            </div>
+            <div class="chat-content" *ngIf="currentChatUser">
+                <div class="chat-header p-3 border-bottom d-flex justify-content-between align-items-center">
+                    <button (click)="currentChatUser = null" class="btn btn-secondary btn-sm">Back</button>
+                </div>
+                <div class="chat-messages p-3 flex-grow-1" #chatMessagesContainer>
+                    <div *ngFor="let message of messages" class="message-item">
+                        <div class="message-header">
+                            <span [ngStyle]="{'color': getStatusColor(message.sender?.id)}">●</span>
+                            <img [src]="apiUrl.replace('api/auth/', '') + 'uploads/userphoto/' + message.sender?.photoName" alt="avatar" class="avatar">
+                            <span class="message-sender">{{ message.sender?.firstname }} {{ message.sender?.lastname }}</span>
+                        </div>
+                        <div class="message-text">{{ message.text }}</div>
+                        <div class="message-date">{{ message?.createdAt | date:"MMM d, y h:mm:ss a" }}</div>
+                    </div>
+                </div>
+                <div class="message-input p-3 border-top d-flex">
+                    <input type="text" [(ngModel)]="messageText" placeholder="Type your message..." class="form-control" (keyup.enter)="sendMessage()">
+                    <button type="button" (click)="sendMessage()" class="btn btn-success btn-sm">Send</button>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>

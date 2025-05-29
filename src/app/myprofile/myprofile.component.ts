@@ -12,6 +12,7 @@ import { Followers } from '../models/followers';
 import { NgForm } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SocketService } from '../services/socket-service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-myprofile',
@@ -20,6 +21,7 @@ import { SocketService } from '../services/socket-service';
 })
 
 export class MyprofileComponent implements OnInit {
+  apiUrl = environment.apiUrl;
   form: any = {
     text: null,
   }
@@ -95,6 +97,8 @@ export class MyprofileComponent implements OnInit {
   historyNotificationsLength: any;
   groupedLikes: { [key: string]: any[] } = {}; 
   currentTimelineId: number | null = null;
+  selectedPhotoUrl: string | null = null;
+
 
   constructor(private router: Router, private route: ActivatedRoute, private socketService: SocketService, private modalService: NgbModal, public _DomSanitizationService: DomSanitizer , private token: TokenStorageService, private authService: AuthService, private blogService: ServiceblogService) {}
 
@@ -127,6 +131,15 @@ export class MyprofileComponent implements OnInit {
     });
     const storedViewMode = localStorage.getItem('selectedTab');
     this.viewMode = storedViewMode || 'tab1';
+    
+  }
+
+  openPhotoModal(photoUrl: string) {
+  this.selectedPhotoUrl = photoUrl;
+  }
+
+  closePhotoModal() {
+  this.selectedPhotoUrl = null;
   }
 
   selectTab(tab: string): void {
