@@ -83,13 +83,19 @@ export class ServiceblogService {
     return this.http.get(API_URL + `posts/${id}`);
   }
 
-  updatePost(title, content, categoryId, id) {
-    const obj = {
-      title: title,
-      content: content,
-      categoryId: categoryId,
-    };
-    this.http.put(API_URL + `posts/${id}`, obj).subscribe();
+  updatePost(file: File | null, title: string, content: string, userId: string, categoryId: any, id: number): Observable<any> {
+    const formData: FormData = new FormData();
+    formData.append('title', title);
+    formData.append('content', content);
+    formData.append('userId', userId);
+    formData.append('categoryId', categoryId);
+    if (file) {
+      formData.append('file', file);
+    }
+    return this.http.put(API_URL + `posts/${id}`, formData, {
+      reportProgress: true,
+      observe: 'events'
+    });
   }
 
   deletePost(id: number): Observable<any> {
